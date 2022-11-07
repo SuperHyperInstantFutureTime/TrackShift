@@ -21,7 +21,7 @@ class PRSStatementUpload extends Upload {
 			$data = $this->rowToData($headerRow, $row);
 			$this->usageList->add(new Usage(
 				$data["Work Title"],
-				new Money($data["Amount (performance revenue)"]),
+				new Money((float)$data["Amount (performance revenue)"]),
 			));
 		}
 	}
