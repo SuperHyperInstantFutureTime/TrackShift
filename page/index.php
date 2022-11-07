@@ -62,4 +62,5 @@ function do_upload(Input $input, Response $response):void {
 	}
 
 	$file->moveTo($targetPath);
+	$response->redirect("./?user=$userId");
 }
