@@ -1,5 +1,5 @@
 <?php
-namespace Upload;
+namespace Trackshift\Test\Upload;
 
 use Trackshift\Upload\PRSStatementUpload;
 
@@ -21,7 +21,7 @@ class PRSStatementUploadTest extends UploadTestCase {
 		$sut = new PRSStatementUpload($tmpFileName);
 		$moneyTotalUsage = $sut->getUsageTotal();
 
-		self::assertSame(0.0282, $moneyTotalUsage->getAbsoluteValue());
+		self::assertSame(0.0282, $moneyTotalUsage->value);
 		self::assertSame("£0.02", (string)$moneyTotalUsage);
 	}
 }

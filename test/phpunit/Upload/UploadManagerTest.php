@@ -1,6 +1,6 @@
 <?php
 
-namespace Upload;
+namespace Trackshift\Test\Upload;
 
 use PHPUnit\Framework\TestCase;
 use Trackshift\Upload\PRSStatementUpload;
