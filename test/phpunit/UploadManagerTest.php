@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use Trackshift\Upload\UnknownUpload;
 use Trackshift\Upload\UploadManager;
 
 class UploadManagerTest extends TestCase {
