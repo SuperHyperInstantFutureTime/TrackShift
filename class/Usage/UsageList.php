@@ -2,6 +2,7 @@
 namespace Trackshift\Usage;
 
 use Iterator;
+use Trackshift\Royalty\Money;
 
 /**
  * @implements Iterator<Usage>
@@ -18,6 +19,16 @@ class UsageList implements Iterator {
 
 	public function add(Usage $usage):void {
 		array_push($this->internalArray, $usage);
+	}
+
+	public function getTotalAmount():Money {
+		$total = new Money();
+
+		foreach($this as $usage) {
+			$total = $total->withAddition($usage->amount);
+		}
+
+		return $total;
 	}
 
 	public function rewind():void {

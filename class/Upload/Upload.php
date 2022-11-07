@@ -30,7 +30,9 @@ abstract class Upload {
 		$aggregation = new Aggregation();
 
 		foreach($this->usageList as $usage) {
-			$aggregateKey = $usage->{$propertyName};
+			$aggregateKey = $usage->{$propertyName} ?? null;
+// TODO: Throw meaningful exception here where aggregate key is null.
+// It means the name has been picked incorrectly by the developer.
 			$aggregation->add($aggregateKey, $usage);
 		}
 

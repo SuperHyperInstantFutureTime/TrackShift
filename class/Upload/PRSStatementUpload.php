@@ -12,6 +12,9 @@ class PRSStatementUpload extends Upload {
 
 		while(!$this->file->eof()) {
 			$row = $this->file->fgetcsv();
+			if(empty($row) || is_null($row[0])) {
+				continue;
+			}
 
 			if(!$headerRow) {
 				$headerRow = $row;
@@ -19,8 +22,9 @@ class PRSStatementUpload extends Upload {
 			}
 
 			$data = $this->rowToData($headerRow, $row);
+			$workTitle = $data["Work Title"];
 			$this->usageList->add(new Usage(
-				$data["Work Title"],
+				$workTitle,
 				new Money((float)$data["Amount (performance revenue)"]),
 			));
 		}

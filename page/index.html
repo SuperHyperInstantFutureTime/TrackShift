@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale:1" />
+<title>Trackshift</title>
+<link rel="stylesheet" href="/style.css" />
+
+<h1>Trackshift</h1>
+
+<p data-template="error"></p>
+
+<form method="post" enctype="multipart/form-data">
+	<label>
+		<span>Upload your statement file</span>
+		<input type="file" name="statement" required />
+	</label>
+	<button name="do" value="upload">Upload</button>
+</form>
+
+
+<table>
+	<thead>
+		<tr>
+			<th>Work title</th>
+			<th>Amount</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr data-template>
+			<td data-bind:text="title"></td>
+			<td data-bind:text="total"></td>
+		</tr>
+	</tbody>
+</table>
