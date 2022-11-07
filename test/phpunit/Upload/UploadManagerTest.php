@@ -1,5 +1,7 @@
 <?php
 
+namespace Upload;
+
 use PHPUnit\Framework\TestCase;
 use Trackshift\Upload\PRSStatementUpload;
 use Trackshift\Upload\UnknownUpload;
