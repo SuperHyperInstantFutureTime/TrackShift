@@ -4,6 +4,8 @@ namespace Trackshift\Royalty;
 use Stringable;
 
 class Money implements Stringable {
+	const DECIMAL_ACCURACY = 10;
+
 	public function __construct(
 		public readonly float $value = 0,
 	) {}
@@ -14,6 +16,8 @@ class Money implements Stringable {
 	}
 
 	public function withAddition(Money $add):self {
-		return new Money(round($add->value, 10) + round($this->value, 10));
+		$newValue = round($add->value, self::DECIMAL_ACCURACY) + round($this->value, self::DECIMAL_ACCURACY);
+		$newValue = (float)substr($newValue, 0, 2 + self::DECIMAL_ACCURACY);
+		return new Money($newValue);
 	}
 }

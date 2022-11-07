@@ -2,6 +2,7 @@
 namespace Trackshift\Test\Upload;
 
 use Trackshift\Upload\PRSStatementUpload;
+use Trackshift\Usage\Usage;
 
 class PRSStatementUploadTest extends UploadTestCase {
 	public function testGetUsageTotal():void {
@@ -40,12 +41,12 @@ class PRSStatementUploadTest extends UploadTestCase {
 		DATA;
 		$tmpFileName = self::getTempFile($fileContent);
 		$sut = new PRSStatementUpload($tmpFileName);
-		$aggregatedTotalUsage = $sut->getAggregatedUsageTotal("Work Title");
+		$aggregation = $sut->getAggregatedUsages("workTitle");
 
-		self::assertSame(0.0104, $aggregatedTotalUsage->getTotalForAggregate("Song 1")->value);
-		self::assertSame(0.0084, $aggregatedTotalUsage->getTotalForAggregate("Song 2")->value);
-		self::assertSame(0.0094, $aggregatedTotalUsage->getTotalForAggregate("Song 3")->value);
+		self::assertSame(0.0104, $aggregation->getTotalValueForAggregate("Song 1")->value);
+		self::assertSame(0.0084, $aggregation->getTotalValueForAggregate("Song 2")->value);
+		self::assertSame(0.0094, $aggregation->getTotalValueForAggregate("Song 3")->value);
 
-		self::assertSame(0.0282, $aggregatedTotalUsage->getTotal()->value);
+		self::assertSame(0.0282, $aggregation->getTotalValue()->value);
 	}
 }

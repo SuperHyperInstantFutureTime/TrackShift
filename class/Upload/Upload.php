@@ -3,7 +3,7 @@ namespace Trackshift\Upload;
 
 use SplFileObject;
 use Trackshift\Royalty\Money;
-use Trackshift\Usage\Usage;
+use Trackshift\Usage\Aggregation;
 use Trackshift\Usage\UsageList;
 
 abstract class Upload {
@@ -24,6 +24,17 @@ abstract class Upload {
 		}
 
 		return $total;
+	}
+
+	public function getAggregatedUsages(string $propertyName):Aggregation {
+		$aggregation = new Aggregation();
+
+		foreach($this->usageList as $usage) {
+			$aggregateKey = $usage->{$propertyName};
+			$aggregation->add($aggregateKey, $usage);
+		}
+
+		return $aggregation;
 	}
 
 	abstract protected function processUsages():void;
