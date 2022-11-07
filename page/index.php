@@ -16,8 +16,13 @@ function go(
 	DocumentBinder $binder,
 ):void {
 	if($userId = $input->getString("user")) {
+		$userDataFile = "data/$userId";
+		if(!is_file($userDataFile)) {
+			return;
+		}
+
 		$uploadManager = new UploadManager();
-		$upload = $uploadManager->load("data/$userId");
+		$upload = $uploadManager->load($userDataFile);
 
 		if($upload instanceof UnknownUpload) {
 			$t = $templateCollection->get($document, "error")->insertTemplate();
