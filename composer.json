@@ -1,0 +1,22 @@
+{
+	"name": "superhyperinstantfuturetime/trackshift",
+	"description": "",
+
+	"require": {
+		"phpgt/webengine": "dev-master"
+	},
+	"require-dev": {
+		"phpstan/phpstan": "^v1.9",
+		"phpunit/phpunit": "^v9.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"Trackshift\\": "./class"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Trackshift\\Test\\": "./test/phpunit"
+		}
+	}
+}
