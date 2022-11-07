@@ -7,7 +7,7 @@ use Trackshift\Upload\PRSStatementUpload;
 use Trackshift\Upload\UnknownUpload;
 use Trackshift\Upload\UploadManager;
 
-class UploadManagerTest extends TestCase {
+class UploadManagerTest extends UploadTestCase {
 	/** Load a file with content that isn't recognised by Trackshift. */
 	public function testLoad_unknownFileType():void {
 		$fileContent = <<<DATA
@@ -34,12 +34,5 @@ class UploadManagerTest extends TestCase {
 		$upload = $sut->load($tmpFileName);
 
 		self::assertInstanceOf(PRSStatementUpload::class, $upload);
-	}
-
-	/** @return string absolute file path of the temp file */
-	private static function getTempFile($content):string {
-		$filePath = sys_get_temp_dir() . "/" . uniqid("trackshift-test-");
-		file_put_contents($filePath, $content);
-		return $filePath;
 	}
 }
