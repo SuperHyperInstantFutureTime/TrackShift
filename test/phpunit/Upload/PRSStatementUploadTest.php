@@ -43,8 +43,8 @@ class PRSStatementUploadTest extends UploadTestCase {
 		$aggregatedTotalUsage = $sut->getAggregatedUsageTotal("Work Title");
 
 		self::assertSame(0.0104, $aggregatedTotalUsage->getTotalForAggregate("Song 1")->value);
-		self::assertSame(0.0084, $aggregatedTotalUsage->getTotalForAggregate("Song 1")->value);
-		self::assertSame(0.0094, $aggregatedTotalUsage->getTotalForAggregate("Song 1")->value);
+		self::assertSame(0.0084, $aggregatedTotalUsage->getTotalForAggregate("Song 2")->value);
+		self::assertSame(0.0094, $aggregatedTotalUsage->getTotalForAggregate("Song 3")->value);
 
 		self::assertSame(0.0282, $aggregatedTotalUsage->getTotal()->value);
 	}
