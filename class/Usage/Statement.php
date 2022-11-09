@@ -43,4 +43,23 @@ class Statement implements Iterator, Countable {
 	public function count():int {
 		return count($this->uploadArray);
 	}
+
+	public function clear():void {
+		foreach($this as $upload) {
+			$upload->delete();
+		}
+
+		$this->uploadArray = [];
+	}
+
+	public function getAggregatedUsages(string $propertyName):Aggregation {
+		$aggregation = new Aggregation();
+
+		foreach($this as $upload) {
+			$uploadAggregation = $upload->getAggregatedUsages($propertyName);
+			$aggregation = $aggregation->withAggregatedUsages($propertyName, $uploadAggregation);
+		}
+
+		return $aggregation;
+	}
 }

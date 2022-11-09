@@ -14,6 +14,7 @@ abstract class Upload {
 		public readonly string $filePath,
 	) {
 		$this->file = new SplFileObject($this->filePath);
+		$this->usageList = new UsageList();
 		$this->processUsages();
 	}
 
@@ -40,4 +41,11 @@ abstract class Upload {
 	}
 
 	abstract protected function processUsages():void;
+
+	public function delete():void {
+		$path = $this->file->getRealPath();
+		unset($this->file);
+		unlink($path);
+		$this->usageList = new UsageList();
+	}
 }

@@ -38,7 +38,7 @@ function go(
 			}
 		}
 
-		$aggregatedUsages = $upload->getAggregatedUsages("workTitle");
+		$aggregatedUsages = $statement->getAggregatedUsages("workTitle");
 		$tableData = [];
 		foreach($aggregatedUsages as $name => $usageList) {
 			array_push(

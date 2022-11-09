@@ -75,4 +75,20 @@ class Aggregation implements Iterator {
 		$usageMapKeys = array_keys($this->usageMap);
 		return $usageMapKeys[$this->iteratorIndex] ?? null;
 	}
+
+	public function withAggregatedUsages(
+		string $propertyName,
+		Aggregation $otherAggregation,
+	):self {
+		$clone = clone($this);
+
+		foreach($otherAggregation as $usageList) {
+			foreach($usageList as $usage) {
+				$aggregateKey = $usage->{$propertyName} ?? null;
+				$clone->add($aggregateKey, $usage);
+			}
+		}
+
+		return $clone;
+	}
 }

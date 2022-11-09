@@ -2,8 +2,11 @@
 namespace Trackshift\Test\Usage;
 
 use PHPUnit\Framework\TestCase;
+use Trackshift\Royalty\Money;
 use Trackshift\Upload\Upload;
+use Trackshift\Usage\Aggregation;
 use Trackshift\Usage\Statement;
+use Trackshift\Usage\Usage;
 
 class StatementTest extends TestCase {
 	public function testCount_empty():void {
@@ -33,5 +36,31 @@ class StatementTest extends TestCase {
 		self::assertCount(3, $sut);
 		$sut->clear();
 		self::assertCount(0, $sut);
+	}
+
+	public function testGetAggregatedUsages_empty():void {
+		$sut = new Statement();
+		$aggregation = $sut->getAggregatedUsages("test");
+		self::assertSame(0.00, $aggregation->getTotalValue()->value);
+	}
+
+	public function testGetAggregatedUsages():void {
+		$mockMoney = self::getMockBuilder(Money::class)
+			->setConstructorArgs([1.23])
+			->getMock();
+
+		$usageAggregation = self::createMock(Aggregation::class);
+		$usageAggregation->method("getTotalValue")
+			->willReturn($mockMoney);
+
+		$upload = self::createMock(Upload::class);
+		$upload->method("getAggregatedUsages")
+			->willReturn($usageAggregation);
+
+		$sut = new Statement();
+		$sut->addUpload($upload);
+
+		$aggregation = $sut->getAggregatedUsages("test");
+		self::assertSame(0.00, $aggregation->getTotalValue()->value);
 	}
 }
