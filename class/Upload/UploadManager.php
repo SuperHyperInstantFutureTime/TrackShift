@@ -6,8 +6,10 @@ use Trackshift\Usage\Statement;
 
 class UploadManager {
 	public function load(string...$filePathList):Statement {
-		$statement = new Statement();
+		return $this->loadInto(new Statement(), ...$filePathList);
+	}
 
+	public function loadInto(Statement $statement, string...$filePathList):Statement {
 		foreach($filePathList as $filePath) {
 			$upload = null;
 			if($this->isCsv($filePath)) {

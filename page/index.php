@@ -16,18 +16,26 @@ function go(
 	DocumentBinder $binder,
 ):void {
 	if($userId = $input->getString("user")) {
-		$userDataFile = "data/$userId";
-		if(!is_file($userDataFile)) {
+		$userDataDir = "data/$userId";
+		if(!is_dir($userDataDir)) {
 			return;
 		}
 
 		$uploadManager = new UploadManager();
-		$upload = $uploadManager->load($userDataFile);
+		$statement = $uploadManager->load(...glob("$userDataDir/*.*"));
 
-		if($upload instanceof UnknownUpload) {
-			$t = $templateCollection->get($document, "error")->insertTemplate();
-			$t->innerText = "ERROR: Unknown file type";
-			return;
+		foreach($statement as $upload) {
+			$errorFiles = [];
+
+			if($upload instanceof UnknownUpload) {
+				array_push($errorFiles, $upload->filePath);
+			}
+
+			if($errorFiles) {
+				$t = $templateCollection->get($document, "error")->insertTemplate();
+				$t->innerText = "ERROR: Unknown file type - " . implode(", ", $errorFiles);
+				return;
+			}
 		}
 
 		$aggregatedUsages = $upload->getAggregatedUsages("workTitle");
@@ -56,8 +64,9 @@ function do_upload(Input $input, Response $response):void {
 	}
 
 	$file = $input->getFile("statement");
+	$originalFileName = $file->getClientFilename();
 
-	$targetPath = "data/$userId";
+	$targetPath = "data/$userId/$originalFileName";
 	if(!is_dir(dirname($targetPath))) {
 		mkdir(dirname($targetPath), 0775, true);
 	}

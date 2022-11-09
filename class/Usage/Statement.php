@@ -1,11 +1,12 @@
 <?php
 namespace Trackshift\Usage;
 
+use Countable;
 use Iterator;
 use Trackshift\Upload\Upload;
 
 /** @implements Iterator<Upload> */
-class Statement implements Iterator {
+class Statement implements Iterator, Countable {
 	/** @var array<Upload> */
 	private array $uploadArray;
 	private int $iteratorKey;
@@ -37,5 +38,9 @@ class Statement implements Iterator {
 
 	public function next():void {
 		$this->iteratorKey++;
+	}
+
+	public function count():int {
+		return count($this->uploadArray);
 	}
 }
