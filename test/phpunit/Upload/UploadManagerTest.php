@@ -22,8 +22,22 @@ class UploadManagerTest extends UploadTestCase {
 		$tmpFileName = self::getTempFile("prs-simple-3-songs.csv");
 
 		$sut = new UploadManager();
-		$upload = $sut->load($tmpFileName);
+		$statement = $sut->load($tmpFileName);
 
-		self::assertInstanceOf(PRSStatementUpload::class, $upload);
+		self::assertInstanceOf(PRSStatementUpload::class, $statement->current());
+	}
+
+	public function testLoad_multiplePrsStatements():void {
+		$tmpFileName1 = self::getTempFile("prs-simple-3-songs.csv");
+		$tmpFileName2 = self::getTempFile("prs-simple-3-songs-another-statement.csv");
+
+		$sut = new UploadManager();
+		$statement = $sut->load($tmpFileName1, $tmpFileName2);
+
+		$i = null;
+		foreach($statement as $i => $upload) {
+			self::assertInstanceOf(PRSStatementUpload::class, $upload);
+		}
+		self::assertGreaterThan(0, $i);
 	}
 }
