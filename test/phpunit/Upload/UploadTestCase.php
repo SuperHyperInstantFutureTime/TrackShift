@@ -7,7 +7,7 @@ use RuntimeException;
 abstract class UploadTestCase extends TestCase {
 	/** @return string absolute file path of the temp file */
 	protected static function getTempFile(string $testFileName):string {
-		$testFilePath = realpath("../files/$testFileName");
+		$testFilePath = realpath(__DIR__ . "/../../files/$testFileName");
 		if(!is_file($testFilePath)) {
 			throw new RuntimeException("Test file path not found: $testFileName");
 		}
