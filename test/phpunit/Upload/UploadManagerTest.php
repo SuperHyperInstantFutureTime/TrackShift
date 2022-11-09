@@ -2,7 +2,6 @@
 
 namespace Trackshift\Test\Upload;
 
-use PHPUnit\Framework\TestCase;
 use Trackshift\Upload\PRSStatementUpload;
 use Trackshift\Upload\UnknownUpload;
 use Trackshift\Upload\UploadManager;
@@ -13,9 +12,9 @@ class UploadManagerTest extends UploadTestCase {
 		$tmpFileName = self::getTempFile("gubbins.txt");
 
 		$sut = new UploadManager();
-		$upload = $sut->load($tmpFileName);
+		$statement = $sut->load($tmpFileName);
 
-		self::assertInstanceOf(UnknownUpload::class, $upload);
+		self::assertInstanceOf(UnknownUpload::class, $statement->current());
 	}
 
 	public function testLoad_prsStatement():void {
