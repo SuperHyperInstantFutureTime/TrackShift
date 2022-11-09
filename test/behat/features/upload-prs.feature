@@ -8,5 +8,5 @@ Feature: App should handle PRS statement CSV files
 		When I attach the file "prs-simple-3-songs.csv" to "statement"
 		And I press "Upload"
 		Then I should see 3 rows in the table
-		When I press "Clear"
+		When I press "Clear uploads"
 		Then I should see 0 rows in the table

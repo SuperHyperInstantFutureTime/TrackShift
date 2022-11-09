@@ -74,3 +74,16 @@ function do_upload(Input $input, Response $response):void {
 	$file->moveTo($targetPath);
 	$response->redirect("./?user=$userId");
 }
+
+function do_clear(Input $input, Response $response):void {
+	$userId = $input->getString("user");
+	if(!$userId) {
+		$response->reload();
+	}
+
+	foreach(glob("data/$userId/*.*") as $file) {
+		unlink($file);
+	}
+
+	$response->redirect("./?user=$userId");
+}
