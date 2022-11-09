@@ -56,6 +56,7 @@ function do_upload(Input $input, Response $response):void {
 	}
 
 	$file = $input->getFile("statement");
+
 	$targetPath = "data/$userId";
 	if(!is_dir(dirname($targetPath))) {
 		mkdir(dirname($targetPath), 0775, true);
