@@ -11,4 +11,4 @@ default:
     Behat\MinkExtension:
       base_url: http://localhost:8080
       goutte: ~
-      files_path: "../../test/files/"
+      files_path: "%paths.base%/../../test/files/"
