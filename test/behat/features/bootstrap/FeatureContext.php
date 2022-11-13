@@ -1,4 +1,5 @@
 <?php
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
@@ -80,5 +81,11 @@ class FeatureContext extends MinkContext {
 
 			$rowIndex++;
 		}
+	}
+
+	/** @Then I dump the HTML */
+	public function iDumpTheHTML() {
+		echo $this->getSession()->getPage()->getHtml();
+		exit(1);
 	}
 }
