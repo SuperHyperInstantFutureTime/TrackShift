@@ -11,4 +11,4 @@ default:
     Behat\MinkExtension:
       base_url: http://localhost:8080
       goutte: ~
-      files_path: "/home/g105b/Code/SuperHyperInstantFutureTime/Trackshift/test/files/"
+      files_path: "../../test/files/"
