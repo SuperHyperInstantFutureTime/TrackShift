@@ -79,6 +79,9 @@ jobs:
           name: build-artifact
           path: /tmp/github-actions
 
+      - name: Extract build archive
+        run: tar -xvf /tmp/github-actions/build.tar ./
+
       - name: Local development server
         run: mkdir www && php -S 0.0.0.0:8080 -t www vendor/phpgt/webengine/go.php &
 
