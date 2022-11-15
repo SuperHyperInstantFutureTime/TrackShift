@@ -7,7 +7,6 @@ use Trackshift\Usage\UsageList;
 
 class PRSStatementUpload extends Upload {
 	protected function processUsages():void {
-		$this->usageList = new UsageList();
 		$headerRow = null;
 
 		while(!$this->file->eof()) {

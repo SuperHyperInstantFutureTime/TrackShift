@@ -2,16 +2,30 @@
 namespace Trackshift\Upload;
 
 use SplFileObject;
+use Trackshift\Usage\Statement;
 
 class UploadManager {
-	public function load(string $filePath):Upload {
-		if($this->isCsv($filePath)) {
-			if($this->hasCsvColumns($filePath, "Record Number", "CAE Number", "Work Title", "Amount (performance revenue)")) {
-				return new PRSStatementUpload($filePath);
+	public function load(string...$filePathList):Statement {
+		return $this->loadInto(new Statement(), ...$filePathList);
+	}
+
+	public function loadInto(Statement $statement, string...$filePathList):Statement {
+		foreach($filePathList as $filePath) {
+			$upload = null;
+			if($this->isCsv($filePath)) {
+				if($this->hasCsvColumns($filePath, "Record Number", "CAE Number", "Work Title", "Amount (performance revenue)")) {
+					$upload = new PRSStatementUpload($filePath);
+				}
 			}
+
+			if(is_null($upload)) {
+				$upload = new UnknownUpload($filePath);
+			}
+
+			$statement->addUpload($upload);
 		}
 
-		return new UnknownUpload($filePath);
+		return $statement;
 	}
 
 	private function isCsv(string $filePath):bool {

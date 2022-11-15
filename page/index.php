@@ -16,21 +16,29 @@ function go(
 	DocumentBinder $binder,
 ):void {
 	if($userId = $input->getString("user")) {
-		$userDataFile = "data/$userId";
-		if(!is_file($userDataFile)) {
+		$userDataDir = "data/$userId";
+		if(!is_dir($userDataDir)) {
 			return;
 		}
 
 		$uploadManager = new UploadManager();
-		$upload = $uploadManager->load($userDataFile);
+		$statement = $uploadManager->load(...glob("$userDataDir/*.*"));
 
-		if($upload instanceof UnknownUpload) {
-			$t = $templateCollection->get($document, "error")->insertTemplate();
-			$t->innerText = "ERROR: Unknown file type";
-			return;
+		foreach($statement as $upload) {
+			$errorFiles = [];
+
+			if($upload instanceof UnknownUpload) {
+				array_push($errorFiles, $upload->filePath);
+			}
+
+			if($errorFiles) {
+				$t = $templateCollection->get($document, "error")->insertTemplate();
+				$t->innerText = "ERROR: Unknown file type - " . implode(", ", $errorFiles);
+				return;
+			}
 		}
 
-		$aggregatedUsages = $upload->getAggregatedUsages("workTitle");
+		$aggregatedUsages = $statement->getAggregatedUsages("workTitle");
 		$tableData = [];
 		foreach($aggregatedUsages as $name => $usageList) {
 			array_push(
@@ -56,11 +64,26 @@ function do_upload(Input $input, Response $response):void {
 	}
 
 	$file = $input->getFile("statement");
-	$targetPath = "data/$userId";
+	$originalFileName = $file->getClientFilename();
+
+	$targetPath = "data/$userId/$originalFileName";
 	if(!is_dir(dirname($targetPath))) {
 		mkdir(dirname($targetPath), 0775, true);
 	}
 
 	$file->moveTo($targetPath);
+	$response->redirect("./?user=$userId");
+}
+
+function do_clear(Input $input, Response $response):void {
+	$userId = $input->getString("user");
+	if(!$userId) {
+		$response->reload();
+	}
+
+	foreach(glob("data/$userId/*.*") as $file) {
+		unlink($file);
+	}
+
 	$response->redirect("./?user=$userId");
 }
