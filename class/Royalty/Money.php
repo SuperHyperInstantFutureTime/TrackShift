@@ -12,7 +12,7 @@ class Money implements Stringable {
 
 	public function __toString():string {
 		$rounded = (float)substr((string)$this->value, 0, 4);
-		return "£" . number_format((float)$rounded, 2);
+		return "£" . number_format($rounded, 2);
 	}
 
 	public function withAddition(Money $add):self {
