@@ -12,7 +12,6 @@ function go(
 	Input $input,
 	Response $response,
 	HTMLDocument $document,
-	TemplateCollection $templateCollection,
 	DocumentBinder $binder,
 ):void {
 	if($userId = $input->getString("user")) {
@@ -23,20 +22,8 @@ function go(
 
 		$uploadManager = new UploadManager();
 		$statement = $uploadManager->load(...glob("$userDataDir/*.*"));
-
-		foreach($statement as $upload) {
-			$errorFiles = [];
-
-			if($upload instanceof UnknownUpload) {
-				array_push($errorFiles, $upload->filePath);
-			}
-
-			if($errorFiles) {
-				$t = $templateCollection->get($document, "error")->insertTemplate();
-				$t->innerText = "ERROR: Unknown file type - " . implode(", ", $errorFiles);
-				return;
-			}
-		}
+		$binder->bindList($statement, $document->querySelector("details"));
+		$binder->bindKeyValue("uploadCount", count($statement));
 
 		$aggregatedUsages = $statement->getAggregatedUsages("workTitle");
 		$tableData = [];
@@ -50,7 +37,11 @@ function go(
 		}
 		usort($tableData, fn($a, $b) => $a["total"]->value < $b["total"]->value);
 
-		$binder->bindList($tableData);
+		$tableEl = $document->querySelector("table");
+		$bound = $binder->bindList($tableData, $tableEl);
+		if($bound === 0) {
+			$tableEl->hidden = true;
+		}
 	}
 	else {
 		$response->redirect("./?user=" . new Ulid());
@@ -63,15 +54,17 @@ function do_upload(Input $input, Response $response):void {
 		$response->reload();
 	}
 
-	$file = $input->getFile("statement");
-	$originalFileName = $file->getClientFilename();
+	$fileList = $input->getMultipleFile("statement");
+	foreach($fileList as $file) {
+		$originalFileName = $file->getClientFilename();
 
-	$targetPath = "data/$userId/$originalFileName";
-	if(!is_dir(dirname($targetPath))) {
-		mkdir(dirname($targetPath), 0775, true);
+		$targetPath = "data/$userId/$originalFileName";
+		if(!is_dir(dirname($targetPath))) {
+			mkdir(dirname($targetPath), 0775, true);
+		}
+		$file->moveTo($targetPath);
 	}
 
-	$file->moveTo($targetPath);
 	$response->redirect("./?user=$userId");
 }
 
@@ -82,6 +75,20 @@ function do_clear(Input $input, Response $response):void {
 	}
 
 	foreach(glob("data/$userId/*.*") as $file) {
+		unlink($file);
+	}
+
+	$response->redirect("./?user=$userId");
+}
+
+function do_delete(Input $input, Response $response):void {
+	$userId = $input->getString("user");
+	if(!$userId) {
+		$response->reload();
+	}
+
+	$filename = $input->getString("filename");
+	foreach(glob("data/$userId/$filename.*") as $file) {
 		unlink($file);
 	}
 

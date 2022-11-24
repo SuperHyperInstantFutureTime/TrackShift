@@ -15,7 +15,7 @@ Feature: App should be usable by anonymous users
 		Given I am on the homepage
 		When I attach the file "gubbins.txt" to "statement"
 		And I press "Upload"
-		Then I should see "ERROR: Unknown file type"
+		Then I should see "Gubbins - 2.2 KB - Unknown"
 
 	Scenario: I can upload a PRS statement
 		Given I am on the homepage
