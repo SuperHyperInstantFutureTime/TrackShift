@@ -7,6 +7,12 @@ label.dragging {
 	}
 }
 
+details {
+	summary {
+		cursor: pointer;
+	}
+}
+
 body {
 	margin: 40px auto;
 	max-width: 1200px;
@@ -15,6 +21,36 @@ body {
 	color: #444;
 	padding: 0 10px
 }
-h1,h2,h3 {
-	line-height:1.2
+h1, h2, h3 {
+	line-height: 1.2
+}
+
+table {
+	width: 100%;
+
+	th, td {
+		padding: 0.5rem;
+
+		&:last-of-type {
+			text-align: right;
+		}
+	}
+
+	thead {
+		th {
+			background-color: #444;
+			color: white;
+			text-align: left;
+		}
+	}
+	tbody {
+		tr {
+			&:nth-of-type(even) {
+				background-color: #eee;
+			}
+
+			td {
+			}
+		}
+	}
 }
