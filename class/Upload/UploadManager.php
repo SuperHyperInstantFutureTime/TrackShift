@@ -1,6 +1,7 @@
 <?php
 namespace Trackshift\Upload;
 
+use DateTime;
 use SplFileObject;
 use Trackshift\Usage\Statement;
 
@@ -49,5 +50,37 @@ class UploadManager {
 		}
 
 		return $foundAllColumns;
+	}
+
+	public function purge(string $dir = "data"):int {
+		$count = 0;
+		$expiredTimestamp = strtotime("-3 weeks");
+
+		foreach(glob("$dir/*") as $file) {
+			if(is_dir($file)) {
+				$file .= "/.";
+			}
+
+			if(filemtime($file) <= $expiredTimestamp) {
+				$count += $this->recursiveRemove($file);
+				rmdir(rtrim($file, "."));
+			}
+		}
+		return $count;
+	}
+
+	private function recursiveRemove(string $filePath):int {
+		$count = 0;
+		if(is_dir($filePath)) {
+			foreach(glob("$filePath/*") as $subFile) {
+				$count += $this->recursiveRemove($subFile);
+			}
+		}
+		else {
+			unlink($filePath);
+			$count++;
+		}
+
+		return $count;
 	}
 }

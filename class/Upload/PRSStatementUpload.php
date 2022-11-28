@@ -3,7 +3,6 @@ namespace Trackshift\Upload;
 
 use Trackshift\Royalty\Money;
 use Trackshift\Usage\Usage;
-use Trackshift\Usage\UsageList;
 
 class PRSStatementUpload extends Upload {
 	protected function processUsages():void {

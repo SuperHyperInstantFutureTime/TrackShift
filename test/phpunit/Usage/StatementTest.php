@@ -6,7 +6,6 @@ use Trackshift\Royalty\Money;
 use Trackshift\Upload\Upload;
 use Trackshift\Usage\Aggregation;
 use Trackshift\Usage\Statement;
-use Trackshift\Usage\Usage;
 
 class StatementTest extends TestCase {
 	public function testCount_empty():void {
@@ -16,7 +15,6 @@ class StatementTest extends TestCase {
 
 	public function testCount():void {
 		$sut = new Statement();
-		/** @noinspection PhpComposerExtensionStubsInspection */
 		$expectedCount = rand(3, 99);
 		for($i = 0; $i < $expectedCount; $i++) {
 			$upload = self::createMock(Upload::class);

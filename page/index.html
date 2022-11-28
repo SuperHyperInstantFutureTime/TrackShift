@@ -1,27 +1,48 @@
-<!doctype html>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale:1" />
-<title>Trackshift</title>
-<link rel="stylesheet" href="/style.css" />
+<details>
+	<summary>
+		Uploaded files (<span data-bind:text="uploadCount">0</span>)
+	</summary>
+	<ul>
+		<li data-template>
+			<form method="post">
+				<input type="hidden" name="filename" data-bind:value="filename" />
 
-<h1>Trackshift</h1>
+				<strong data-bind:text="filename">abc.xyz</strong>
+				- <span data-bind:text="sizeString">0B</span>
+				- <span data-bind:text="type">Type</span>
 
-<p data-template="error"></p>
+				<button name="do" value="delete" onclick="return confirm('Are you sure you want to remove {{filename}}?')">
+					<span>Delete <span data-bind:text="filename" hidden>filename</span></span>
+				</button>
+			</form>
+		</li>
+	</ul>
+
+	<form method="post">
+		<p>Your uploads will automatically be purged from Trackshift on <time data-bind:text="expiryDateString">1st Jan 1970 @ 00:00am</time></p>
+		<button name="do" value="extend">Extend file expiry by 3 weeks</button>
+		<button name="do" value="clear" onclick="return confirm('Are you sure you want to remove all your uploaded files?')">Clear uploads</button>
+	</form>
+
+	<br/>
+	<br/>
+</details>
+
+<br/>
+<br/>
 
 <form method="post" enctype="multipart/form-data">
 	<label>
 		<span>Upload your statement file</span>
-		<input type="file" name="statement" required />
+		<input type="file" name="statement[]" multiple required />
 	</label>
 	<button name="do" value="upload">Upload</button>
 </form>
 
-<form method="post">
-	<button name="do" value="clear">Clear uploads</button>
-</form>
+<br/>
+<br/>
 
-
-<table>
+<table border="1" cellpadding="8">
 	<thead>
 		<tr>
 			<th>Work title</th>

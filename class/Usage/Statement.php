@@ -2,11 +2,16 @@
 namespace Trackshift\Usage;
 
 use Countable;
+use DateTime;
+use DateTimeInterface;
+use Gt\DomTemplate\BindGetter;
 use Iterator;
 use Trackshift\Upload\Upload;
 
 /** @implements Iterator<Upload> */
 class Statement implements Iterator, Countable {
+	const EXPIRY_SECONDS = 60 * 60 * 24 * 7 * 3; // 3 weeks
+
 	/** @var array<Upload> */
 	private array $uploadArray;
 	private int $iteratorKey;
@@ -61,5 +66,18 @@ class Statement implements Iterator, Countable {
 		}
 
 		return $aggregation;
+	}
+
+	public function getExpiryDate():?DateTimeInterface {
+		$upload = $this->uploadArray[0] ?? null;
+		if(!$upload) {
+			return null;
+		}
+
+		$uploadDir = dirname($upload->filePath);
+		$createdAt = filemtime($uploadDir);
+		$expiresAtDateTime = new DateTime();
+		$expiresAtDateTime->setTimestamp($createdAt + self::EXPIRY_SECONDS);
+		return $expiresAtDateTime;
 	}
 }
