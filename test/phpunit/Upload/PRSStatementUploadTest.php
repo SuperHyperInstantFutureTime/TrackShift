@@ -2,7 +2,6 @@
 namespace Trackshift\Test\Upload;
 
 use Trackshift\Upload\PRSStatementUpload;
-use Trackshift\Usage\Usage;
 
 class PRSStatementUploadTest extends UploadTestCase {
 	public function testGetUsageTotal():void {

@@ -55,4 +55,17 @@ class UploadManagerTest extends UploadTestCase {
 		}
 		self::assertGreaterThan(0, $i);
 	}
+
+	public function testPurge():void {
+		$dir = dirname(self::getTempFile("prs-simple-3-songs.csv", "purge-test"));
+		self::getTempFile("prs-simple-3-songs.csv", "purge-test");
+		self::getTempFile("prs-simple-3-songs.csv", "purge-test");
+
+		$sut = new UploadManager();
+
+		$expiredTime = strtotime("-4 weeks");
+		touch($dir, $expiredTime);
+
+		self::assertSame(3, $sut->purge(dirname($dir)));
+	}
 }
