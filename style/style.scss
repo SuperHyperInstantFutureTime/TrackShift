@@ -1,3 +1,5 @@
+@import "font/gilroy";
+
 label.dragging {
 	&::before {
 		content: "Drop your files to upload!";
@@ -14,6 +16,7 @@ details {
 }
 
 body {
+	font-family: "Gilroy", sans-serif;
 	margin: 40px auto;
 	max-width: 1200px;
 	line-height: 1.6;
