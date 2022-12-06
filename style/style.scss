@@ -1,8 +1,59 @@
+@import "font/gilroy";
+
 label.dragging {
 	&::before {
 		content: "Drop your files to upload!";
 		display: block;
 		border: 4px dashed black;
 		padding: 2rem 1rem;
+	}
+}
+
+details {
+	summary {
+		cursor: pointer;
+	}
+}
+
+body {
+	font-family: "Gilroy", sans-serif;
+	margin: 40px auto;
+	max-width: 1200px;
+	line-height: 1.6;
+	font-size: 18px;
+	color: #444;
+	padding: 0 10px
+}
+h1, h2, h3 {
+	line-height: 1.2
+}
+
+table {
+	width: 100%;
+
+	th, td {
+		padding: 0.5rem;
+
+		&:last-of-type {
+			text-align: right;
+		}
+	}
+
+	thead {
+		th {
+			background-color: #444;
+			color: white;
+			text-align: left;
+		}
+	}
+	tbody {
+		tr {
+			&:nth-of-type(even) {
+				background-color: #eee;
+			}
+
+			td {
+			}
+		}
 	}
 }

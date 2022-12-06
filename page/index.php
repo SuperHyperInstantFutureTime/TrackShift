@@ -4,6 +4,7 @@ use Gt\Dom\HTMLDocument;
 use Gt\DomTemplate\DocumentBinder;
 use Gt\Http\Response;
 use Gt\Input\Input;
+use Gt\Session\Session;
 use Gt\Ulid\Ulid;
 use Trackshift\Upload\UploadManager;
 
@@ -13,6 +14,7 @@ function go(
 	Response $response,
 	HTMLDocument $document,
 	DocumentBinder $binder,
+	Session $session,
 ):void {
 	$uploadManager->purge();
 
@@ -52,7 +54,9 @@ function go(
 		}
 	}
 	else {
-		$response->redirect("./?user=" . new Ulid());
+		$ulid = $session->getString("ulid") ?? new Ulid();
+		$session->set("ulid", $ulid);
+		$response->redirect("./?user=" . $ulid);
 	}
 }
 
