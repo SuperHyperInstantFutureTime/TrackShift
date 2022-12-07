@@ -13,6 +13,12 @@ details {
 	summary {
 		cursor: pointer;
 	}
+
+	li {
+		&[data-type="Unknown"] {
+			color: red;
+		}
+	}
 }
 
 body {

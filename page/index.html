@@ -3,7 +3,7 @@
 		Uploaded files (<span data-bind:text="uploadCount">0</span>)
 	</summary>
 	<ul>
-		<li data-template>
+		<li data-template data-bind:data-type="type">
 			<form method="post">
 				<input type="hidden" name="filename" data-bind:value="filename" />
 
