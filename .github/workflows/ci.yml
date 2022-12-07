@@ -112,4 +112,4 @@ jobs:
           ssh_key: ${{ secrets.deploy_ssh_key }}
 
       - name: Build client side files
-        run: ssh deploy@deploy-endpoint.dev.trackshift.app "cd /var/www/trackshift/${{ github.ref_name }} && ./vendor/bin/gt build
+        run: ssh deploy@deploy-endpoint.dev.trackshift.app "cd /var/www/trackshift/${{ github.ref_name }} && ./vendor/bin/gt build"
