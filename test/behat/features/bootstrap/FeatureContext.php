@@ -49,11 +49,9 @@ class FeatureContext extends MinkContext {
 
 	/** @Then a new user ID should be generated */
 	public function aNewUserIDShouldBeGenerated() {
-		$url = $this->getSession()->getCurrentUrl();
-		$query = parse_url($url, PHP_URL_QUERY);
-		parse_str($query, $queryParts);
-		PHPUnit::assertArrayHasKey("user", $queryParts);
-		PHPUnit::assertGreaterThan(16, strlen($queryParts["user"]));
+		$body = $this->getSession()->getPage()->find("css", "body");
+		PHPUnit::assertTrue($body->hasAttribute("data-hash"));
+		PHPUnit::assertSame(3, strlen($body->getAttribute("data-hash")));
 	}
 
 	/** @Then I should see :numRows rows in the table */

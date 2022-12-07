@@ -10,7 +10,6 @@ use Trackshift\Upload\UploadManager;
 
 function go(
 	UploadManager $uploadManager,
-	Input $input,
 	Response $response,
 	HTMLDocument $document,
 	DocumentBinder $binder,
@@ -18,7 +17,8 @@ function go(
 ):void {
 	$uploadManager->purge();
 
-	if($userId = $input->getString("user")) {
+	if($userId = $session->getString("ulid")) {
+		$document->body->dataset->set("hash", substr($userId, -3));
 		$userDataDir = "data/$userId";
 
 		$statement = $uploadManager->load(...glob("$userDataDir/*.*"));
@@ -56,12 +56,12 @@ function go(
 	else {
 		$ulid = $session->getString("ulid") ?? new Ulid();
 		$session->set("ulid", $ulid);
-		$response->redirect("./?user=" . $ulid);
+		$response->reload();
 	}
 }
 
-function do_upload(Input $input, Response $response):void {
-	$userId = $input->getString("user");
+function do_upload(Session $session, Input $input, Response $response):void {
+	$userId = $session->getString("ulid");
 	if(!$userId) {
 		$response->reload();
 	}
@@ -77,11 +77,11 @@ function do_upload(Input $input, Response $response):void {
 		$file->moveTo($targetPath);
 	}
 
-	$response->redirect("./?user=$userId");
+	$response->reload();
 }
 
-function do_clear(Input $input, Response $response):void {
-	$userId = $input->getString("user");
+function do_clear(Session $session, Response $response):void {
+	$userId = $session->getString("ulid");
 	if(!$userId) {
 		$response->reload();
 	}
@@ -90,11 +90,11 @@ function do_clear(Input $input, Response $response):void {
 		unlink($file);
 	}
 
-	$response->redirect("./?user=$userId");
+	$response->reload();
 }
 
-function do_delete(Input $input, Response $response):void {
-	$userId = $input->getString("user");
+function do_delete(Session $session, Input $input, Response $response):void {
+	$userId = $session->getString("ulid");
 	if(!$userId) {
 		$response->reload();
 	}
@@ -104,11 +104,11 @@ function do_delete(Input $input, Response $response):void {
 		unlink($file);
 	}
 
-	$response->redirect("./?user=$userId");
+	$response->reload();
 }
 
-function do_extend(Input $input, Response $response):void {
-	$userId = $input->getString("user");
+function do_extend(Session $session, Response $response):void {
+	$userId = $session->getString("ulid");
 	if(!$userId) {
 		$response->reload();
 	}
@@ -119,5 +119,5 @@ function do_extend(Input $input, Response $response):void {
 		touch($dir, $dateIn3weeks->getTimestamp());
 	}
 
-	$response->redirect("./?user=$userId");
+	$response->reload();
 }
