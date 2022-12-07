@@ -110,3 +110,4 @@ jobs:
           path: /var/www/trackshift
           path_owner: www-data.
           ssh_key: ${{ secrets.deploy_ssh_key }}
+          after_command: ./vendor/bin/gt build
