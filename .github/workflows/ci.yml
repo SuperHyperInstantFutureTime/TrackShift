@@ -103,9 +103,6 @@ jobs:
       - name: Extract build archive
         run: tar -xvf /tmp/github-actions/build.tar ./
 
-      - name: Build client side files
-        run: ./vendor/bin/gt build
-
       - uses: php-actions/deploy-ssh@master
         with:
           hostname: deploy-endpoint.dev.trackshift.app
@@ -113,3 +110,6 @@ jobs:
           path: /var/www/trackshift
           path_owner: www-data.
           ssh_key: ${{ secrets.deploy_ssh_key }}
+
+      - name: Build client side files
+        run: ssh deploy@deploy-endpoint.dev.trackshift.app "cd /var/www/trackshift/${{ github.ref_name }} && ./vendor/bin/gt build
