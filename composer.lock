@@ -1427,12 +1427,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PhpGt/WebEngine.git",
-                "reference": "07be0a652317aa8308955c05b66fd45f2fec4c5b"
+                "reference": "c7407cff58aedf55f23ea114b8d03341cfe355b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhpGt/WebEngine/zipball/07be0a652317aa8308955c05b66fd45f2fec4c5b",
-                "reference": "07be0a652317aa8308955c05b66fd45f2fec4c5b",
+                "url": "https://api.github.com/repos/PhpGt/WebEngine/zipball/c7407cff58aedf55f23ea114b8d03341cfe355b0",
+                "reference": "c7407cff58aedf55f23ea114b8d03341cfe355b0",
                 "shasum": ""
             },
             "require": {
@@ -1495,7 +1495,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-12-07T12:33:52+00:00"
+            "time": "2022-12-07T17:34:54+00:00"
         },
         {
             "name": "psr/container",
