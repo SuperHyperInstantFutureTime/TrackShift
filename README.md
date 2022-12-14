@@ -3,6 +3,8 @@ A music royalties data aggregator
 
 // TODO: Very short intro to the project and brief description of the codebase.
 
+A tool that helps artists and record labels process and analyse the complex web of payment data from vendors.
+
 Setup guide
 -----------
 
