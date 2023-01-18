@@ -9,8 +9,9 @@ class PRSStatementUpload extends Upload {
 		$headerRow = null;
 
 		while(!$this->file->eof()) {
-			$row = $this->file->fgetcsv();
-			if(empty($row) || is_null($row[0])) {
+			$line = $this->file->fgetcsv();
+			$row = $this->stripNullBytes($line);
+			if(empty($row) || !$row[0]) {
 				continue;
 			}
 

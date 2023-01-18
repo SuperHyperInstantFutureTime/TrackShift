@@ -9,8 +9,8 @@ class BandcampUpload extends Upload {
 		$headerRow = null;
 
 		while(!$this->file->eof()) {
-			$row = $this->file->fgetcsv();
-			if(empty($row) || is_null($row[0])) {
+			$row = $this->stripNullBytes($this->file->fgetcsv());
+			if(empty($row) || !$row[0]) {
 				continue;
 			}
 
@@ -19,7 +19,13 @@ class BandcampUpload extends Upload {
 				continue;
 			}
 
+
 			$data = $this->rowToData($headerRow, $row);
+			if(empty($data["net amount"])) {
+// TODO: Talk to Biff about this - I think skipping "pay out" rows is OK, but need to go over the data.
+				continue;
+			}
+
 			$workTitle = $data["item name"];
 			$artist = $this->getArtist($data["artist"]);
 
