@@ -93,4 +93,20 @@ abstract class Upload {
 	public function isMultipleArtist():bool {
 		return count($this->artistList) > 1;
 	}
+
+	/**
+	 * TODO: Extract this into a CSVProcessor trait or similar.
+	 * Convert an indexed array of row data into an associative array,
+	 * according to the provided header row.
+	 * @param array<string> $headerRow
+	 * @param array<string> $row
+	 * @return array<string, string>
+	 */
+	protected function rowToData(array $headerRow, array $row):array {
+		$data = [];
+		foreach($row as $i => $datum) {
+			$data[$headerRow[$i]] = $datum;
+		}
+		return $data;
+	}
 }
