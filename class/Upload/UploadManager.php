@@ -44,6 +44,13 @@ class UploadManager {
 	):bool {
 		$file = new SplFileObject($filePath);
 		$firstLine = $file->fgetcsv();
+		foreach($firstLine as $i => $column) {
+			$firstLine[$i] = preg_replace(
+				'/[[:^print:]]/',
+				'',
+				$column
+			);
+		}
 		$foundAllColumns = true;
 
 		foreach($columnsToCheck as $columnName) {

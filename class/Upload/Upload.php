@@ -105,8 +105,37 @@ abstract class Upload {
 	protected function rowToData(array $headerRow, array $row):array {
 		$data = [];
 		foreach($row as $i => $datum) {
-			$data[$headerRow[$i]] = $datum;
+			if(isset($headerRow[$i])) {
+				$data[$headerRow[$i]] = $datum;
+			}
 		}
 		return $data;
+	}
+
+	/**
+	 * @param string|array<?string> $data
+	 * @return string|array<?string>
+	 */
+	protected function stripNullBytes(string|array $data):string|array {
+		if(empty($data) || is_null($data[0])) {
+			return $data;
+		}
+		$input = $data;
+		if(!is_array($input)) {
+			$input = [$input];
+		}
+
+		foreach($input as $i => $value) {
+			$input[$i] = preg_replace(
+				'/[[:^print:]]/',
+				'',
+				$value
+			);
+		}
+
+		if(is_string($data)) {
+			return $input[0];
+		}
+		return $input;
 	}
 }
