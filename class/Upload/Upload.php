@@ -2,6 +2,8 @@
 namespace Trackshift\Upload;
 
 use SplFileObject;
+use Trackshift\Artist\Artist;
+use Trackshift\Artist\ArtistIdentifier;
 use Trackshift\Royalty\Money;
 use Trackshift\Usage\Aggregation;
 use Trackshift\Usage\UsageList;
@@ -14,12 +16,21 @@ abstract class Upload {
 
 	protected SplFileObject $file;
 	protected UsageList $usageList;
+	/** @var array<Artist> */
+	protected array $artistList;
+	protected ArtistIdentifier $artistIdentifier;
 
 	public function __construct(
 		public readonly string $filePath,
+		?ArtistIdentifier $identifier = null,
 	) {
 		$this->file = new SplFileObject($this->filePath);
 		$this->usageList = new UsageList();
+		$this->artistList = [];
+		if(!$identifier) {
+			$this->artistIdentifier = new ArtistIdentifier();
+		}
+
 		$this->processUsages();
 
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);
@@ -70,5 +81,16 @@ abstract class Upload {
 		unset($this->file);
 		unlink($path);
 		$this->usageList = new UsageList();
+	}
+
+	public function getArtist(string $identifier):Artist {
+		return $this->artistIdentifier->identify(
+			$identifier,
+			self::class,
+		);
+	}
+
+	public function isMultipleArtist():bool {
+		return count($this->artistList) > 1;
 	}
 }

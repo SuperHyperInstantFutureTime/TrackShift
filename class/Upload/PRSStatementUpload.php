@@ -21,9 +21,16 @@ class PRSStatementUpload extends Upload {
 
 			$data = $this->rowToData($headerRow, $row);
 			$workTitle = $data["Work Title"];
+			$artist = $this->getArtist($data["CAE Number"]);
+
+			if(!in_array($artist, $this->artistList)) {
+				array_push($this->artistList, $artist);
+			}
+
 			$this->usageList->add(new Usage(
 				$workTitle,
 				new Money((float)$data["Amount (performance revenue)"]),
+				$artist,
 			));
 		}
 	}
