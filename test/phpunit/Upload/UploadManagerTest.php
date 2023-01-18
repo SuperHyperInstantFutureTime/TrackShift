@@ -2,6 +2,7 @@
 
 namespace Trackshift\Test\Upload;
 
+use Trackshift\Upload\BandcampUpload;
 use Trackshift\Upload\PRSStatementUpload;
 use Trackshift\Upload\UnknownUpload;
 use Trackshift\Upload\UploadManager;
@@ -24,6 +25,15 @@ class UploadManagerTest extends UploadTestCase {
 		$statement = $sut->load($tmpFileName);
 
 		self::assertInstanceOf(PRSStatementUpload::class, $statement->current());
+	}
+
+	public function testLoad_bandcamp():void {
+		$tmpFileName = self::getTempFile("bandcamp-simple-3-songs.csv");
+
+		$sut = new UploadManager();
+		$statement = $sut->load($tmpFileName);
+
+		self::assertInstanceOf(BandcampUpload::class, $statement->current());
 	}
 
 	public function testLoad_multiplePrsStatements():void {

@@ -1,0 +1,9 @@
+date,paid to,item type,item name,artist,currency,item price,quantity,discount code,sub total,transaction fee,fee type,item total,amount you received,bandcamp transaction id,paypal transaction id,net amount
+11/25/22 5:45pm,you@example.com,track,Song 1,Person 1,GBP,7.99,1,,7.99,0.57,paypal,7.99,7.42,1234000001,3KJ69516S2466193S,6.22
+12/2/22 7:56am,you@example.com,track,Song 1,Person 1,GBP,5,1,,5,0.47,paypal,5,4.53,1234000002,29966046F7946584H,3.78
+12/2/22 2:00pm,collected to cover your revenue share balance,track,Song 1,Person 1,GBP,1,1,,1,,,1,0,1234000003,<-- collected to cover your revenue share balance,0.85
+12/3/22 10:25am,you@example.com,track,Song 2,Person 1,GBP,2,1,,2,0.27,paypal,2,1.73,1234000004,36F06739NU791841K,1.43
+12/5/22 12:51pm,you@example.com,track,Song 2,Person 1,GBP,1,1,,1,0.24,paypal,1,0.76,1234000005,49H01364DL948121E,0.61
+12/7/22 7:25pm,Bandcamp,track,Song 2,Person 1,GBP,0.4,1,,0.4,,,0.4,0,1234000006,,0.34
+12/10/22 8:12am,you@example.com,track,Song 3,Person 1,GBP,5,1,,5,0.37,paypal,5,4.63,1234000007,3AL22901JK7712703,3.88
+2/1/23 3:12pm,Bandcamp,track,Song 3,Person 1,GBP,0.78,1,,0.78,0.09,paypal,0.78,0,1234000008,,0.57
