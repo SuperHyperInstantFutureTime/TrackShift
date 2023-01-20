@@ -64,9 +64,31 @@ class FeatureContext extends MinkContext {
 		PHPUnit::assertCount($numRows, $rowList);
 	}
 
+	/** @Given I should see the total earnings for :artistName as :earnings */
+	public function iShouldSeeTheTotalEarningsForAs(
+		string $artistName,
+		string $earnings,
+	) {
+		foreach($this->getSession()->getPage()->findAll("css", "artist-statement-list summary h2") as $h2) {
+			if($h2->getText() === $artistName) {
+				PHPUnit::assertSame($earnings, $h2->getParent()->find("css", "h3")->getText());
+			}
+		}
+	}
+
+	/**
+	 * @Given I should see :num artists
+	 */
+	public function iShouldSeeArtists(int $artistNum) {
+		$detailsList = $this->getSession()->getPage()->findAll("css", "artist-statement-list details");
+		PHPUnit::assertCount($artistNum, $detailsList);
+	}
+
 	/** @Given I should see the following table data: */
-	public function iShouldSeeTheFollowingTableData(TableNode $data) {
-		$table = $this->getSession()->getPage()->find("css", "table");
+	public function iShouldSeeTheFollowingTableData(TableNode $data, $table = null) {
+		if(!$table) {
+			$table = $this->getSession()->getPage()->find("css", "table");
+		}
 		$trList = $table->findAll("css", "tr");
 		$rowIndex = 0;
 
@@ -80,6 +102,16 @@ class FeatureContext extends MinkContext {
 			}
 
 			$rowIndex++;
+		}
+	}
+
+	/** @Given I should see the following table data for :artistName: */
+	public function iShouldSeeTheFollowingTableDataFor(string $artistName, TableNode $data) {
+		foreach($this->getSession()->getPage()->findAll("css", "artist-statement-list summary h2") as $h2) {
+			if($h2->getText() === $artistName) {
+				$table = $h2->getParent()->getParent()->find("css", "table");
+				$this->iShouldSeeTheFollowingTableData($data, $table);
+			}
 		}
 	}
 
