@@ -6,6 +6,7 @@ use Gt\Http\Response;
 use Gt\Input\Input;
 use Gt\Session\Session;
 use Gt\Ulid\Ulid;
+use Trackshift\Royalty\Money;
 use Trackshift\Upload\UploadManager;
 
 function go(
@@ -35,23 +36,40 @@ function go(
 			$document->querySelector("details")->hidden = true;
 		}
 
-		$aggregatedUsages = $statement->getAggregatedUsages("workTitle");
 		$tableData = [];
-		foreach($aggregatedUsages as $name => $usageList) {
-			array_push(
-				$tableData, [
-					"title" => $name,
-					"total" => $usageList->getTotalAmount(),
-				]
-			);
-		}
-		usort($tableData, fn($a, $b) => $a["total"]->value < $b["total"]->value);
 
-		$tableEl = $document->querySelector("table");
-		$bound = $binder->bindList($tableData, $tableEl);
-		if($bound === 0) {
-			$tableEl->hidden = true;
+		$aggregatedArtists = $statement->getArtistUsages("workTitle");
+		foreach($aggregatedArtists->getAllArtists() as $i => $artist) {
+			$usageList = $aggregatedArtists->getUsageListForArtist($artist);
+
+			if(!isset($tableData[$artist->id])) {
+				$tableData[$artist->id] = [
+					"artistId" => $artist->id,
+					"artistName" => $artist->name,
+					"artistTotal" => $usageList->getTotalAmount(),
+					"usages" => [],
+				];
+			}
+
+			foreach($usageList as $usage) {
+				if(!isset($tableData[$artist->id]["usages"][$usage->workTitle])) {
+					$tableData[$artist->id]["usages"][$usage->workTitle] = [
+						"workTitle" => $usage->workTitle,
+						"amount" => new Money(),
+					];
+				}
+
+				/** @var Money $money */
+				$money = $tableData[$artist->id]["usages"][$usage->workTitle]["amount"];
+				$money = $money->withAddition(new Money($usage->amount->value));
+				$tableData[$artist->id]["usages"][$usage->workTitle]["amount"] = $money;
+			}
 		}
+
+		$binder->bindList(
+			$tableData,
+			$document->querySelector("artist-statement-list")
+		);
 	}
 	else {
 		$ulid = $session->getString("ulid") ?? new Ulid();

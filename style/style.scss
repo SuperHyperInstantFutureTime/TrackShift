@@ -9,14 +9,38 @@ label.dragging {
 	}
 }
 
-details {
-	summary {
-		cursor: pointer;
-	}
+uploaded-files-list {
+	details {
+		summary {
+			cursor: pointer;
+		}
 
-	li {
-		&[data-type="Unknown"] {
-			color: red;
+		li {
+			&[data-type="Unknown"] {
+				color: red;
+			}
+		}
+	}
+}
+
+artist-statement-list {
+	details {
+		summary {
+			cursor: pointer;
+
+			h2 {
+				display: inline-block;
+			}
+			h3 {
+				display: inline-block;
+
+				&::before {
+					content: "(";
+				}
+				&::after {
+					content: ")";
+				}
+			}
 		}
 	}
 }

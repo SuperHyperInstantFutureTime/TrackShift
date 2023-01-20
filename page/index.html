@@ -1,32 +1,35 @@
-<details>
-	<summary>
-		Uploaded files (<span data-bind:text="uploadCount">0</span>)
-	</summary>
-	<ul>
-		<li data-template data-bind:data-type="type">
-			<form method="post">
-				<input type="hidden" name="filename" data-bind:value="filename" />
+<uploaded-files-list>
+	<details>
+		<summary>
+			Uploaded files (<span data-bind:text="uploadCount">0</span>)
+		</summary>
+		<ul>
+			<li data-template data-bind:data-type="type">
+				<form method="post">
+					<input type="hidden" name="filename" data-bind:value="filename" />
 
-				<strong data-bind:text="filename">abc.xyz</strong>
-				- <span data-bind:text="sizeString">0B</span>
-				- <span data-bind:text="type">Type</span>
+					<strong data-bind:text="filename">abc.xyz</strong>
+					- <span data-bind:text="sizeString">0B</span>
+					- <span data-bind:text="type">Type</span>
+					- Artist: <span data-bind:text="artist">???</span>
 
-				<button name="do" value="delete" onclick="return confirm('Are you sure you want to remove {{filename}}?')">
-					<span>Delete <span data-bind:text="filename" hidden>filename</span></span>
-				</button>
-			</form>
-		</li>
-	</ul>
+					<button name="do" value="delete" onclick="return confirm('Are you sure you want to remove {{filename}}?')">
+						<span>Delete <span data-bind:text="filename" hidden>filename</span></span>
+					</button>
+				</form>
+			</li>
+		</ul>
 
-	<form method="post">
-		<p>Your uploads will automatically be purged from Trackshift on <time data-bind:text="expiryDateString">1st Jan 1970 @ 00:00am</time></p>
-		<button name="do" value="extend">Extend file expiry by 3 weeks</button>
-		<button name="do" value="clear" onclick="return confirm('Are you sure you want to remove all your uploaded files?')">Clear uploads</button>
-	</form>
+		<form method="post">
+			<p>Your uploads will automatically be purged from Trackshift on <time data-bind:text="expiryDateString">1st Jan 1970 @ 00:00am</time></p>
+			<button name="do" value="extend">Extend file expiry by 3 weeks</button>
+			<button name="do" value="clear" onclick="return confirm('Are you sure you want to remove all your uploaded files?')">Clear uploads</button>
+		</form>
 
-	<br/>
-	<br/>
-</details>
+		<br/>
+		<br/>
+	</details>
+</uploaded-files-list>
 
 <br/>
 <br/>
@@ -42,17 +45,25 @@
 <br/>
 <br/>
 
-<table>
-	<thead>
-		<tr>
-			<th>Work title</th>
-			<th>Amount</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr data-template>
-			<td data-bind:text="title"></td>
-			<td data-bind:text="total"></td>
-		</tr>
-	</tbody>
-</table>
+<artist-statement-list>
+	<details data-template>
+		<summary>
+			<h2 data-bind:text="artistName">Artist name</h2>
+			<h3 data-bind:text="artistTotal">£0.00</h3>
+		</summary>
+		<table>
+			<thead>
+			<tr>
+				<th>Work title</th>
+				<th>Amount</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr data-template>
+				<td data-bind:text="workTitle"></td>
+				<td data-bind:text="amount"></td>
+			</tr>
+			</tbody>
+		</table>
+	</details>
+</artist-statement-list>
