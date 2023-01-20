@@ -49,6 +49,12 @@ artist-statement-list {
 			}
 		}
 
+		&.single {
+			summary {
+				display: none;
+			}
+		}
+
 		&:nth-of-type(odd) {
 			summary {
 				background-color: #f4f4f4;

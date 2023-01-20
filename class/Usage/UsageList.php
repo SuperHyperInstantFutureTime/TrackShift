@@ -55,13 +55,4 @@ class UsageList implements Iterator {
 	public function getUsages():array {
 		return $this->internalArray;
 	}
-
-	public function getAggregatedUsages(string $property):Aggregation {
-		$aggregation = new Aggregation();
-		foreach($this->internalArray[$property] as $usage) {
-			$aggregation->add($property, $usage);
-		}
-
-		return $aggregation;
-	}
 }

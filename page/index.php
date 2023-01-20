@@ -50,7 +50,7 @@ function go(
 					"usages" => [],
 				];
 			}
-
+//var_dump($usageList);die();
 			foreach($usageList as $usage) {
 				if(!isset($tableData[$artist->id]["usages"][$usage->workTitle])) {
 					$tableData[$artist->id]["usages"][$usage->workTitle] = [
@@ -77,6 +77,12 @@ function go(
 			$tableData,
 			$document->querySelector("artist-statement-list")
 		);
+
+		if(count($tableData) === 1) {
+			$details = $document->querySelector("artist-statement-list details");
+			$details->open = true;
+			$details->classList->add("single");
+		}
 	}
 	else {
 		$ulid = $session->getString("ulid") ?? new Ulid();

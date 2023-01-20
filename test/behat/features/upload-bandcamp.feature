@@ -10,6 +10,6 @@ Feature: App should handle Bandcamp CSV files
 		Then I should see 3 rows in the table
 		And I should see the following table data:
 			| Work title | Amount |
-			| Song 1     | £10.85 |
-			| Song 3     | £4.45  |
-			| Song 2     | £2.38  |
+			| BC 1     | £10.85 |
+			| BC 3     | £4.45  |
+			| BC 2     | £2.38  |

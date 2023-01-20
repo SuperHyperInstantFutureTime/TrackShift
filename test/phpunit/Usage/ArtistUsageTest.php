@@ -15,8 +15,11 @@ class ArtistUsageTest extends TestCase {
 
 	public function testGetAllArtists():void {
 		$sut = new ArtistUsage();
+		$artist = self::getMockBuilder(Artist::class)
+			->setConstructorArgs(["1", "Artist 1"])
+			->getMock();
 		$sut->addArtistUsage(
-			self::createMock(Artist::class),
+			$artist,
 			self::createMock(Usage::class),
 		);
 		self::assertCount(1, $sut->getAllArtists());
@@ -24,7 +27,10 @@ class ArtistUsageTest extends TestCase {
 
 	public function testGetUsageListForArtist_doesNotExist():void {
 		$sut = new ArtistUsage();
-		$usageList = $sut->getUsageListForArtist(self::createMock(Artist::class));
+		$artist = self::getMockBuilder(Artist::class)
+			->setConstructorArgs(["1", "Artist 1"])
+			->getMock();
+		$usageList = $sut->getUsageListForArtist($artist);
 		self::assertCount(0, $usageList);
 	}
 
