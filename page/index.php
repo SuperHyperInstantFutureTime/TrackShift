@@ -64,7 +64,14 @@ function go(
 				$money = $money->withAddition(new Money($usage->amount->value));
 				$tableData[$artist->id]["usages"][$usage->workTitle]["amount"] = $money;
 			}
+
+			usort(
+				$tableData[$artist->id]["usages"],
+				fn($a, $b) => $b["amount"] <=> $a["amount"],
+			);
 		}
+
+		usort($tableData, fn($a, $b) => $b["artistTotal"] <=> $a["artistTotal"]);
 
 		$binder->bindList(
 			$tableData,
