@@ -1,3 +1,13 @@
+	<form method="post" enctype="multipart/form-data">
+	<label class="draganddrop">
+		<span>Drop your files here or  </span>
+		<input type="file" name="statement[]" multiple required />
+	</label>
+	<button name="do" value="upload" class="button">Upload</button>
+</form>
+
+<br/>
+
 <details>
 	<summary>
 		Uploaded files (<span data-bind:text="uploadCount">0</span>)
@@ -21,26 +31,12 @@
 	<form method="post">
 		<p>Your uploads will automatically be purged from Trackshift on <time data-bind:text="expiryDateString">1st Jan 1970 @ 00:00am</time></p>
 		<button name="do" value="extend">Extend file expiry by 3 weeks</button>
-		<button name="do" value="clear" onclick="return confirm('Are you sure you want to remove all your uploaded files?')">Clear uploads</button>
+		<button name="do" value="clear" class="button" onclick="return confirm('Are you sure you want to remove all your uploaded files?')">Clear uploads</button>
 	</form>
 
 	<br/>
 	<br/>
 </details>
-
-<br/>
-<br/>
-
-<form method="post" enctype="multipart/form-data">
-	<label>
-		<span>Upload your statement file</span>
-		<input type="file" name="statement[]" multiple required />
-	</label>
-	<button name="do" value="upload">Upload</button>
-</form>
-
-<br/>
-<br/>
 
 <table>
 	<thead>

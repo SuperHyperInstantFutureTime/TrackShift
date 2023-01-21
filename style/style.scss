@@ -1,13 +1,16 @@
 @import "font/gilroy";
+@import "font/inter";
 
-label.dragging {
-	&::before {
-		content: "Drop your files to upload!";
-		display: block;
-		border: 4px dashed black;
-		padding: 2rem 1rem;
+.draganddrop {
+	display: block;
+	border: 4px dashed black;
+	padding: 2rem 1rem
 	}
+
+.draganddrop.dragging {
+	background-color:#efefef;
 }
+
 
 details {
 	summary {
@@ -22,21 +25,52 @@ details {
 }
 
 body {
-	font-family: "Gilroy", sans-serif;
-	margin: 40px auto;
+	font-family: "Inter", sans-serif;
+	margin: 0px auto;
 	max-width: 1200px;
 	line-height: 1.6;
 	font-size: 18px;
 	color: #444;
 	padding: 0 10px
 }
+.brand {
+	font-family: "Gilroy", sans-serif;
+}
 h1, h2, h3 {
 	line-height: 1.2
+}
+h1 > a {
+	text-decoration:none;
+	color:black;
+}
+nav {
+	width:100%;
+	display:block;
+	float:left;
+	margin-bottom:30px;
+	
+	ul {
+		list-style-type: none;
+		margin:0;
+		padding:0;
+	}
+	li {
+		float:left;
+	}
+	li a {
+		display:block;
+		text-decoration:none;
+		padding-right:30px;
+		color:black;
+	}
+	li a:hover {
+		text-decoration: underline;
+	}
 }
 
 table {
 	width: 100%;
-
+	margin-bottom:120px;
 	th, td {
 		padding: 0.5rem;
 
@@ -62,4 +96,33 @@ table {
 			}
 		}
 	}
+}
+
+.button {
+	color:black;
+	background-color: white;
+	border: 2px black solid;
+	border-radius: 5px;
+	font-weight:bold;
+	font-size:18px;
+	padding:10px 15px;
+	margin:15px 0
+}
+
+.button:hover {
+	background-color: #efefef;
+}
+
+.footer {
+	position: fixed;
+  	right: 0;
+  	bottom: 0;
+  	left: 0;
+  	padding: 1rem;
+  	background-color: #efefef;
+  	text-align: center
+}
+
+hr {
+	margin-bottom: 30px
 }
