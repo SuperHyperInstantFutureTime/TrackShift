@@ -2,6 +2,8 @@
 namespace Trackshift\Upload;
 
 use SplFileObject;
+use Trackshift\Artist\Artist;
+use Trackshift\Artist\ArtistIdentifier;
 use Trackshift\Royalty\Money;
 use Trackshift\Usage\Aggregation;
 use Trackshift\Usage\UsageList;
@@ -14,12 +16,21 @@ abstract class Upload {
 
 	protected SplFileObject $file;
 	protected UsageList $usageList;
+	/** @var array<Artist> */
+	protected array $artistList;
+	protected ArtistIdentifier $artistIdentifier;
 
 	public function __construct(
 		public readonly string $filePath,
+		?ArtistIdentifier $identifier = null,
 	) {
 		$this->file = new SplFileObject($this->filePath);
 		$this->usageList = new UsageList();
+		$this->artistList = [];
+		if(!$identifier) {
+			$this->artistIdentifier = new ArtistIdentifier();
+		}
+
 		$this->processUsages();
 
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);
@@ -70,5 +81,61 @@ abstract class Upload {
 		unset($this->file);
 		unlink($path);
 		$this->usageList = new UsageList();
+	}
+
+	public function getArtist(string $identifier):Artist {
+		return $this->artistIdentifier->identify(
+			$identifier,
+			self::class,
+		);
+	}
+
+	public function isMultipleArtist():bool {
+		return count($this->artistList) > 1;
+	}
+
+	/**
+	 * TODO: Extract this into a CSVProcessor trait or similar.
+	 * Convert an indexed array of row data into an associative array,
+	 * according to the provided header row.
+	 * @param array<string> $headerRow
+	 * @param array<string> $row
+	 * @return array<string, string>
+	 */
+	protected function rowToData(array $headerRow, array $row):array {
+		$data = [];
+		foreach($row as $i => $datum) {
+			if(isset($headerRow[$i])) {
+				$data[$headerRow[$i]] = $datum;
+			}
+		}
+		return $data;
+	}
+
+	/**
+	 * @param string|array<?string> $data
+	 * @return string|array<?string>
+	 */
+	protected function stripNullBytes(string|array $data):string|array {
+		if(empty($data) || is_null($data[0])) {
+			return $data;
+		}
+		$input = $data;
+		if(!is_array($input)) {
+			$input = [$input];
+		}
+
+		foreach($input as $i => $value) {
+			$input[$i] = preg_replace(
+				'/[[:^print:]]/',
+				'',
+				$value
+			);
+		}
+
+		if(is_string($data)) {
+			return $input[0];
+		}
+		return $input;
 	}
 }

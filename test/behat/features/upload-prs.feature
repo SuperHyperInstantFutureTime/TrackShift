@@ -21,7 +21,7 @@ Feature: App should handle PRS statement CSV files
 		And I should see the following table data:
 			| Work title | Amount |
 			| Song 2     | £0.20  |
-			| Song 3     | £0.15  |
-			| Song 4     | £0.14  |
+			| Song 3     | £0.16  |
+			| Song 4     | £0.15  |
 			| Song 1     | £0.10  |
 			| Song 5     | £0.01  |

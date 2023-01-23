@@ -8,7 +8,11 @@ use Gt\DomTemplate\BindGetter;
 use Iterator;
 use Trackshift\Upload\Upload;
 
-/** @implements Iterator<Upload> */
+/**
+ * A Statement represents a collection of Uploads, whereas an Upload represents
+ * a collection of Usages.
+ * @implements Iterator<Upload>
+ */
 class Statement implements Iterator, Countable {
 	const EXPIRY_SECONDS = 60 * 60 * 24 * 7 * 3; // 3 weeks
 
@@ -68,6 +72,21 @@ class Statement implements Iterator, Countable {
 		return $aggregation;
 	}
 
+	public function getArtistUsages(string $propertyName):ArtistUsage {
+		$artistAggregation = new ArtistUsage();
+
+		foreach($this as $upload) {
+			$uploadAggregation = $upload->getAggregatedUsages($propertyName);
+			foreach($uploadAggregation as $usageList) {
+				foreach($usageList as $usage) {
+					$artistAggregation->addArtistUsage($usage->artist, $usage);
+				}
+			}
+		}
+
+		return $artistAggregation;
+	}
+
 	public function getExpiryDate():?DateTimeInterface {
 		$upload = $this->uploadArray[0] ?? null;
 		if(!$upload) {
@@ -79,5 +98,15 @@ class Statement implements Iterator, Countable {
 		$expiresAtDateTime = new DateTime();
 		$expiresAtDateTime->setTimestamp($createdAt + self::EXPIRY_SECONDS);
 		return $expiresAtDateTime;
+	}
+
+	public function isMultipleArtist():bool {
+		foreach($this->uploadArray as $upload) {
+			if($upload->isMultipleArtist()) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

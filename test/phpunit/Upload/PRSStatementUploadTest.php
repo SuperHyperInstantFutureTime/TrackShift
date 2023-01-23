@@ -24,4 +24,16 @@ class PRSStatementUploadTest extends UploadTestCase {
 
 		self::assertSame(0.372, $aggregation->getTotalValue()->value);
 	}
+
+	public function testIsMultipleArtist_no():void {
+		$tmpFile = self::getTempFile("prs-simple-3-songs.csv");
+		$sut = new PRSStatementUpload($tmpFile);
+		self::assertFalse($sut->isMultipleArtist());
+	}
+
+	public function testIsMultipleArtist_yes():void {
+		$tmpFile = self::getTempFile("prs-simple-multiple-artist.csv");
+		$sut = new PRSStatementUpload($tmpFile);
+		self::assertTrue($sut->isMultipleArtist());
+	}
 }

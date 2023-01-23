@@ -50,4 +50,9 @@ class UsageList implements Iterator {
 	public function next():void {
 		$this->iteratorIndex++;
 	}
+
+	/** @return array<Usage> */
+	public function getUsages():array {
+		return $this->internalArray;
+	}
 }

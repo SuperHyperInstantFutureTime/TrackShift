@@ -5,6 +5,8 @@ A music royalties data aggregator
 
 A tool that helps artists and record labels process and analyse the complex web of payment data from vendors.
 
+Giving indies superpowers in the age of big data.
+
 Setup guide
 -----------
 
