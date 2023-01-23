@@ -11,6 +11,10 @@
 	background-color:#efefef;
 }
 
+.content {
+	margin-bottom:240px;
+}
+
 uploaded-files-list {
 	details {
 		summary {
@@ -26,28 +30,38 @@ uploaded-files-list {
 }
 
 artist-statement-list {
+	
 	details {
-		margin-bottom: 2rem;
+		margin-bottom: 0rem;
 
 		summary {
 			cursor: pointer;
 			display: flex;
-			justify-content: space-between;
-			align-items: baseline;
-			border-bottom: 2px solid #eeeeee;
-			background-color: #fafafa;
+			align-items: center;
+			border-bottom: 1px solid #000;
+			background-color: #fff;
+			padding: 1rem 1rem;
 
 			&:hover, &:focus {
 				text-decoration: underline;
 			}
 
 			h2 {
-				display: inline-block;
-				flex-grow: 1;
+				// display: inline-block;
+				// flex-grow: 1;
 				margin: 1rem;
 			}
 			h3 {
-				display: inline-block;
+				display: inline-flex;
+			}
+			.artistName {
+				float:left;
+			}
+			.artistTotal {
+				margin-left:auto;
+			}
+			.expand {
+				float:right;
 			}
 		}
 
@@ -111,7 +125,7 @@ nav {
 
 table {
 	width: 100%;
-	margin-bottom:120px;
+	margin-bottom:60px;
 	th, td {
 		padding: 0.5rem;
 

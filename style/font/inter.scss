@@ -4,7 +4,7 @@ $font-styles:
 ;
 $font-weights: (
 	thin: 100,
-	ultralight: 200,
+	extralight: 200,
 	light: 300,
 	regular: 400,
 	medium: 500,
@@ -21,7 +21,7 @@ $font-weights: (
 			font-style: $style;
 			font-weight: $weight-value;
 			font-display: swap;
-			src: url("/asset/font/inter/inter-#{$weight-name}-#{$style}.woff") format("woff");
+			src: url("/asset/font/inter/inter-#{$weight-name}-#{$style}.ttf") format("ttf");
 		}
 	}
 }
