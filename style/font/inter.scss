@@ -1,0 +1,27 @@
+$font-styles:
+	italic
+	normal
+;
+$font-weights: (
+	thin: 100,
+	ultralight: 200,
+	light: 300,
+	regular: 400,
+	medium: 500,
+	semibold: 600,
+	bold: 700,
+	extrabold: 800,
+	black: 900
+);
+
+@each $style in $font-styles {
+	@each $weight-name, $weight-value in $font-weights {
+		@font-face {
+			font-family: "Inter";
+			font-style: $style;
+			font-weight: $weight-value;
+			font-display: swap;
+			src: url("/asset/font/inter/inter-#{$weight-name}-#{$style}.woff") format("woff");
+		}
+	}
+}
