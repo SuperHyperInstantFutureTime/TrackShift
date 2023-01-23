@@ -12,14 +12,56 @@
 }
 
 
-details {
-	summary {
-		cursor: pointer;
-	}
+uploaded-files-list {
+	details {
+		summary {
+			cursor: pointer;
+		}
 
-	li {
-		&[data-type="Unknown"] {
-			color: red;
+		li {
+			&[data-type="Unknown"] {
+				color: red;
+			}
+		}
+	}
+}
+
+artist-statement-list {
+	details {
+		margin-bottom: 2rem;
+
+		summary {
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			align-items: baseline;
+			border-bottom: 2px solid #eeeeee;
+			background-color: #fafafa;
+
+			&:hover, &:focus {
+				text-decoration: underline;
+			}
+
+			h2 {
+				display: inline-block;
+				flex-grow: 1;
+				margin: 1rem;
+			}
+			h3 {
+				display: inline-block;
+			}
+		}
+
+		&.single {
+			summary {
+				display: none;
+			}
+		}
+
+		&:nth-of-type(odd) {
+			summary {
+				background-color: #f4f4f4;
+			}
 		}
 	}
 }
@@ -48,7 +90,7 @@ nav {
 	display:block;
 	float:left;
 	margin-bottom:30px;
-	
+
 	ul {
 		list-style-type: none;
 		margin:0;

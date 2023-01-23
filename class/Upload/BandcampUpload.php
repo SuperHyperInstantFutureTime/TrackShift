@@ -4,13 +4,12 @@ namespace Trackshift\Upload;
 use Trackshift\Royalty\Money;
 use Trackshift\Usage\Usage;
 
-class PRSStatementUpload extends Upload {
+class BandcampUpload extends Upload {
 	protected function processUsages():void {
 		$headerRow = null;
 
 		while(!$this->file->eof()) {
-			$line = $this->file->fgetcsv();
-			$row = $this->stripNullBytes($line);
+			$row = $this->stripNullBytes($this->file->fgetcsv());
 			if(empty($row) || !$row[0]) {
 				continue;
 			}
@@ -20,9 +19,15 @@ class PRSStatementUpload extends Upload {
 				continue;
 			}
 
+
 			$data = $this->rowToData($headerRow, $row);
-			$workTitle = $data["Work Title"];
-			$artist = $this->getArtist($data["CAE Number"]);
+			if(empty($data["net amount"])) {
+// TODO: Talk to Biff about this - I think skipping "pay out" rows is OK, but need to go over the data.
+				continue;
+			}
+
+			$workTitle = $data["item name"];
+			$artist = $this->getArtist($data["artist"]);
 
 			if(!in_array($artist, $this->artistList)) {
 				array_push($this->artistList, $artist);
@@ -30,7 +35,7 @@ class PRSStatementUpload extends Upload {
 
 			$this->usageList->add(new Usage(
 				$workTitle,
-				new Money((float)$data["Amount (performance revenue)"]),
+				new Money((float)$data["net amount"]),
 				$artist,
 			));
 		}

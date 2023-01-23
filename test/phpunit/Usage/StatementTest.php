@@ -61,4 +61,34 @@ class StatementTest extends TestCase {
 		$aggregation = $sut->getAggregatedUsages("test");
 		self::assertSame(0.00, $aggregation->getTotalValue()->value);
 	}
+
+	public function testIsMultipleArtist_allUploadsSingleArtist():void {
+		$upload = self::createMock(Upload::class);
+		$upload->method("isMultipleArtist")
+			->willReturn(false);
+
+		$sut = new Statement();
+		$sut->addUpload($upload);
+		$sut->addUpload($upload);
+		$sut->addUpload($upload);
+
+		self::assertFalse($sut->isMultipleArtist());
+	}
+
+	public function testIsMultipleArtist_oneUploadOtherArtist():void {
+		$upload = self::createMock(Upload::class);
+		$upload->method("isMultipleArtist")
+			->willReturn(false);
+		$uploadMultiple = self::createMock(Upload::class);
+		$uploadMultiple->method("isMultipleArtist")
+			->willReturn(true);
+
+		$sut = new Statement();
+		$sut->addUpload($upload);
+		$sut->addUpload($uploadMultiple);
+		$sut->addUpload($upload);
+		$sut->addUpload($upload);
+
+		self::assertTrue($sut->isMultipleArtist());
+	}
 }

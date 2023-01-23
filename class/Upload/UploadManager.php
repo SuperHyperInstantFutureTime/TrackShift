@@ -17,6 +17,9 @@ class UploadManager {
 				if($this->hasCsvColumns($filePath, "Record Number", "CAE Number", "Work Title", "Amount (performance revenue)")) {
 					$upload = new PRSStatementUpload($filePath);
 				}
+				elseif($this->hasCsvColumns($filePath, "item type", "item name", "artist", "bandcamp transaction id")) {
+					$upload = new BandcampUpload($filePath);
+				}
 			}
 
 			if(is_null($upload)) {
@@ -41,6 +44,13 @@ class UploadManager {
 	):bool {
 		$file = new SplFileObject($filePath);
 		$firstLine = $file->fgetcsv();
+		foreach($firstLine as $i => $column) {
+			$firstLine[$i] = preg_replace(
+				'/[[:^print:]]/',
+				'',
+				$column
+			);
+		}
 		$foundAllColumns = true;
 
 		foreach($columnsToCheck as $columnName) {
