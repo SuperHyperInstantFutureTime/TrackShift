@@ -1,3 +1,12 @@
+<form method="post" enctype="multipart/form-data">
+	<label class="draganddrop">
+		<span>Drop your files here or  </span>
+		<input type="file" name="statement[]" multiple required />
+	</label>
+	<button name="do" value="upload" class="button">Upload</button>
+</form>
+
+
 <uploaded-files-list>
 	<details>
 		<summary>
@@ -26,44 +35,30 @@
 			<button name="do" value="clear" onclick="return confirm('Are you sure you want to remove all your uploaded files?')">Clear uploads</button>
 		</form>
 
-		<br/>
-		<br/>
 	</details>
 </uploaded-files-list>
-
-<br/>
-<br/>
-
-<form method="post" enctype="multipart/form-data">
-	<label>
-		<span>Upload your statement file</span>
-		<input type="file" name="statement[]" multiple required />
-	</label>
-	<button name="do" value="upload">Upload</button>
-</form>
-
-<br/>
-<br/>
-
-<artist-statement-list>
-	<details data-template>
-		<summary>
-			<h2 data-bind:text="artistName">Artist name</h2>
-			<h3 data-bind:text="artistTotal">£0.00</h3>
-		</summary>
-		<table>
-			<thead>
-			<tr>
-				<th>Work title</th>
-				<th>Amount</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr data-template>
-				<td data-bind:text="workTitle"></td>
-				<td data-bind:text="amount"></td>
-			</tr>
-			</tbody>
-		</table>
-	</details>
-</artist-statement-list>
+<br /><br />
+<div class="content">
+	<artist-statement-list>
+		<details data-template>
+			<summary>
+				<h3 data-bind:text="artistName" class="artistName">Artist name</h3>
+				<h3 data-bind:text="artistTotal" class="artistTotal">£0.00</h3>
+			</summary>
+			<table>
+				<thead>
+				<tr>
+					<th>Work title</th>
+					<th>Amount</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr data-template>
+					<td data-bind:text="workTitle"></td>
+					<td data-bind:text="amount"></td>
+				</tr>
+				</tbody>
+			</table>
+		</details>
+	</artist-statement-list>
+</div>
