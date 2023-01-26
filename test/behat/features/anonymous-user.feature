@@ -9,17 +9,17 @@ Feature: App should be usable by anonymous users
 
 	Scenario: I can see the upload form without logging in
 		Given I am on the homepage
-		Then I should see "Upload your statement file"
+		Then I should see "Drop your files here"
 
 	Scenario: Unknown upload types show an appropriate error message
 		Given I am on the homepage
-		When I attach the file "gubbins.txt" to "statement"
+		When I attach the file "gubbins.txt" to "statement[]"
 		And I press "Upload"
-		Then I should see "Gubbins - 2.2 KB - Unknown"
+		Then I should see "gubbins - 2.2 KB - Unknown"
 
 	Scenario: I can upload a PRS statement
 		Given I am on the homepage
-		When I attach the file "prs-simple-3-songs.csv" to "statement"
+		When I attach the file "prs-simple-3-songs.csv" to "statement[]"
 		And I press "Upload"
 		Then I should see 3 rows in the table
 		And I should see the following table data:

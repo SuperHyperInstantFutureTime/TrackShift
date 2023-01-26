@@ -5,7 +5,7 @@ Feature: App should handle PRS statement CSV files
 
 	Scenario: I can clear my uploads
 		Given I am on the homepage
-		When I attach the file "prs-simple-3-songs.csv" to "statement"
+		When I attach the file "prs-simple-3-songs.csv" to "statement[]"
 		And I press "Upload"
 		Then I should see 3 rows in the table
 		When I press "Clear uploads"
@@ -13,9 +13,9 @@ Feature: App should handle PRS statement CSV files
 
 	Scenario: I can upload more than one CSV
 		Given I am on the homepage
-		When I attach the file "prs-simple-3-songs.csv" to "statement"
+		When I attach the file "prs-simple-3-songs.csv" to "statement[]"
 		And I press "Upload"
-		And I attach the file "prs-simple-3-songs-another-statement.csv" to "statement"
+		And I attach the file "prs-simple-3-songs-another-statement.csv" to "statement[]"
 		And I press "Upload"
 		Then I should see 5 rows in the table
 		And I should see the following table data:

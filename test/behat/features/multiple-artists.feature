@@ -5,7 +5,7 @@ Feature: App should aggregate multiple artists
 
 	Scenario: I upload a Bandcamp statement containing multiple artists
 		Given I am on the homepage
-		When I attach the file "bandcamp-simple-multiple-artist.csv" to "statement"
+		When I attach the file "bandcamp-simple-multiple-artist.csv" to "statement[]"
 		And I press "Upload"
 
 		Then I should see 2 artists

@@ -5,7 +5,7 @@ Feature: App should handle Bandcamp CSV files
 
 	Scenario: I can see my Bandcamp data
 		Given I am on the homepage
-		When I attach the file "bandcamp-simple-3-songs.csv" to "statement"
+		When I attach the file "bandcamp-simple-3-songs.csv" to "statement[]"
 		And I press "Upload"
 		Then I should see 3 rows in the table
 		And I should see the following table data:
