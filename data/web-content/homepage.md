@@ -12,12 +12,11 @@
 
 ### Main feature 
 
-Whilst St Matthew's Church[4] is not mentioned in the Domesday book (1086), a charter of 1154–9 confirms the gift of the church of Pentrich to the canons of Darley Abbey. Of this Norman church or one which shortly after replaced it the five arcades separating the aisles from the nave, parts of the west wall and south aisle and lower part of the tower remain.
+Music is a £20 billion global industry run on shared spreadsheets and antiquated systems that takes ages to pay artists (and not always correctly). 
 
-The tower was made higher in the late 14th century and the two aisles were rebuilt. Around 1430 a new pointed chancel arch was built, retaining the earlier capitals and piers and a clerestory was added. The tracery of the east window suggests a date of 1420–50.
+Independent record labels with the most artist-friendly deals often spend a month out of every year sorting through those spreadsheets or grappling with those antiquated systems in order to understand how much their artists have earned. 
 
-The font stands on a pedestal dated 1662 but the bowl has decoration typical of the Norman period. During the 19th century the bowl was absent and was used for the salting of beef. 
-
+We're building an innovative royalties processor to solve that. 
 
 
 <!-- who? -->
