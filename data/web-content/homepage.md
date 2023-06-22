@@ -1,8 +1,8 @@
 <!-- what? -->
 
-# Punchy tagline about what we do
+# We make releasing music easier.
 
-## Subheading that gives everyone a clear understanding of the product
+## We are DIY artists, label people, software developers and music consumers who are building tools to give indies superpowers in the age of big data.
 
 ***
 
