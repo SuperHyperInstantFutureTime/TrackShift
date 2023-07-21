@@ -1,5 +1,5 @@
 <?php
-namespace Trackshift\Artist;
+namespace SHIFT\Trackshift\Artist;
 
 class ArtistIdentifier {
 	/** @var array<string, Artist> */

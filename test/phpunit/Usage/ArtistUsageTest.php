@@ -1,11 +1,11 @@
 <?php
-namespace Trackshift\Test\Usage;
+namespace SHIFT\Trackshift\Test\Usage;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Trackshift\Artist\Artist;
-use Trackshift\Usage\ArtistUsage;
-use Trackshift\Usage\Usage;
+use SHIFT\Trackshift\Artist\Artist;
+use SHIFT\Trackshift\Usage\ArtistUsage;
+use SHIFT\Trackshift\Usage\Usage;
 
 class ArtistUsageTest extends TestCase {
 	public function testGetAllArtists_empty():void {

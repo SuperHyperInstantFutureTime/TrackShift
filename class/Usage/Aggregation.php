@@ -1,8 +1,8 @@
 <?php
-namespace Trackshift\Usage;
+namespace SHIFT\Trackshift\Usage;
 
 use Iterator;
-use Trackshift\Royalty\Money;
+use SHIFT\Trackshift\Royalty\Money;
 
 /** @implements Iterator<string, UsageList> */
 class Aggregation implements Iterator {

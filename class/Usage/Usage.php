@@ -1,9 +1,9 @@
 <?php
-namespace Trackshift\Usage;
+namespace SHIFT\Trackshift\Usage;
 
 use Gt\DomTemplate\BindGetter;
-use Trackshift\Artist\Artist;
-use Trackshift\Royalty\Money;
+use SHIFT\Trackshift\Artist\Artist;
+use SHIFT\Trackshift\Royalty\Money;
 
 class Usage {
 	public function __construct(

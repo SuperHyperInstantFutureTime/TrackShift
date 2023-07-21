@@ -1,18 +1,23 @@
 <?php
-namespace Trackshift\Upload;
+namespace SHIFT\Trackshift\Upload;
 
+use DateTime;
+use DateTimeZone;
+use Gt\DomTemplate\BindGetter;
 use SplFileObject;
-use Trackshift\Artist\Artist;
-use Trackshift\Artist\ArtistIdentifier;
-use Trackshift\Royalty\Money;
-use Trackshift\Usage\Aggregation;
-use Trackshift\Usage\UsageList;
+use SHIFT\Trackshift\Artist\Artist;
+use SHIFT\Trackshift\Artist\ArtistIdentifier;
+use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\Trackshift\Usage\Aggregation;
+use SHIFT\Trackshift\Usage\UsageList;
 
 abstract class Upload {
 	public readonly string $filename;
+	public readonly string $basename;
 	public readonly int $size;
 	public readonly string $sizeString;
 	public readonly string $type;
+	public readonly DateTime $uploadedAt;
 
 	protected SplFileObject $file;
 	protected UsageList $usageList;
@@ -34,7 +39,10 @@ abstract class Upload {
 		$this->processUsages();
 
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);
+		$this->basename = pathinfo($this->filePath, PATHINFO_BASENAME);
 		$this->size = filesize($this->filePath);
+		$this->uploadedAt = new DateTime("@" . filectime($this->filePath));
+		$this->uploadedAt->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
 		$bytes = $this->size;
 		$units = ["B", "KB", "MB", "GB", "TB", "PB"];
@@ -50,6 +58,16 @@ abstract class Upload {
 			default => str_replace("Upload", "", substr($className, strrpos($className, "\\") + 1)),
 			PRSStatementUpload::class => "PRS Statement",
 		};
+	}
+
+	#[BindGetter]
+	public function getUploadedAtFormattedDate():string {
+		return $this->uploadedAt->format("d/m/Y");
+	}
+
+	#[BindGetter]
+	public function getUploadedAtFormattedTime():string {
+		return $this->uploadedAt->format("H:i");
 	}
 
 	public function getUsageTotal():Money {

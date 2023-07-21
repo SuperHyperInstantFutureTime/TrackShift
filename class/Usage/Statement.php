@@ -1,12 +1,12 @@
 <?php
-namespace Trackshift\Usage;
+namespace SHIFT\Trackshift\Usage;
 
 use Countable;
 use DateTime;
 use DateTimeInterface;
 use Gt\DomTemplate\BindGetter;
 use Iterator;
-use Trackshift\Upload\Upload;
+use SHIFT\Trackshift\Upload\Upload;
 
 /**
  * A Statement represents a collection of Uploads, whereas an Upload represents

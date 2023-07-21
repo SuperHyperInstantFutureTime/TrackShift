@@ -1,10 +1,12 @@
 <?php
-namespace Trackshift\Upload;
+namespace SHIFT\Trackshift\Upload;
 
-use Trackshift\Royalty\Money;
-use Trackshift\Usage\Usage;
+use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\Trackshift\Usage\Usage;
 
 class BandcampUpload extends Upload {
+	const KNOWN_CSV_COLUMNS = ["item type", "item name", "artist", "bandcamp transaction id"];
+
 	protected function processUsages():void {
 		$headerRow = null;
 

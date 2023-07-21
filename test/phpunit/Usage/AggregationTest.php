@@ -1,11 +1,11 @@
 <?php
-namespace Trackshift\Test\Usage;
+namespace SHIFT\Trackshift\Test\Usage;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Trackshift\Royalty\Money;
-use Trackshift\Usage\Aggregation;
-use Trackshift\Usage\Usage;
+use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\Trackshift\Usage\Aggregation;
+use SHIFT\Trackshift\Usage\Usage;
 
 class AggregationTest extends TestCase {
 	public function testIterator():void {

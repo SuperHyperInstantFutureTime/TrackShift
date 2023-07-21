@@ -1,11 +1,11 @@
 <?php
 
-namespace Trackshift\Test\Upload;
+namespace SHIFT\Trackshift\Test\Upload;
 
-use Trackshift\Upload\BandcampUpload;
-use Trackshift\Upload\PRSStatementUpload;
-use Trackshift\Upload\UnknownUpload;
-use Trackshift\Upload\UploadManager;
+use SHIFT\Trackshift\Upload\BandcampUpload;
+use SHIFT\Trackshift\Upload\PRSStatementUpload;
+use SHIFT\Trackshift\Upload\UnknownUpload;
+use SHIFT\Trackshift\Upload\UploadManager;
 
 class UploadManagerTest extends UploadTestCase {
 	/** Load a file with content that isn't recognised by Trackshift. */

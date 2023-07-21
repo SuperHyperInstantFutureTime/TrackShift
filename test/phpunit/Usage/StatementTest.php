@@ -1,11 +1,11 @@
 <?php
-namespace Trackshift\Test\Usage;
+namespace SHIFT\Trackshift\Test\Usage;
 
 use PHPUnit\Framework\TestCase;
-use Trackshift\Royalty\Money;
-use Trackshift\Upload\Upload;
-use Trackshift\Usage\Aggregation;
-use Trackshift\Usage\Statement;
+use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\Trackshift\Upload\Upload;
+use SHIFT\Trackshift\Usage\Aggregation;
+use SHIFT\Trackshift\Usage\Statement;
 
 class StatementTest extends TestCase {
 	public function testCount_empty():void {

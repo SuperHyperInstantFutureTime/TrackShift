@@ -1,8 +1,8 @@
 <?php
-namespace Trackshift\Usage;
+namespace SHIFT\Trackshift\Usage;
 
 use Iterator;
-use Trackshift\Artist\Artist;
+use SHIFT\Trackshift\Artist\Artist;
 
 class ArtistUsage {
 	/** @var array<Artist> Distinct list of artists found in aggregation */

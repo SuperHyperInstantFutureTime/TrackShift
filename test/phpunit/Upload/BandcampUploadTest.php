@@ -1,8 +1,8 @@
 <?php
-namespace Trackshift\Test\Upload;
+namespace SHIFT\Trackshift\Test\Upload;
 
-use Trackshift\Upload\BandcampUpload;
-use Trackshift\Upload\PRSStatementUpload;
+use SHIFT\Trackshift\Upload\BandcampUpload;
+use SHIFT\Trackshift\Upload\PRSStatementUpload;
 
 class BandcampUploadTest extends UploadTestCase {
 	public function testGetUsageTotal():void {

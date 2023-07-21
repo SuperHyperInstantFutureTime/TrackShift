@@ -1,7 +1,7 @@
 <?php
-namespace Trackshift\Test\Upload;
+namespace SHIFT\Trackshift\Test\Upload;
 
-use Trackshift\Upload\UnknownUpload;
+use SHIFT\Trackshift\Upload\UnknownUpload;
 
 class UploadTest extends UploadTestCase {
 	public function testDelete():void {

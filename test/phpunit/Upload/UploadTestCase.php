@@ -1,5 +1,5 @@
 <?php
-namespace Trackshift\Test\Upload;
+namespace SHIFT\Trackshift\Test\Upload;
 
 use PHPUnit\Framework\TestCase;
 use RuntimeException;

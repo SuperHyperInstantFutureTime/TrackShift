@@ -1,7 +1,7 @@
 <?php
-namespace Trackshift\Test\Upload;
+namespace SHIFT\Trackshift\Test\Upload;
 
-use Trackshift\Upload\PRSStatementUpload;
+use SHIFT\Trackshift\Upload\PRSStatementUpload;
 
 class PRSStatementUploadTest extends UploadTestCase {
 	public function testGetUsageTotal():void {

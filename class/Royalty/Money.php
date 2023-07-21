@@ -1,5 +1,5 @@
 <?php
-namespace Trackshift\Royalty;
+namespace SHIFT\Trackshift\Royalty;
 
 use Stringable;
 

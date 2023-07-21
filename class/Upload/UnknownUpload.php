@@ -1,5 +1,5 @@
 <?php
-namespace Trackshift\Upload;
+namespace SHIFT\Trackshift\Upload;
 
 class UnknownUpload extends Upload {
 	protected function processUsages():void {}
