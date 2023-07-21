@@ -6,8 +6,8 @@ use Gt\Http\Response;
 use Gt\Input\Input;
 use Gt\Session\Session;
 use Gt\Ulid\Ulid;
-use Trackshift\Royalty\Money;
-use Trackshift\Upload\UploadManager;
+use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\Trackshift\Upload\UploadManager;
 
 function go(
 	UploadManager $uploadManager,
@@ -16,6 +16,7 @@ function go(
 	DocumentBinder $binder,
 	Session $session,
 ):void {
+	return;
 	$uploadManager->purge();
 
 	if($userId = $session->getString("ulid")) {

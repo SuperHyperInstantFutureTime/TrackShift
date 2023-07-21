@@ -1,0 +1,15 @@
+a {
+	cursor: pointer;
+	text-decoration: underline;
+	color: var(--pal-link-text);
+	background-color: var(--pal-link-bg);
+
+	&:visited {
+		color: var(--pal-link-text--visited);
+		background-color: var(--pal-link-bg--visited);
+	}
+
+	&:focus {
+		outline: var(--theme-accessibility-outline);
+	}
+}

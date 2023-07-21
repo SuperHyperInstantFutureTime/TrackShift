@@ -1,0 +1,43 @@
+file-uploader {
+	@extend %d-dropzone, %o-container;
+	display: block;
+	box-sizing: border-box;
+	text-align: center;
+	padding: 4rem 2rem;
+	margin-top: 8rem;
+	margin-bottom: 8rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+	max-width: calc($break-small - 6rem);
+	cursor: pointer;
+	transition: background-color 0.25s ease-in-out;
+
+	@media(min-width: $break-small) {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.dragging &,
+	&.contains-files {
+		background-color: var(--pal-2);
+	}
+
+	label {
+		span {
+			a {
+				--pal-link-text--visited: var(--pal-1);
+
+				text-decoration: underline;
+				cursor: pointer;
+			}
+		}
+
+		input {
+			display: none;
+		}
+	}
+
+	button[name=do][value=upload] {
+		display: none;
+	}
+}

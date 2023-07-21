@@ -1,0 +1,51 @@
+global-header {
+	@extend %o-container;
+
+	display: block;
+
+	header {
+		h1 {
+			position: relative;
+			text-align: center;
+			font-family: var(--font-family-heading);
+			font-weight: 900;
+
+			@media(min-width: $break-small) {
+				text-align: left;
+			}
+
+			a {
+				--pal-link-text: var(--pal-utility-light-1);
+				--pal-link-text--visited: var(--pal-utility-light-1);
+
+				text-decoration: none;
+				transition: color 0.1s ease-in-out;
+
+				&:hover {
+					color: var(--pal-2);
+				}
+			}
+
+			&::before {
+				$size: 12rem;
+
+				content: "";
+				position: absolute;
+				display: block;
+				z-index: -1;
+				top: calc(50% - ($size / 2));
+				left: calc(50% - ($size / 2));
+				width: $size;
+				height: $size;
+
+				border-radius: $size;
+				background-color: var(--pal-1);
+				pointer-events: none;
+
+				@media(min-width: $break-small) {
+					left: -1.5rem;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,8 @@
+%d-dropzone {
+	border: 4px dashed var(--pal-body);
+	padding: 2rem;
+
+	&.dragging {
+		background-color: var(--pal-ui-bg--hover);
+	}
+}

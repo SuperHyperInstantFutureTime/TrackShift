@@ -1,0 +1,28 @@
+%d-typography {
+	font-family: "Inter", sans-serif;
+
+	h1, h2, h3, h4, h5, h6, p {
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		font-family: var(--font-family-heading);
+	}
+
+	h1 {
+		font-size: var(--font-size-1);
+	}
+	h2 {
+		font-size: var(--font-size-2);
+	}
+	p {
+		font-size: var(--font-size-base);
+		line-height: var(--font-readable-line-height);
+		font-family: var(--font-family-main);
+	}
+
+	hr {
+		margin: 8rem 0;
+	}
+}
