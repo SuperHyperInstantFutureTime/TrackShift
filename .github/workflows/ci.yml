@@ -18,7 +18,7 @@ jobs:
       - name: Composer install
         uses: php-actions/composer@v6
         with:
-          php_version: '8.1'
+          php_version: '8.2'
 
       - name: Archive build
         run: mkdir /tmp/github-actions/ && tar -cvf /tmp/github-actions/build.tar ./
@@ -45,7 +45,7 @@ jobs:
       - name: PHP Unit tests
         uses: php-actions/phpunit@v3
         with:
-          php_version: '8.1'
+          php_version: '8.2'
           php_extensions: xdebug
           configuration: test/phpunit/phpunit.xml
           bootstrap: vendor/autoload.php
@@ -58,6 +58,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: build-artifact
+          php_version: '8.2'
           path: /tmp/github-actions
 
       - name: Extract build archive
@@ -77,6 +78,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: build-artifact
+          php_unit: '8.2'
           path: /tmp/github-actions
 
       - name: Extract build archive

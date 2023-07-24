@@ -9,21 +9,17 @@ Feature: App should be usable by anonymous users
 
 	Scenario: I can see the upload form without logging in
 		Given I am on the homepage
-		Then I should see "Drop your files here"
+		Then I should see "Drag and drop your Bandcamp statement"
 
 	Scenario: Unknown upload types show an appropriate error message
 		Given I am on the homepage
-		When I attach the file "gubbins.txt" to "statement[]"
+		When I attach the file "gubbins.txt" to "upload[]"
 		And I press "Upload"
-		Then I should see "gubbins - 2.2 KB - Unknown"
+		Then I should be on "/upload/"
+		And I should see "gubbins.txt - 2.2 KB - Unknown"
 
 	Scenario: I can upload a PRS statement
 		Given I am on the homepage
-		When I attach the file "prs-simple-3-songs.csv" to "statement[]"
+		When I attach the file "prs-simple-3-songs.csv" to "upload[]"
 		And I press "Upload"
-		Then I should see 3 rows in the table
-		And I should see the following table data:
-			| Work title  | Amount |
-			| Song 2      | £0.17  |
-			| Song 1      | £0.10  |
-			| Song 3      | £0.09  |
+		Then I should see "prs-simple-3-songs.csv - 299 B - PRS Statement"

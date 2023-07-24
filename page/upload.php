@@ -18,7 +18,8 @@ function go(
 		$binder->bindKeyValue("advance-auto", $advance === "auto");
 	}
 
-	$binder->bindList($uploadManager->getUploadsForUser($user), $document->querySelector("file-upload-list"));
+	$uploadCount = $binder->bindList($uploadManager->getUploadsForUser($user), $document->querySelector("file-upload-list"));
+	$binder->bindKeyValue("uploadCount", $uploadCount);
 	$binder->bindKeyValue("expiryDateString", $uploadManager->getExpiry($user)->format("dS M Y"));
 }
 
