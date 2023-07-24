@@ -5,6 +5,9 @@ on: [push]
 jobs:
   composer:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ 8.2 ]
 
     steps:
       - uses: actions/checkout@v3
@@ -18,7 +21,7 @@ jobs:
       - name: Composer install
         uses: php-actions/composer@v6
         with:
-          php_version: '8.2'
+          php_version: ${{ matrix.php }}
 
       - name: Archive build
         run: mkdir /tmp/github-actions/ && tar -cvf /tmp/github-actions/build.tar ./
@@ -31,7 +34,13 @@ jobs:
 
   phpunit:
     runs-on: ubuntu-latest
-    needs: [composer]
+    needs: [ composer ]
+    strategy:
+      matrix:
+        php: [ 8.2 ]
+
+    outputs:
+      coverage: ${{ steps.store-coverage.outputs.coverage_text }}
 
     steps:
       - uses: actions/download-artifact@v3
@@ -44,21 +53,49 @@ jobs:
 
       - name: PHP Unit tests
         uses: php-actions/phpunit@v3
+        env:
+          XDEBUG_MODE: cover
         with:
-          php_version: '8.2'
+          php_version: ${{ matrix.php }}
           php_extensions: xdebug
-          configuration: test/phpunit/phpunit.xml
-          bootstrap: vendor/autoload.php
+          coverage_text: _coverage/coverage.txt
+          coverage_clover: _coverage/clover.xml
+
+      - name: Store coverage data
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage
+          path: _coverage
+
+  coverage:
+    runs-on: ubuntu-latest
+    needs: [ phpunit ]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: code-coverage
+          path: _coverage
+
+      - name: Output coverage
+        run: cat "_coverage/coverage.txt"
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v3
 
   phpstan:
     runs-on: ubuntu-latest
-    needs: [composer]
+    needs: [ composer ]
+    strategy:
+      matrix:
+        php: [ 8.2 ]
 
     steps:
       - uses: actions/download-artifact@v3
         with:
           name: build-artifact
-          php_version: '8.2'
           path: /tmp/github-actions
 
       - name: Extract build archive
@@ -67,34 +104,15 @@ jobs:
       - name: PHP Static Analysis
         uses: php-actions/phpstan@v3
         with:
-          path: class/
-          level: 6
+          php_version: ${{ matrix.php }}
+          path: src/
 
-  behat:
+  phpmd:
     runs-on: ubuntu-latest
-    needs: [composer]
-
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: build-artifact
-          php_unit: '8.2'
-          path: /tmp/github-actions
-
-      - name: Extract build archive
-        run: tar -xvf /tmp/github-actions/build.tar ./
-
-      - name: Local development server
-        run: mkdir www && php -S 0.0.0.0:8080 -t www vendor/phpgt/webengine/go.php &
-
-      - name: Behat tests
-        uses: php-actions/behat@v1
-        with:
-          config: test/behat/behat.yml
-
-  dev-deploy:
-    runs-on: ubuntu-latest
-    needs: [composer, phpunit, phpstan, behat]
+    needs: [ composer ]
+    strategy:
+      matrix:
+        php: [ 8.2 ]
 
     steps:
       - uses: actions/download-artifact@v3
@@ -105,11 +123,48 @@ jobs:
       - name: Extract build archive
         run: tar -xvf /tmp/github-actions/build.tar ./
 
-      - uses: php-actions/deploy-ssh@master
+      - name: PHP Mess Detector
+        uses: php-actions/phpmd@v1
         with:
-          hostname: deploy-endpoint.dev.trackshift.app
-          user: deploy
-          path: /var/www/trackshift
-          path_owner: www-data.
-          ssh_key: ${{ secrets.deploy_ssh_key }}
-          after_command: ./vendor/bin/gt build
+          php_version: ${{ matrix.php }}
+          path: src/
+          output: text
+          ruleset: phpmd.xml
+
+  phpcs:
+    runs-on: ubuntu-latest
+    needs: [ composer ]
+    strategy:
+      matrix:
+        php: [ 8.2 ]
+
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+          path: /tmp/github-actions
+
+      - name: Extract build archive
+        run: tar -xvf /tmp/github-actions/build.tar ./
+
+      - name: PHP Code Sniffer
+        uses: php-actions/phpcs@v1
+        with:
+          php_version: ${{ matrix.php }}
+          path: src/
+          standard: phpcs.xml
+
+  remove_old_artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Remove old artifacts for prior workflow runs on this repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "/repos/${{ github.repository }}/actions/artifacts?name=build-artifact" | jq ".artifacts[] | select(.name == \"build-artifact\") | .id" > artifact-id-list.txt
+          while read id
+          do
+            echo -n "Deleting artifact ID $id ... "
+            gh api --method DELETE /repos/${{ github.repository }}/actions/artifacts/$id && echo "Done"
+          done <artifact-id-list.txt

@@ -26,7 +26,7 @@ class Aggregation implements Iterator {
 	public function getTotalValue():Money {
 		$total = new Money();
 
-		foreach($this->usageMap as $key => $usageList) {
+		foreach(array_keys($this->usageMap) as $key) {
 			$total = $total->withAddition(
 				$this->getTotalValueForAggregate($key)
 			);

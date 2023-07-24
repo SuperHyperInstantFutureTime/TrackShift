@@ -23,11 +23,11 @@ readonly class ContentRepository {
 		$contentName = $element->dataset->get("content");
 		$markdownPath = "$this->directoryPath/$contentName.md";
 		$markdown = file_get_contents($markdownPath);
-		$html = $this->markdownToHTML($markdown);
+		$html = $this->markdownToHtml($markdown);
 		$element->innerHTML = $html;
 	}
 
-	private function markdownToHTML(string $markdown):string {
+	private function markdownToHtml(string $markdown):string {
 		$environment = new Environment([
 //			"allow_unsafe_links" => true,
 		]);
