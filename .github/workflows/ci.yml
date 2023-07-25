@@ -126,8 +126,8 @@ jobs:
       - name: PHP Mess Detector
         uses: php-actions/phpmd@v1
         with:
-          version: '2.13.0'
           php_version: ${{ matrix.php }}
+          vendored_phpunit_path: vendor/bin/phpmd
           path: class/
           output: text
           ruleset: phpmd.xml
