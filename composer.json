@@ -15,6 +15,7 @@
 		"friends-of-behat/mink-extension": "^2.7",
 		"behat/mink-goutte-driver": "^2.0",
 		"phpmd/phpmd": "^2.13",
+		"pdepend/pdepend": "dev-master",
 		"squizlabs/php_codesniffer": "^3.7"
 	},
 	"autoload": {
