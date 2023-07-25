@@ -17,8 +17,7 @@ file-uploader {
 		margin-right: auto;
 	}
 
-	.dragging &,
-	&.contains-files {
+	.dragging & {
 		background-color: var(--pal-2);
 	}
 

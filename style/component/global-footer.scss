@@ -1,3 +1,5 @@
+@use "sass:math";
+
 global-footer {
 	position: relative;
 	display: block;
@@ -10,7 +12,7 @@ global-footer {
 		content: "";
 		position: absolute;
 		left: 0;
-		top: -($size-gfx / 4);
+		top: -(calc($size-gfx / 4));
 		width: 100%;
 		height: $size-gfx;
 		z-index: 1;
@@ -26,8 +28,8 @@ global-footer {
 	&::after {
 		content: "";
 		position: absolute;
-		left: calc(50% - ($size-gfx / 2));
-		top: -($size-gfx / 2);
+		left: calc(50% - calc($size-gfx / 2));
+		top: -(calc($size-gfx / 2));
 		width: $size-gfx;
 		height: $size-gfx;
 		z-index: 1;

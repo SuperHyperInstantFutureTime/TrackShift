@@ -13,8 +13,10 @@ export class DragDropPage {
 
 // TODO: When/if there are more forms on the page to drag onto, use e.target
 // but for now - keep it simple!
-			let form = document.querySelector("[type=file]").closest("form");;
+			let form = document.querySelector("[type=file]").closest("form");
 			form.querySelector("[type=file]").files = e.dataTransfer.files;
+			let changeEvent = new Event("change");
+			form.dispatchEvent(changeEvent);
 
 			let fileUploader = form.closest("file-uploader");
 			if(fileUploader) {
