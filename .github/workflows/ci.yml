@@ -127,7 +127,7 @@ jobs:
         uses: php-actions/phpmd@v1
         with:
           php_version: ${{ matrix.php }}
-          vendored_phpunit_path: vendor/bin/phpmd
+          vendored_phpmd_path: vendor/bin/phpmd
           path: class/
           output: text
           ruleset: phpmd.xml
