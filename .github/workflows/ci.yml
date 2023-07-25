@@ -105,7 +105,7 @@ jobs:
         uses: php-actions/phpstan@v3
         with:
           php_version: ${{ matrix.php }}
-          path: src/
+          path: class/
 
   phpmd:
     runs-on: ubuntu-latest
@@ -127,7 +127,7 @@ jobs:
         uses: php-actions/phpmd@v1
         with:
           php_version: ${{ matrix.php }}
-          path: src/
+          path: class/
           output: text
           ruleset: phpmd.xml
 
@@ -151,7 +151,7 @@ jobs:
         uses: php-actions/phpcs@v1
         with:
           php_version: ${{ matrix.php }}
-          path: src/
+          path: class/
           standard: phpcs.xml
 
   remove_old_artifacts:
