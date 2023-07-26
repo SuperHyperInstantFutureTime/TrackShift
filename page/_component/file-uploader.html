@@ -1,7 +1,24 @@
-<form method="post" enctype="multipart/form-data" action="/upload/?advance=auto" onchange="this.querySelector('[name=do][value=upload]').click()">
-	<label class="draganddrop">
-		<span>Drag and drop your Bandcamp statement files here, or <a href="#upload" onclick="this.closest('label').click()">Browse</a>.</span>
+<form method="post" enctype="multipart/form-data" action="/upload/?advance=/account/products/" onchange="this.querySelector('button').click()">
+	<label>
+		<p>Drop your sales reports here</p>
+		<p>or</p>
+		<p><a class="btn" href="#upload" onclick="this.closest('label').click()">Browse</a></p>
 		<input type="file" name="upload[]" multiple required/>
 	</label>
 	<button name="do" value="upload" class="button">Upload</button>
 </form>
+
+<upload-progress />
+
+<script>
+document.addEventListener("keydown", e => {
+	if(e.key === "1") {
+		document.querySelector("form").style.display = "block";
+		document.querySelector("upload-progress").style.display = "none";
+	}
+	if(e.key === "2") {
+		document.querySelector("form").style.display = "none";
+		document.querySelector("upload-progress").style.display = "block";
+	}
+})
+</script>

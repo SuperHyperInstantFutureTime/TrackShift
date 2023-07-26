@@ -1,0 +1,99 @@
+upload-progress {
+	@extend %o-container;
+	position: relative;
+	display: none;
+	height: 19rem;
+	transition: opacity 1s;
+
+	.uploading & {
+		display: block;
+	}
+
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+	}
+	@keyframes sweep-in {
+		0% {
+			clip-path: polygon(0 0, 0 0, 0 0, 0 100%);
+		}
+		50% {
+			clip-path: polygon(0 0, 0 0, 60% 100%, 0 100%);
+		}
+		100% {
+			clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+		}
+	}
+
+	h1 {
+		text-align: center;
+		padding: 4rem 2rem;
+		margin: 8rem 1rem;
+		max-width: calc($break-small - 6rem);
+
+		@media(min-width: $break-small) {
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+
+	.messages {
+		position: absolute;
+		left: 0;
+		right: 0;
+	}
+
+	p {
+		position: relative;
+		display: block;
+		margin: 2rem auto;
+		font-weight: bold;
+		animation-name: fade-in;
+		animation-fill-mode: backwards;
+		animation-duration: 1s;
+		max-width: calc($break-small - 22rem);
+		text-align: left;
+
+		@media(min-width: $break-small) {
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		@for $i from 1 through 10 {
+			&:nth-of-type(#{$i}) {
+				animation-delay: #{$i * 1.5}s;
+
+				&::after {
+					animation-delay: #{($i * 1.5) + 1}s;
+				}
+			}
+		}
+
+		&::before,&::after {
+			content: "";
+			display: block;
+			position: absolute;
+			top: -0.25rem;
+			right: 0;
+		}
+
+		&::before {
+			width: 1.5rem;
+			height: 1.5rem;
+			border: 2px solid var(--pal-utility-dark-2);
+			border-radius: 2rem;
+		}
+
+		&::after {
+			background-color: var(--pal-1);
+			mask-image: url("/asset/icon/check-solid.svg");
+			mask-size: contain;
+			mask-repeat: no-repeat;
+			width: 2rem;
+			height: 2rem;
+			animation: sweep-in 0.5s both;
+			translate: 0.5rem -0.3rem;
+		}
+	}
+}

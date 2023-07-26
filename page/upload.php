@@ -3,29 +3,36 @@ use Gt\Dom\HTMLDocument;
 use Gt\DomTemplate\DocumentBinder;
 use Gt\Http\Response;
 use Gt\Input\Input;
+use SHIFT\Spotify\SpotifyClient;
 use SHIFT\Trackshift\Auth\User;
+use SHIFT\Trackshift\Auth\UserRepository;
+use SHIFT\Trackshift\Egg\UploadMessageList;
 use SHIFT\Trackshift\Upload\UploadManager;
 
-function go(
-	HTMLDocument $document,
-	Input $input,
-	DocumentBinder $binder,
-	User $user,
-	UploadManager $uploadManager,
-):void {
-	if($advance = $input->getString("advance")) {
-		$binder->bindKeyValue("advance", $advance);
-		$binder->bindKeyValue("advance-auto", $advance === "auto");
-	}
-
-	$uploadCount = $binder->bindList($uploadManager->getUploadsForUser($user), $document->querySelector("file-upload-list"));
-	$binder->bindKeyValue("uploadCount", $uploadCount);
-	$binder->bindKeyValue("expiryDateString", $uploadManager->getExpiry($user)->format("dS M Y"));
+function go(Response $response):void {
+	$response->redirect("/account/uploads/");
 }
 
-function do_upload(Input $input, Response $response, User $user, UploadManager $uploadManager):void {
-	$uploadManager->upload($user, ...$input->getMultipleFile("upload"));
-	$response->reload();
+function do_upload(
+	Input $input,
+	Response $response,
+	UserRepository $userRepository,
+	User $user,
+	UploadManager $uploadManager,
+	SpotifyClient $spotify,
+):void {
+	$userRepository->persistUser($user);
+
+	$fileNameList = $uploadManager->upload($user, ...$input->getMultipleFile("upload"));
+	$productList = $uploadManager->processUploads($user, ...$fileNameList);
+//	$uploadManager->cacheArt($spotify, ...$productList);
+
+	if($advanceTo = $input->getString("advance")) {
+		$response->redirect($advanceTo);
+	}
+	else {
+		$response->reload();
+	}
 }
 
 function do_delete(Input $input, Response $response, User $user, UploadManager $uploadManager):void {

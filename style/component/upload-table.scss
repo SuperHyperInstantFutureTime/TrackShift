@@ -1,0 +1,14 @@
+upload-table {
+	@extend %d-data-table;
+	min-height: 100%;
+
+	table {
+		margin-top: 4rem;
+	}
+
+	button[name=do][value=delete] {
+		span {
+			display: none;
+		}
+	}
+}

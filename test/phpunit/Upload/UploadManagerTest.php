@@ -76,6 +76,6 @@ class UploadManagerTest extends UploadTestCase {
 		$expiredTime = strtotime("-4 weeks");
 		touch($dir, $expiredTime);
 
-		self::assertSame(3, $sut->purge(dirname($dir)));
+		self::assertSame(3, $sut->purgeOldFiles(dirname($dir)));
 	}
 }

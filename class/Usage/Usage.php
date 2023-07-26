@@ -1,19 +1,14 @@
 <?php
 namespace SHIFT\Trackshift\Usage;
 
-use Gt\DomTemplate\BindGetter;
-use SHIFT\Trackshift\Artist\Artist;
-use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\Trackshift\Repository\Entity;
+use SHIFT\Trackshift\Upload\Upload;
 
-class Usage {
+readonly class Usage extends Entity {
+	/** @param array<string, string> $row */
 	public function __construct(
-		public readonly string $workTitle,
-		public readonly Money $amount,
-		public readonly ?Artist $artist = null,
+		public string $id,
+		public Upload $upload,
+		public array $row,
 	) {}
-
-	#[BindGetter]
-	public function getAmountFormatted():string {
-		return $this->amount;
-	}
 }

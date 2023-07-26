@@ -47,5 +47,37 @@ global-header {
 				}
 			}
 		}
+
+		nav {
+			@media(min-width: $break-small) {
+				position: absolute;
+				margin: 0;
+				top: 0;
+				left: 24rem;
+				right: 24rem;
+			}
+
+			ul {
+				list-style-type: none;
+				margin: 0;
+				margin-top: 6rem;
+				padding: 0;
+
+				@media(min-width: $break-small) {
+					max-width: calc($break-small - 6rem);
+					text-align: right;
+					margin-top: 1rem;
+					margin-left: auto;
+					margin-right: auto;
+				}
+
+				li {
+					a {
+						display: block;
+						padding: 1rem;
+					}
+				}
+			}
+		}
 	}
 }

@@ -1,5 +1,10 @@
 :root {
 	--theme-ui-border: 4px solid var(--pal-utility-dark-2);
+	--theme-ui-border--focus: 4px solid var(--pal-utility-dark-2);
 	--theme-ui-box-shadow: none;
+	--theme-ui-box-shadow--focus: inset 0 0 0 4px var(--pal-2);
+	--theme-ui-outline: none;
+	--theme-ui-outline--focus: none;
 	--theme-accessibility-outline: 4px solid var(--pal-3);
+
 }

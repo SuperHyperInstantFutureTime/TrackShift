@@ -10,6 +10,7 @@
 @import "decorator/dropzone";
 @import "decorator/typography";
 @import "decorator/ui-element";
+@import "decorator/data-table";
 
 @import "object/container";
 
@@ -18,15 +19,29 @@
 @import "element/body";
 @import "element/html";
 @import "element/section";
+@import "element/main";
 
 @import "component/global-header";
 @import "component/global-footer";
 @import "component/file-uploader";
 @import "component/file-upload-list";
 @import "component/file-expiry";
+@import "component/upload-progress";
+@import "component/account-tabs";
+@import "component/upload-table";
+@import "component/product-table";
 
 ::selection {
 	background-color: var(--pal-4);
+}
+
+[hidden] {
+	display: none;
+}
+
+.fade-away {
+	opacity: 0;
+	transition: 1s;
 }
 
 body {

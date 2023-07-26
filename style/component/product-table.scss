@@ -1,0 +1,37 @@
+product-table {
+	@extend %d-data-table;
+	min-height: 100%;
+
+	table {
+		margin-top: 4rem;
+
+		tbody {
+			tr {
+				td {
+					&.albumArt {
+						position: relative;
+						width: 3rem;
+						height: 3rem;
+						background-color: var(--pal-utility-dark-3);
+
+						&:empty {
+							&::after {
+								content: "";
+								position: absolute;
+								top: 0;
+								bottom: 0;
+								left: 0;
+								right: 0;
+								background-color: white;
+								mask-image: url("/asset/icon/music-solid.svg");
+								mask-size: 50%;
+								mask-position: 50%;
+								mask-repeat: no-repeat;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

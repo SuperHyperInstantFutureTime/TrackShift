@@ -2,47 +2,35 @@
 namespace SHIFT\Trackshift\Upload;
 
 use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
+use Generator;
 use Gt\DomTemplate\BindGetter;
+use SHIFT\Trackshift\Auth\User;
 use SplFileObject;
 use SHIFT\Trackshift\Artist\Artist;
 use SHIFT\Trackshift\Artist\ArtistIdentifier;
 use SHIFT\Trackshift\Royalty\Money;
-use SHIFT\Trackshift\Usage\Aggregation;
-use SHIFT\Trackshift\Usage\UsageList;
 
 abstract class Upload {
+	protected SplFileObject $file;
 	public readonly string $filename;
 	public readonly string $basename;
 	public readonly int $size;
 	public readonly string $sizeString;
 	public readonly string $type;
-	public readonly DateTime $uploadedAt;
-
-	protected SplFileObject $file;
-	protected UsageList $usageList;
-	/** @var array<Artist> */
-	protected array $artistList;
-	protected ArtistIdentifier $artistIdentifier;
+	public readonly DateTime $createdAt;
 
 	public function __construct(
+		public readonly string $id,
 		public readonly string $filePath,
-		?ArtistIdentifier $identifier = null,
 	) {
 		$this->file = new SplFileObject($this->filePath);
-		$this->usageList = new UsageList();
-		$this->artistList = [];
-		if(!$identifier) {
-			$this->artistIdentifier = new ArtistIdentifier();
-		}
-
-		$this->processUsages();
-
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);
 		$this->basename = pathinfo($this->filePath, PATHINFO_BASENAME);
 		$this->size = filesize($this->filePath);
-		$this->uploadedAt = new DateTime("@" . filectime($this->filePath));
-		$this->uploadedAt->setTimezone(new DateTimeZone(date_default_timezone_get()));
+		$this->createdAt = $createdAt ?? new DateTime("@" . filectime($this->filePath));
+		$this->createdAt->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
 		$bytes = $this->size;
 		$units = ["B", "KB", "MB", "GB", "TB", "PB"];
@@ -57,59 +45,46 @@ abstract class Upload {
 		$this->type = match($className) {
 			default => str_replace("Upload", "", substr($className, strrpos($className, "\\") + 1)),
 			PRSStatementUpload::class => "PRS Statement",
+			BandcampUpload::class => "Bandcamp Statement",
 		};
 	}
 
+	/** @param array<string, string> $row */
+	abstract public function extractArtistName(array $row):string;
+
+	/** @param array<string, string> $row */
+	abstract public function extractProductName(array $row):string;
+
+	/** @param array<string, string> $row */
+	abstract public function extractEarning(array $row):Money;
+
+	/** @return Generator<array<string, string>> */
+	public function generateDataRows():Generator {
+		$headerRow = null;
+
+		$this->file->rewind();
+		while(!$this->file->eof()) {
+			$row = $this->stripNullBytes($this->file->fgetcsv());
+			if(empty($row) || !$row[0]) {
+				continue;
+			}
+			if(!$headerRow) {
+				$headerRow = $row;
+				continue;
+			}
+
+			yield $this->rowToData($headerRow, $row);
+		}
+	}
+
 	#[BindGetter]
-	public function getUploadedAtFormattedDate():string {
-		return $this->uploadedAt->format("d/m/Y");
+	public function getCreatedAtFormattedDate():string {
+		return $this->createdAt->format("d/m/Y");
 	}
 
 	#[BindGetter]
 	public function getUploadedAtFormattedTime():string {
-		return $this->uploadedAt->format("H:i");
-	}
-
-	public function getUsageTotal():Money {
-		$total = new Money();
-		foreach($this->usageList as $usage) {
-			$total = $total->withAddition($usage->amount);
-		}
-
-		return $total;
-	}
-
-	public function getAggregatedUsages(string $propertyName):Aggregation {
-		$aggregation = new Aggregation();
-
-		foreach($this->usageList as $usage) {
-			$aggregateKey = $usage->{$propertyName} ?? null;
-// TODO: Throw meaningful exception here where aggregate key is null.
-// It means the name has been picked incorrectly by the developer.
-			$aggregation->add($aggregateKey, $usage);
-		}
-
-		return $aggregation;
-	}
-
-	abstract protected function processUsages():void;
-
-	public function delete():void {
-		$path = $this->file->getRealPath();
-		unset($this->file);
-		unlink($path);
-		$this->usageList = new UsageList();
-	}
-
-	public function getArtist(string $identifier):Artist {
-		return $this->artistIdentifier->identify(
-			$identifier,
-			self::class,
-		);
-	}
-
-	public function isMultipleArtist():bool {
-		return count($this->artistList) > 1;
+		return $this->createdAt->format("H:i");
 	}
 
 	/**

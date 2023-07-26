@@ -7,39 +7,15 @@ use SHIFT\Trackshift\Usage\Usage;
 class BandcampUpload extends Upload {
 	const KNOWN_CSV_COLUMNS = ["item type", "item name", "artist", "bandcamp transaction id"];
 
-	protected function processUsages():void {
-		$headerRow = null;
+	public function extractArtistName(array $row):string {
+		return $row["artist"];
+	}
 
-		while(!$this->file->eof()) {
-			$row = $this->stripNullBytes($this->file->fgetcsv());
-			if(empty($row) || !$row[0]) {
-				continue;
-			}
+	public function extractProductName(array $row):string {
+		return $row["item name"];
+	}
 
-			if(!$headerRow) {
-				$headerRow = $row;
-				continue;
-			}
-
-
-			$data = $this->rowToData($headerRow, $row);
-			if(empty($data["net amount"])) {
-// TODO: Talk to Biff about this - I think skipping "pay out" rows is OK, but need to go over the data.
-				continue;
-			}
-
-			$workTitle = $data["item name"];
-			$artist = $this->getArtist($data["artist"]);
-
-			if(!in_array($artist, $this->artistList)) {
-				array_push($this->artistList, $artist);
-			}
-
-			$this->usageList->add(new Usage(
-				$workTitle,
-				new Money((float)$data["net amount"]),
-				$artist,
-			));
-		}
+	public function extractEarning(array $row):Money {
+		return new Money((float)$row["net amount"]);
 	}
 }
