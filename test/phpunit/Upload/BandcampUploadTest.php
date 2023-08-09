@@ -1,28 +1,37 @@
 <?php
 namespace SHIFT\Trackshift\Test\Upload;
 
+use DateTime;
+use PHPUnit\Framework\TestCase;
 use SHIFT\Trackshift\Upload\BandcampUpload;
-use SHIFT\Trackshift\Upload\PRSStatementUpload;
 
-class BandcampUploadTest extends UploadTestCase {
-	public function testGetUsageTotal():void {
-		$tmpFile = self::getTempFile("bandcamp-simple-3-songs.csv");
-		$sut = new BandcampUpload($tmpFile);
-		$moneyTotalUsage = $sut->getUsageTotal();
-
-		self::assertSame(17.68, $moneyTotalUsage->value);
-		self::assertSame("£17.68", (string)$moneyTotalUsage);
+class BandcampUploadTest extends TestCase {
+	public function testExtractArtistName():void {
+		$sut = new BandcampUpload("test-id", "test/files/bandcamp-simple-3-songs.csv");
+		$dataRows = iterator_to_array($sut->generateDataRows());
+		$artistName = $sut->extractArtistName($dataRows[0]);
+		self::assertSame("Person 1", $artistName);
 	}
 
-	public function testIsMultipleArtist_no():void {
-		$tmpFile = self::getTempFile("bandcamp-simple-3-songs.csv");
-		$sut = new BandcampUpload($tmpFile);
-		self::assertFalse($sut->isMultipleArtist());
+	public function testExtractProductName():void {
+		$sut = new BandcampUpload("test-id", "test/files/bandcamp-simple-3-songs.csv");
+		$dataRows = iterator_to_array($sut->generateDataRows());
+		$productName = $sut->extractProductName($dataRows[0]);
+		self::assertSame("BC 1", $productName);
 	}
 
-	public function testIsMultipleArtist_yes():void {
-		$tmpFile = self::getTempFile("bandcamp-simple-multiple-artist.csv");
-		$sut = new BandcampUpload($tmpFile);
-		self::assertTrue($sut->isMultipleArtist());
+	public function testExtractEarning():void {
+		$sut = new BandcampUpload("test-id", "test/files/bandcamp-simple-3-songs.csv");
+		$dataRows = iterator_to_array($sut->generateDataRows());
+		$earning = $sut->extractEarning($dataRows[0]);
+		self::assertSame(6.22, $earning->value);
+	}
+
+	public function testGetXYZ_bindGetters():void {
+		$filePath = "test/files/bandcamp-simple-3-songs.csv";
+		$sut = new BandcampUpload("test-id", $filePath);
+		$actualCreationTime = new DateTime("@" . filectime($filePath));
+		self::assertSame($actualCreationTime->format("d/m/Y"), $sut->getCreatedAtFormattedDate());
+		self::assertSame($actualCreationTime->format("H:i"), $sut->getUploadedAtFormattedTime());
 	}
 }

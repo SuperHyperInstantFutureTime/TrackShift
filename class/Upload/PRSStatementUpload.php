@@ -5,10 +5,10 @@ use SHIFT\Trackshift\Royalty\Money;
 use SHIFT\Trackshift\Usage\Usage;
 
 class PRSStatementUpload extends Upload {
-	const KNOWN_CSV_COLUMNS = ["Record Number", "CAE Number", "Work Title", "Amount (performance revenue)"];
+	const KNOWN_CSV_COLUMNS = ["Record Number", "CAE Number", "Work Title", "Amount (performance revenue)", "IP1"];
 
 	public function extractArtistName(array $row): string {
-		return $row["PRS Artist"];
+		return $row["IP1"];
 	}
 
 	public function extractProductName(array $row): string {
