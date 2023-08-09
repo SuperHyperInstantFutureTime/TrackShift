@@ -28,4 +28,15 @@ readonly class ProductRepository extends Repository {
 
 		return $earningList;
 	}
+
+	public function getById(string $id):Product {
+		$row = $this->db->fetch("getById", $id);
+		$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
+		return new Product(
+			$row->getString("id"),
+			$row->getString("title"),
+			$artist,
+		);
+	}
+
 }

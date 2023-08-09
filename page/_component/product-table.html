@@ -11,8 +11,8 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr data-list>
-			<td class="albumArt"><img data-element data-bind:src="artUrl" /></td>
+		<tr data-list data-bind:data-id="product.id">
+			<td class="albumArt"><img data-element data-bind:src="product.artUrl" /></td>
 			<td data-bind:text="product.artist.name">Artist</td>
 			<td data-bind:text="product.title">Title</td>
 			<td data-bind:text="earning">Earnings</td>
