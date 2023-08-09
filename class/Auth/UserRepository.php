@@ -28,11 +28,6 @@ readonly class UserRepository extends Repository {
 	}
 
 	public function persistUser(User $user):void {
-		try {
-			$this->db->insert("create", $user->id);
-		}
-		catch(\Exception $e) {
-			var_dump($e->getPrevious());die();
-		}
+		$this->db->insert("create", $user->id);
 	}
 }

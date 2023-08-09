@@ -28,11 +28,12 @@
 	</rule>
 
 	<rule ref="rulesets/unusedcode.xml">
+		<exclude name="UnusedPrivateField" />
 	</rule>
 
 	<rule ref="rulesets/naming.xml/ShortVariable">
 		<properties>
-			<property name="exceptions" value="a,b,i,id" />
+			<property name="exceptions" value="a,b,i,id,db" />
 		</properties>
 	</rule>
 </ruleset>

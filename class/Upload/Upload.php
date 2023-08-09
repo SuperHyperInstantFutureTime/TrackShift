@@ -29,7 +29,7 @@ abstract class Upload {
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);
 		$this->basename = pathinfo($this->filePath, PATHINFO_BASENAME);
 		$this->size = filesize($this->filePath);
-		$this->createdAt = $createdAt ?? new DateTime("@" . filectime($this->filePath));
+		$this->createdAt = new DateTime("@" . filectime($this->filePath));
 		$this->createdAt->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
 		$bytes = $this->size;

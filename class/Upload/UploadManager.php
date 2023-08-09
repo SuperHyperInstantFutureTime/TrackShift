@@ -19,8 +19,10 @@ use SHIFT\Trackshift\Repository\Repository;
 use SHIFT\Trackshift\Royalty\Money;
 use SHIFT\Trackshift\Usage\Usage;
 use SplFileObject;
-use SHIFT\Trackshift\Usage\Statement;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 readonly class UploadManager extends Repository {
 	public function __construct(
 		QueryCollection $db,
@@ -166,7 +168,7 @@ readonly class UploadManager extends Repository {
 				new SearchFilter(EntityType::album)
 			);
 			if($results->albums->total > 0) {
-				if($image = $results->albums->items[0]->images[0]) {
+				if($image = $results->albums->items[0]?->images[0] ?? null) {
 					if(!is_dir(dirname($cacheFilePath))) {
 						mkdir(dirname($cacheFilePath), recursive: true);
 					}
@@ -175,7 +177,6 @@ readonly class UploadManager extends Repository {
 			}
 		}
 	}
-
 
 	private function findOrCreateArtist(string $artistName):Artist {
 		if($row = $this->artistDb->fetch("getArtistByName", $artistName)) {

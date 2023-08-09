@@ -2,7 +2,7 @@
 namespace SHIFT\Trackshift\Egg;
 use Iterator;
 
-/** @extends Iterator<string> */
+/** @implements Iterator<string> */
 class UploadMessageList implements Iterator {
 	private const AVAILABLE_MESSAGE_STRINGS = [
 		"Checking Tracklist",
@@ -18,6 +18,7 @@ class UploadMessageList implements Iterator {
 
 	/** @var array<string> */
 	private array $messages;
+
 	public function __construct(int $numMessages) {
 		$messageArray = self::AVAILABLE_MESSAGE_STRINGS;
 		shuffle($messageArray);
