@@ -19,7 +19,6 @@ function do_upload(
 	UserRepository $userRepository,
 	User $user,
 	UploadManager $uploadManager,
-	SpotifyClient $spotify,
 ):void {
 	$userRepository->persistUser($user);
 

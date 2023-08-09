@@ -12,7 +12,7 @@ class CargoUpload extends Upload {
 	}
 
 	public function extractProductName(array $row):string {
-		return $row["Asset Title"];
+		return $row["Product Title"];
 	}
 
 	public function extractEarning(array $row):Money {
