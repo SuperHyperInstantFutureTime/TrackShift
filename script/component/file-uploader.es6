@@ -1,6 +1,7 @@
 import {Page} from "../inc/Page.es6";
 
 const nextPageDelay = 2000;
+let nextPageDelayTriggered = false;
 
 Page.go(function() {
 	document.querySelectorAll("file-uploader").forEach(init);
@@ -35,7 +36,7 @@ function formSubmit(e) {
 			}
 
 			nextPageTimeout = setTimeout(() => {
-				location.href = nextPageUrl;
+				nextPageDelayTriggered = true;
 			}, nextPageDelay);
 		});
 	});
@@ -54,6 +55,14 @@ function formSubmit(e) {
 		body: formData,
 	}).then(response => {
 		nextPageUrl = response.url;
+		if(nextPageDelayTriggered) {
+			location.href = nextPageUrl;
+		}
+		else {
+			setTimeout(() => {
+				location.href = nextPageUrl;
+			}, nextPageDelay);
+		}
 	})
 }
 
