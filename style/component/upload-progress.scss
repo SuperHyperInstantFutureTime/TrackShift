@@ -1,6 +1,9 @@
 upload-progress {
 	@extend %o-container;
-	position: relative;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
 	display: none;
 	height: 19rem;
 	transition: opacity 1s;
@@ -40,8 +43,8 @@ upload-progress {
 
 	.messages {
 		position: absolute;
-		left: 0;
-		right: 0;
+		left: 1rem;
+		right: 1rem;
 	}
 
 	p {

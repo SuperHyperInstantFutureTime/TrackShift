@@ -2,29 +2,84 @@ file-uploader {
 	display: block;
 	box-sizing: border-box;
 	text-align: center;
-	max-width: calc($break-small - 6rem);
+	max-width: 20rem;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 4rem;
 	cursor: pointer;
+
+	position: absolute;
+	top: -1rem;
+	left: calc(50% - $break-small + 12rem);
+	right: calc(50% - $break-small + 12rem);
+
+	@media(min-width: $break-small) {
+		max-width: 48vw;
+		margin-top: 0;
+	}
+
+	body.uri--index & {
+		position: static;
+		top: auto;
+		left: auto;
+		right: auto;
+		margin-top: 12rem;
+	}
 
 	&.uploading {
 		form {
-			display: none;
+			opacity: 0;
 		}
 	}
 
-	@media(min-width: $break-small) {
-		margin-left: auto;
-		margin-right: auto;
-	}
-
 	form {
-		margin: 8rem 1rem;
 		padding: 0;
+		margin: 1rem;
+
+		body.uri--index & {
+			margin: 8rem 1rem;
+		}
 	}
 
 	label {
 		@extend %d-dropzone, %o-container;
+		background-color: var(--pal-page-bg);
+
+		body:not(.uri--index) & {
+			padding: 0;
+		}
 
 		p {
+			@media(max-width: $break-small) {
+				&:not(:last-of-type) {
+					display: none;
+				}
+			}
+
+			a {
+				span {
+					&.desktop-text {
+						display: none;
+					}
+
+					@media(min-width: $break-small) {
+						&.desktop-text {
+							display: block;
+						}
+						&.mobile-text {
+							display: none;
+						}
+					}
+				}
+			}
+
+			@media(min-width: $break-small) {
+				body:not(.uri--index) & {
+					display: inline-block;
+				}
+			}
+
+
 			a {
 				--pal-link-text--visited: var(--pal-1);
 

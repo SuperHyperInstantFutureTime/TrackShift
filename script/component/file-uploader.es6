@@ -24,7 +24,12 @@ function formSubmit(e) {
 	let nextPageTimeout = null;
 	let nextPageUrl = form.action || location.href;
 
-	fileUploader.nextElementSibling.addEventListener("transitionend", e => {
+	let animContext = fileUploader;
+	while(animContext.parentNode !== document.body) {
+		animContext = animContext.parentNode;
+	}
+
+	animContext.nextElementSibling.addEventListener("transitionend", e => {
 		console.log("page has faded out");
 	});
 
@@ -41,12 +46,11 @@ function formSubmit(e) {
 		});
 	});
 
-	let context = fileUploader;
 	do {
-		context = context.nextElementSibling;
-		context.classList.add("fade-away");
+		animContext = animContext.nextElementSibling;
+		animContext.classList.add("fade-away");
 	}
-	while(context.nextElementSibling);
+	while(animContext.nextElementSibling);
 
 	let formData = new FormData(form);
 	formData.set("do", "upload");

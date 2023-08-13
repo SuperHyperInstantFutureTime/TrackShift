@@ -1,10 +1,11 @@
 global-header {
 	@extend %o-container;
+	position: relative;
 
 	display: block;
 
 	header {
-		h1 {
+		>h1 {
 			position: relative;
 			text-align: center;
 			font-family: var(--font-family-heading);
@@ -49,32 +50,37 @@ global-header {
 		}
 
 		nav {
+			position: absolute;
+			top: 8rem;
+			left: 0;
+			right: 0;
+			display: flex;
+			justify-content: center;
+
 			@media(min-width: $break-small) {
 				position: absolute;
 				margin: 0;
 				top: 0;
-				left: 24rem;
-				right: 24rem;
+				right: 0;
+				left: auto;
 			}
 
 			ul {
 				list-style-type: none;
 				margin: 0;
-				margin-top: 6rem;
 				padding: 0;
 
 				@media(min-width: $break-small) {
 					max-width: calc($break-small - 6rem);
 					text-align: right;
-					margin-top: 1rem;
-					margin-left: auto;
-					margin-right: auto;
+					margin-top: 0;
 				}
 
 				li {
 					a {
 						display: block;
 						padding: 1rem;
+						background-color: var(--pal-page-bg);
 					}
 				}
 			}
