@@ -11,7 +11,7 @@ readonly class ProductRepository extends Repository {
 	public function getProductEarnings(User $user):array {
 		$earningList = [];
 
-		foreach($this->db->fetchAll("getEarnings") as $row) {
+		foreach($this->db->fetchAll("getEarnings", $user->id) as $row) {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
 			$product = new Product($row->getString("productId"), $row->getString("title"), $artist);
 			$earning = new Money($row->getFloat("totalEarning"));

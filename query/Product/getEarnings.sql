@@ -3,7 +3,7 @@ select
 	artistId,
 	Artist.name as artistName,
 	title,
-	type,
+	Product.type,
 	round(sum(UsageOfProduct.earning), 2) as totalEarning
 
 from
@@ -23,6 +23,13 @@ inner join
 	Usage
 on
 	UsageOfProduct.usageId = Usage.id
+
+inner join
+	Upload
+on
+	Upload.id = Usage.uploadId
+and
+	Upload.userId = ?
 
 group by
 	title
