@@ -2561,12 +2561,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SuperHyperInstantFutureTime/SpotifyAPI.git",
-                "reference": "ee18d9a07c093392cc2726bbf494426468b10664"
+                "reference": "a71b81d56be8f6e3d3683e335fdfbbbe32782215"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SuperHyperInstantFutureTime/SpotifyAPI/zipball/ee18d9a07c093392cc2726bbf494426468b10664",
-                "reference": "ee18d9a07c093392cc2726bbf494426468b10664",
+                "url": "https://api.github.com/repos/SuperHyperInstantFutureTime/SpotifyAPI/zipball/a71b81d56be8f6e3d3683e335fdfbbbe32782215",
+                "reference": "a71b81d56be8f6e3d3683e335fdfbbbe32782215",
                 "shasum": ""
             },
             "require": {
@@ -2590,7 +2590,7 @@
                 "issues": "https://github.com/SuperHyperInstantFutureTime/SpotifyAPI/issues",
                 "source": "https://github.com/SuperHyperInstantFutureTime/SpotifyAPI/tree/master"
             },
-            "time": "2023-08-13T17:11:53+00:00"
+            "time": "2023-08-13T18:35:01+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
