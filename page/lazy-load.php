@@ -18,7 +18,7 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 		exit;
 	}
 
-	$searchString = "{$product->artist->name} - $product->title";
+	$searchString = "'$product->title' artist: '{$product->artist->name}'";
 	$result = $spotify->search->query($searchString, new SearchFilter(EntityType::album), limit: 1);
 	if($album = $result->albums->items[0] ?? null) {
 		$smallestImage = null;
