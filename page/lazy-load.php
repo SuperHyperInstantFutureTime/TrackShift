@@ -41,7 +41,7 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 			$album = $match->album;
 		}
 		else {
-			$album = null;
+			$album = $match;
 		}
 
 		if(!$album) {
@@ -68,8 +68,6 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 		echo $imageData;
 		exit;
 	}
-
-	die("nothing");
 
 	touch("$filePath.missing");
 	exit;
