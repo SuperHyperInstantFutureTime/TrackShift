@@ -1,6 +1,6 @@
 import {Page} from "../inc/Page.es6";
 
-const nextPageDelay = 2000;
+const nextPageDelay = 3000;
 let nextPageDelayTriggered = false;
 
 Page.go(function() {
@@ -22,6 +22,8 @@ function formSubmit(e) {
 	fileUploader.classList.add("uploading");
 	let uploadProgress = fileUploader.querySelector("upload-progress");
 	let nextPageTimeout = null;
+	let nextPageCallback = null;
+	let nextPageCallbackTimeout = null;
 	let nextPageUrl = form.action || location.href;
 
 	let animContext = fileUploader;
@@ -39,10 +41,18 @@ function formSubmit(e) {
 				clearTimeout(nextPageTimeout);
 				nextPageTimeout = null;
 			}
+			console.log("reset trigger");
+			nextPageDelayTriggered = false;
 
 			nextPageTimeout = setTimeout(() => {
+				console.log("triggered trigger");
 				nextPageDelayTriggered = true;
 			}, nextPageDelay);
+
+			if(nextPageCallbackTimeout) {
+				clearTimeout(nextPageCallbackTimeout);
+				nextPageCallbackTimeout = setTimeout(nextPageCallback, nextPageDelay);
+			}
 		});
 	});
 
@@ -60,12 +70,15 @@ function formSubmit(e) {
 	}).then(response => {
 		nextPageUrl = response.url;
 		if(nextPageDelayTriggered) {
+			console.log("Next page delay triggered");
 			location.href = nextPageUrl;
 		}
 		else {
-			setTimeout(() => {
+			console.log("Next page delay NOT triggered");
+			nextPageCallback = () => {
 				location.href = nextPageUrl;
-			}, nextPageDelay);
+			};
+			nextPageCallbackTimeout = setTimeout(nextPageCallback, nextPageDelay);
 		}
 	})
 }

@@ -24,7 +24,6 @@ function do_upload(
 
 	$fileNameList = $uploadManager->upload($user, ...$input->getMultipleFile("upload"));
 	$productList = $uploadManager->processUploads($user, ...$fileNameList);
-//	$uploadManager->cacheArt($spotify, ...$productList);
 
 	if($advanceTo = $input->getString("advance")) {
 		$response->redirect($advanceTo);

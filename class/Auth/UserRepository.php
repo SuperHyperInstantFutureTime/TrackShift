@@ -23,11 +23,11 @@ readonly class UserRepository extends Repository {
 
 	public function createNewUser():User {
 		$user = new User(new Ulid());
-		$this->session->set(self::SESSION_USER, $user);
+		$this->db->insert("create", $user->id);
 		return $user;
 	}
 
 	public function persistUser(User $user):void {
-		$this->db->insert("create", $user->id);
+		$this->session->set(self::SESSION_USER, $user);
 	}
 }
