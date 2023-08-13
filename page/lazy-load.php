@@ -17,6 +17,9 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 		echo file_get_contents($filePath);
 		exit;
 	}
+	if(is_file("$filePath.missing")) {
+		exit;
+	}
 
 	$searchString = "album:'$product->title' artist:'{$product->artist->name}'";
 	$result = $spotify->search->query($searchString, new SearchFilter(EntityType::album), "GB", limit: 1);
@@ -43,6 +46,10 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 
 		file_put_contents($filePath, $imageData);
 		echo $imageData;
+		exit;
+	}
+	else {
+		touch("$filePath.missing");
 		exit;
 	}
 }
