@@ -17,7 +17,7 @@ global-footer {
 		height: $size-gfx;
 		z-index: 1;
 		display: block;
-		background-image: url("/asset/img/abstract/zap.svg");
+		// background-image: url("/asset/img/abstract/zap.svg");
 		background-size: $size-gfx * 4;
 		background-repeat: repeat-x;
 		background-position-x: 50%;
@@ -34,7 +34,7 @@ global-footer {
 		height: $size-gfx;
 		z-index: 1;
 		display: block;
-		background-image: url("/asset/img/abstract/tape.svg");
+		// background-image: url("/asset/img/abstract/tape.svg");
 		background-size: 100%;
 		pointer-events: none;
 	}

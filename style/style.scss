@@ -45,7 +45,7 @@
 }
 
 body {
-	background-image: url("/asset/img/abstract/bg1.svg");
+	// background-image: url("/asset/img/abstract/bg1.svg");
 	background-repeat: no-repeat;
 	background-position: right -8rem;
 	background-size: 16rem;
@@ -63,7 +63,7 @@ table {
 	width: 100%;
 	margin-bottom:60px;
 	th, td {
-		padding: 0.5rem;
+		padding: 0 1rem;
 
 		&:last-of-type {
 			text-align: right;
@@ -72,18 +72,34 @@ table {
 
 	thead {
 		th {
-			background-color: #444;
-			color: white;
+			// background-color: var(--pal-4);
+			color: var(--pal-5);
 			text-align: left;
+			padding-bottom:1rem;
+			border-bottom: 2px solid var(--pal-5);
+			&.centered {
+				text-align: center !important;
+			}
 		}
 	}
 	tbody {
 		tr {
+			transition: 0.3s ease-in-out;
 			&:nth-of-type(even) {
-				background-color: #eee;
+				// background-color: #eee;
+			}
+			&:hover {
+				// background-color: #444;
+				color:var(--pal-1);
+				
 			}
 
 			td {
+
+				&.centered {
+					text-align: center !important;
+				}
+
 			}
 		}
 	}
@@ -97,11 +113,16 @@ table {
 	font-weight:bold;
 	font-size:18px;
 	padding:10px 15px;
-	margin:15px 0
+	margin:15px 0;
+	text-decoration: none;
+	transition: 0.3s ease-in-out
 }
 
 .button:hover {
-	background-color: #efefef;
+	background-color: var(--pal-1);
+	transition: 0.3sec ease-in-out;
+	color:white;
+	border-color:var(--pal-1);
 }
 
 .footer {
@@ -116,4 +137,14 @@ table {
 
 hr {
 	margin-bottom: 30px
+}
+
+input[type="text"] {
+	padding:15px;
+	font-size:18px;
+	border-radius:15px;
+	border: 2px solid var(--pal-utility-dark-1);
+	outline-color: var(--pal-utility-dark-1);
+	box-shadow:none !important;
+	margin-bottom:2rem
 }

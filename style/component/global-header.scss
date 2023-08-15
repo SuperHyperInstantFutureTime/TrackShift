@@ -16,37 +16,38 @@ global-header {
 			}
 
 			a {
-				--pal-link-text: var(--pal-utility-light-1);
-				--pal-link-text--visited: var(--pal-utility-light-1);
+				--pal-link-text: var(--pal-utility-dark-1);
+				--pal-link-text--visited: var(--pal-utility-dark-1);
 
 				text-decoration: none;
-				transition: color 0.1s ease-in-out;
+				transition: color 0.3s ease-in-out;
 
 				&:hover {
-					color: var(--pal-2);
+					color: var(--pal-1);
+					transition: 0.3s ease-in-out
 				}
 			}
 
-			&::before {
-				$size: 12rem;
+			// &::before {
+			// 	$size: 12rem;
 
-				content: "";
-				position: absolute;
-				display: block;
-				z-index: -1;
-				top: calc(50% - ($size / 2));
-				left: calc(50% - ($size / 2));
-				width: $size;
-				height: $size;
+			// 	content: "";
+			// 	position: absolute;
+			// 	display: block;
+			// 	z-index: -1;
+			// 	top: calc(50% - ($size / 2));
+			// 	left: calc(50% - ($size / 2));
+			// 	width: $size;
+			// 	height: $size;
 
-				border-radius: $size;
-				background-color: var(--pal-1);
-				pointer-events: none;
+			// 	border-radius: $size;
+			// 	background-color: var(--pal-1);
+			// 	pointer-events: none;
 
-				@media(min-width: $break-small) {
-					left: -1.5rem;
-				}
-			}
+			// 	@media(min-width: $break-small) {
+			// 		left: -1.5rem;
+			// 	}
+			// }
 		}
 
 		nav {
