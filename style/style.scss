@@ -45,10 +45,11 @@
 }
 
 body {
-	// background-image: url("/asset/img/abstract/bg1.svg");
+	background-image: url("/asset/img/abstract/bg2.svg");
 	background-repeat: no-repeat;
-	background-position: right -8rem;
+	background-position: right -12rem top -4rem ;
 	background-size: 16rem;
+	background-color: var(--pal-6);
 
 	@media(min-width: $break-small) {
 		background-size: 32vw;
@@ -63,7 +64,7 @@ table {
 	width: 100%;
 	margin-bottom:60px;
 	th, td {
-		padding: 0 1rem;
+		padding-right:1rem !important;
 
 		&:last-of-type {
 			text-align: right;
@@ -110,7 +111,7 @@ table {
 	background-color: white;
 	border: 2px black solid;
 	border-radius: 5px;
-	font-weight:bold;
+	font-weight:bold !important;
 	font-size:18px;
 	padding:10px 15px;
 	margin:15px 0;

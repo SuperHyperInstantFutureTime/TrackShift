@@ -27,7 +27,7 @@ account-tabs {
 
 			&.selected {
 				a {
-					background-color: var(--pal-utility-light-1);
+					// background-color: var(--pal-utility-light-1);
 
 					&::after {
 						content: "";
@@ -36,7 +36,7 @@ account-tabs {
 						left: 0;
 						right: 0;
 						height: 1rem;
-						background-color: var(--pal-utility-light-1);
+						background-color: var(--pal-6);
 					}
 				}
 			}

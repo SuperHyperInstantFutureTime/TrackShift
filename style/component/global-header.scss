@@ -8,11 +8,15 @@ global-header {
 		>h1 {
 			position: relative;
 			text-align: center;
-			font-family: var(--font-family-heading);
+			font-family: 'Gilroy', sans-serif;
 			font-weight: 900;
 
 			@media(min-width: $break-small) {
 				text-align: left;
+			}
+
+			.brand {
+				font-family: 'Gilroy', sans-serif !important;
 			}
 
 			a {
