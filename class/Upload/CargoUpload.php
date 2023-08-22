@@ -11,7 +11,7 @@ class CargoUpload extends Upload {
 		return $row["Asset Artist"];
 	}
 
-	public function extractProductName(array $row):string {
+	public function extractProductTitle(array $row):string {
 		return $row["Product Title"];
 	}
 

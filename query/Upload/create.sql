@@ -2,13 +2,11 @@ insert into Upload (
 	id,
 	userId,
 	filePath,
-	type,
-	createdAt
+	type
 )
 values (
 	:id,
 	:userId,
 	:filePath,
-	:type,
-	strftime('%s')
+	:type
 )

@@ -2,14 +2,13 @@ select
 	id,
 	userId,
 	filePath,
-	type
+	type,
+	usagesProcessed
 
 from
 	Upload
 
-where
-	userId = :userId
-and
-	filePath = :filePath
+order by
+	id
 
 limit 1

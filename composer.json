@@ -9,6 +9,13 @@
 			"options": {
 				"symlink": true
 			}
+		},
+		{
+			"type": "path",
+			"url": "/home/g105b/Code/PhpGt/Database",
+			"options": {
+				"symlink": true
+			}
 		}
 	],
 
@@ -16,7 +23,7 @@
 		"php": ">=8.2",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
-		"phpgt/database": "dev-master as v1.5.0",
+		"phpgt/database": "dev-dynamic-sets as v1.5.0",
 		"league/commonmark": "^2.4"
 	},
 	"require-dev": {

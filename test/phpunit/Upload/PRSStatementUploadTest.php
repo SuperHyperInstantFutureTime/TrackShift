@@ -15,7 +15,7 @@ class PRSStatementUploadTest extends TestCase {
 	public function testExtractProductName():void {
 		$sut = new PRSStatementUpload("test-id", "test/files/prs-simple-3-songs.csv");
 		$dataRows = iterator_to_array($sut->generateDataRows());
-		$productName = $sut->extractProductName($dataRows[0]);
+		$productName = $sut->extractProductTitle($dataRows[0]);
 		self::assertSame("Song 1", $productName);
 	}
 

@@ -15,7 +15,7 @@ class CargoUploadTest extends TestCase {
 	public function testExtractProductName():void {
 		$sut = new CargoUpload("test-id", "test/files/cargo-simple-3-songs.csv");
 		$dataRows = iterator_to_array($sut->generateDataRows());
-		$productName = $sut->extractProductName($dataRows[0]);
+		$productName = $sut->extractProductTitle($dataRows[0]);
 		self::assertSame("Album 1", $productName);
 	}
 

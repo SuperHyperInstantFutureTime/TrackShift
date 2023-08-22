@@ -11,7 +11,7 @@ readonly class ProductRepository extends Repository {
 	public function getProductEarnings(User $user):array {
 		$earningList = [];
 
-		foreach($this->db->fetchAll("getEarnings", $user->id) as $row) {
+		foreach($this->uploadDb->fetchAll("getEarnings", $user->id) as $row) {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
 			$product = new Product($row->getString("productId"), $row->getString("title"), $artist);
 			$earning = new Money($row->getFloat("totalEarning"));
@@ -30,7 +30,7 @@ readonly class ProductRepository extends Repository {
 	}
 
 	public function getById(string $id):Product {
-		$row = $this->db->fetch("getById", $id);
+		$row = $this->uploadDb->fetch("getById", $id);
 		$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
 		return new Product(
 			$row->getString("id"),

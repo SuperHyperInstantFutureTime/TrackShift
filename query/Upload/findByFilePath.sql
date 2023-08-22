@@ -2,8 +2,7 @@ select
 	id,
 	userId,
 	filePath,
-	type,
-	createdAt
+	type
 
 from
 	Upload

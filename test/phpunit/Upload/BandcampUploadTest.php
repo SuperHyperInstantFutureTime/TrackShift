@@ -16,7 +16,7 @@ class BandcampUploadTest extends TestCase {
 	public function testExtractProductName():void {
 		$sut = new BandcampUpload("test-id", "test/files/bandcamp-simple-3-songs.csv");
 		$dataRows = iterator_to_array($sut->generateDataRows());
-		$productName = $sut->extractProductName($dataRows[0]);
+		$productName = $sut->extractProductTitle($dataRows[0]);
 		self::assertSame("BC 1", $productName);
 	}
 

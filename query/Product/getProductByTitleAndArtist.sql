@@ -1,8 +1,7 @@
 select
 	id,
 	artistId,
-	title,
-	type
+	title
 
 from
 	Product

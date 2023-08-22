@@ -22,8 +22,8 @@ function do_upload(
 ):void {
 	$userRepository->persistUser($user);
 
-	$fileNameList = $uploadManager->upload($user, ...$input->getMultipleFile("upload"));
-	$productList = $uploadManager->processUploads($user, ...$fileNameList);
+	$uploadManager->upload($user, ...$input->getMultipleFile("upload"));
+//	$productList = $uploadManager->processUploads($user, ...$fileNameList);
 
 	if($advanceTo = $input->getString("advance")) {
 		$response->redirect($advanceTo);

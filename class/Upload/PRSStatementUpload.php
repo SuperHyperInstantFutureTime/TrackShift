@@ -11,7 +11,7 @@ class PRSStatementUpload extends Upload {
 		return $row["IP1"];
 	}
 
-	public function extractProductName(array $row): string {
+	public function extractProductTitle(array $row): string {
 		return $row["Work Title"];
 	}
 

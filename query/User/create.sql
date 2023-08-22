@@ -1,8 +1,6 @@
 replace into User (
-	id,
-	createdAt
+	id
 )
 values (
-	?,
-	strftime('%s')
+	?
 )

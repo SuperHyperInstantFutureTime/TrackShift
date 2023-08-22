@@ -1,18 +1,15 @@
 select
 	Product.id,
-	artistId,
-	title,
+	Product.artistId,
+	Product.title,
 	Artist.name as artistName
 
 from
 	Product
 
-inner join
-	Artist
+inner join Artist
 on
 	Artist.id = Product.artistId
 
 where
-        Product.id = ?
-
-limit 1
+:__dynamicOr

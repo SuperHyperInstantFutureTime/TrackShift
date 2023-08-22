@@ -5,6 +5,7 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 use Gt\Database\Query\QueryCollection;
+use Gt\Database\Result\Row;
 use Gt\Input\InputData\Datum\FileUpload;
 use Gt\Ulid\Ulid;
 use SHIFT\Spotify\Entity\AlbumType;
@@ -35,7 +36,7 @@ readonly class UploadManager extends Repository {
 
 	/** @return array<string> List of file names that have been uploaded */
 	public function upload(User $user, FileUpload...$uploadList):array {
-		$fileNameList = [];
+		$filePathList = [];
 
 		$userDir = $this->getUserDataDir($user);
 		foreach($uploadList as $file) {
@@ -46,17 +47,34 @@ readonly class UploadManager extends Repository {
 				mkdir(dirname($targetPath), 0775, true);
 			}
 			$file->moveTo($targetPath);
-			array_push($fileNameList, $targetPath);
+			array_push($filePathList, $targetPath);
 		}
 
-		return $fileNameList;
+		foreach($filePathList as $filePath) {
+			$uploadType = $this->detectUploadType($filePath);
+			/** @var Upload $upload */
+			$upload = new $uploadType(new Ulid(), $filePath);
+
+			if($this->uploadDb->fetch("findByFilePath", $filePath)) {
+				continue;
+			}
+
+			$this->uploadDb->insert("create", [
+				"id" => $upload->id,
+				"userId" => $user->id,
+				"filePath" => $upload->filePath,
+				"type" => $upload::class,
+			]);
+		}
+
+		return $filePathList;
 	}
 
 	/** @return array<Upload> */
 	public function getUploadsForUser(User $user):array {
 		$uploadList = [];
 
-		foreach($this->db->fetchAll("getForUser", [
+		foreach($this->uploadDb->fetchAll("getForUser", [
 			"userId" => $user->id,
 		]) as $row) {
 			$type = $row->getString("type");
@@ -69,8 +87,143 @@ readonly class UploadManager extends Repository {
 		return $uploadList;
 	}
 
+	public function getNextUploadNotYetProcessed():?Upload {
+		if($row = $this->uploadDb->fetch("getSingleUnprocessed")) {
+			return $this->rowToUpload($row);
+		}
+
+		return null;
+	}
+
+	public function processUploadIntoUsages(Upload $upload):void {
+		$usageRowsToInsert = [];
+		foreach($upload->generateDataRows() as $row) {
+			$usage = new Usage(
+				new Ulid(),
+				$upload,
+				$row,
+			);
+			array_push($usageRowsToInsert, [
+				"id" => $usage->id,
+				"uploadId" => $upload->id,
+				"data" => json_encode($row),
+			]);
+		}
+
+		$this->usageDb->insert("createMultiple", [
+			"__dynamicValueSet" => $usageRowsToInsert,
+		]);
+		$this->uploadDb->update("setProcessed", $upload->id);
+	}
+
+	public function processUsages(Upload $upload):int {
+		$artistNameIdMap = [];
+// TODO: This should have keys: [$productName__$artistName]
+		$productTitleArtistNameIdMap = [];
+
+		$discoveredArtistNameList = [];
+		$discoveredProductTitleList = [];
+		$discoveredEarningList = [];
+		$discoveredUsageIdList = [];
+
+		foreach($this->usageDb->fetchAll("getUnprocessedForUpload", $upload->id) as $row) {
+			$dataRow = json_decode($row->getString("data"), true);
+			$artistName = $upload->extractArtistName($dataRow);
+			$productTitle = $upload->extractProductTitle($dataRow);
+			$earning = $upload->extractEarning($dataRow);
+			array_push($discoveredArtistNameList, $artistName);
+			array_push($discoveredProductTitleList, $productTitle);
+			array_push($discoveredEarningList, $earning);
+			array_push($discoveredUsageIdList, $row->getString("id"));
+		}
+
+		$uniqueDiscoveredArtistNameList = array_unique($discoveredArtistNameList);
+		$existingArtistNameList = [];
+
+		foreach($this->artistDb->fetchAll("getArtistIdsByNames", [
+			"__dynamicIn" => $uniqueDiscoveredArtistNameList,
+		]) as $row) {
+			$artistNameIdMap[$row->getString("name")] = $row->getString("id");
+			array_push($existingArtistNameList, $row->getString("name"));
+		}
+
+		$newArtistNameList = array_diff($uniqueDiscoveredArtistNameList, $existingArtistNameList);
+
+		$artistsToInsert = [];
+		foreach($newArtistNameList as $name) {
+			$id = (string)(new Ulid());
+			array_push($artistsToInsert, [
+				"id" => $id,
+				"name" => $name,
+			]);
+			$artistNameIdMap[$name] = $id;
+		}
+		if($artistsToInsert) {
+			$this->artistDb->insert("createMultiple", ["__dynamicValueSet" => $artistsToInsert]);
+		}
+
+// TODO: We've got a good, fast list of artists. Need to build up a list of products (with artist IDs as some products will have the same title)
+// Then when we've got products, we can assign the earnings in bulk.
+// We have a list of products and their associated artists, indexed in two arrays.
+// We can get the artist ID from the name/id lookup map.
+		$productTitlesAndArtistIdsList = [];
+		foreach($discoveredProductTitleList as $i => $productTitle) {
+			$artistName = $discoveredArtistNameList[$i];
+			$artistId = $artistNameIdMap[$artistName];
+			array_push($productTitlesAndArtistIdsList, [
+				"title" => $productTitle,
+				"artistId" => $artistId,
+			]);
+		}
+		$uniqueFoundProductTitlesAndArtistIdsList = array_unique($productTitlesAndArtistIdsList, SORT_REGULAR);
+
+		$existingProductsTitleAndArtistIdList = [];
+		foreach($this->productDb->fetchAll("getProductsByArtistIdsAndNames", [
+			"__dynamicOr" => $uniqueFoundProductTitlesAndArtistIdsList,
+		]) as $row) {
+			$title = $row->getString("title");
+			array_push($existingProductsTitleAndArtistIdList, [
+				"title" => $title,
+				"artistId" => $row->getString("artistId"),
+			]);
+			$artistName = $row->getString("artistName");
+			$productTitleArtistNameIdMap[$artistName . "__" . $title] = $row->getString("id");
+		}
+		$uniqueExistingProductsTitleAndArtistIdList = array_unique($existingProductsTitleAndArtistIdList, SORT_REGULAR);
+// TODO: Extract a multi-dimensional array diff - otherwise new products might not be detected!
+		$productsToInsert = array_diff($uniqueFoundProductTitlesAndArtistIdsList, $uniqueExistingProductsTitleAndArtistIdList);
+		foreach($productsToInsert as $i => $item) {
+			$productsToInsert[$i]["id"] = (string)(new Ulid());
+		}
+		if($productsToInsert) {
+			$this->productDb->insert("createMultiple", ["__dynamicValueSet" => array_values($productsToInsert)]);
+		}
+
+		$usageOfProductsToInsert = [];
+		foreach($discoveredEarningList as $i => $earning) {
+			$usageId = $discoveredUsageIdList[$i];
+			$artistName = $discoveredArtistNameList[$i];
+			$productTitle = $discoveredProductTitleList[$i];
+			$productId = $productTitleArtistNameIdMap[$artistName . "__" . $productTitle];
+			$earning = $earning->value;
+			array_push($usageOfProductsToInsert, [
+				"id" => (string)(new Ulid()),
+				"usageId" => $usageId,
+				"productId" => $productId,
+				"earning" => $earning,
+			]);
+		}
+		$count = 0;
+		if($usageOfProductsToInsert) {
+			$count += $this->usageDb->insert("assignMultipleProductUsages", [
+				"__dynamicValueSet" => $usageOfProductsToInsert,
+			]);
+		}
+		return $count;
+	}
+
 	public function delete(User $user, string $id):void {
-		$row = $this->db->fetch("getById", [
+		$row = $this->uploadDb->fetch("getById", [
 			"id" => $id,
 			"userId" => $user->id,
 		]);
@@ -79,7 +232,7 @@ readonly class UploadManager extends Repository {
 			throw new UploadNotFoundException("id: $id");
 		}
 
-		$this->db->delete("delete", [
+		$this->uploadDb->delete("delete", [
 			"id" => $id,
 			"userId" => $user->id,
 		]);
@@ -110,6 +263,7 @@ readonly class UploadManager extends Repository {
 
 	/** @return array<Product> */
 	public function processUploads(User $user, string...$fileNameList):array {
+		set_time_limit(0);
 		$productList = [];
 
 		foreach($fileNameList as $filePath) {
@@ -118,20 +272,21 @@ readonly class UploadManager extends Repository {
 			/** @var Upload $upload */
 			$upload = new $uploadType(new Ulid(), $filePath);
 
-			if($this->db->fetch("findByFilePath", $filePath)) {
+			if($this->uploadDb->fetch("findByFilePath", $filePath)) {
 				continue;
 			}
 
-			$this->db->insert("create", [
+			$this->uploadDb->insert("create", [
 				"id" => $upload->id,
 				"userId" => $user->id,
 				"filePath" => $upload->filePath,
 				"type" => $upload::class,
 			]);
 
+			$usageRowsToInsert = [];
 			foreach($upload->generateDataRows() as $row) {
 				$artistName = $upload->extractArtistName($row);
-				$productName = $upload->extractProductName($row);
+				$productName = $upload->extractProductTitle($row);
 				$earning = $upload->extractEarning($row);
 
 				$usage = new Usage(
@@ -139,18 +294,23 @@ readonly class UploadManager extends Repository {
 					$upload,
 					$row,
 				);
-				$this->usageDb->insert("create", [
+				array_push($usageRowsToInsert, [
 					"id" => $usage->id,
 					"uploadId" => $upload->id,
 					"data" => json_encode($row),
 				]);
 
-				$artist = $this->findOrCreateArtist($artistName);
-				$product = $this->findOrCreateProduct($productName, $artist);
-				array_push($productList, $product);
 
-				$this->assignUsage($product, $usage, $earning);
+//				$artist = $this->findOrCreateArtist($artistName);
+//				$product = $this->findOrCreateProduct($productName, $artist);
+//				array_push($productList, $product);
+
+//				$this->assignUsage($product, $usage, $earning);
 			}
+
+			$this->usageDb->insert("createMultiple", [
+				"__dynamicValueSet" => $usageRowsToInsert,
+			]);
 		}
 
 		return $productList;
@@ -317,5 +477,15 @@ readonly class UploadManager extends Repository {
 		return $foundAllColumns;
 	}
 
+	private function rowToUpload(?Row $row):?Upload {
+		if(!$row) {
+			return null;
+		}
 
+		$filePath = $row->getString("filePath");
+		$uploadType = $this->detectUploadType($filePath);
+		/** @var Upload $upload */
+		$upload = new $uploadType(new Ulid(), $filePath);
+		return $upload;
+	}
 }

@@ -11,7 +11,7 @@ class BandcampUpload extends Upload {
 		return $row["artist"];
 	}
 
-	public function extractProductName(array $row):string {
+	public function extractProductTitle(array $row):string {
 		return $row["item name"];
 	}
 

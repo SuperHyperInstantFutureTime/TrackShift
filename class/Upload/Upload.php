@@ -6,6 +6,7 @@ use DateTimeInterface;
 use DateTimeZone;
 use Generator;
 use Gt\DomTemplate\BindGetter;
+use Gt\Ulid\Ulid;
 use SHIFT\Trackshift\Auth\User;
 use SplFileObject;
 use SHIFT\Trackshift\Artist\Artist;
@@ -29,6 +30,7 @@ abstract class Upload {
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);
 		$this->basename = pathinfo($this->filePath, PATHINFO_BASENAME);
 		$this->size = filesize($this->filePath);
+// TODO: Use the ULID to get the timestamp from the ID.
 		$this->createdAt = new DateTime("@" . filectime($this->filePath));
 		$this->createdAt->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
@@ -53,7 +55,7 @@ abstract class Upload {
 	abstract public function extractArtistName(array $row):string;
 
 	/** @param array<string, string> $row */
-	abstract public function extractProductName(array $row):string;
+	abstract public function extractProductTitle(array $row):string;
 
 	/** @param array<string, string> $row */
 	abstract public function extractEarning(array $row):Money;

@@ -4,6 +4,6 @@ create table Upload
     userId text not null constraint Upload_User_id_fk references User (id) on delete cascade on update cascade,
     filePath text not null,
     type text not null,
-    createdAt integer not null
+    usagesProcessed boolean not null default false
 );
 

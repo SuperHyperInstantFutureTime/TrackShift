@@ -3,7 +3,6 @@ select
 	artistId,
 	Artist.name as artistName,
 	title,
-	Product.type,
 	round(sum(UsageOfProduct.earning), 2) as totalEarning
 
 from
