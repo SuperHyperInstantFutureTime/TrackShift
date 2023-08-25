@@ -1,7 +1,9 @@
 <?php
 use Gt\Input\Input;
 use SHIFT\Spotify\Entity\Album;
+use SHIFT\Spotify\Entity\AlbumType;
 use SHIFT\Spotify\Entity\EntityType;
+use SHIFT\Spotify\Entity\FilterQuery;
 use SHIFT\Spotify\Entity\SearchFilter;
 use SHIFT\Spotify\Entity\Track;
 use SHIFT\Spotify\SpotifyClient;
@@ -23,9 +25,11 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 		exit;
 	}
 
-	$searchString = "album: '$product->title' artist: '{$product->artist->name}'";
-	$result = $spotify->search->query($searchString, new SearchFilter(EntityType::album, EntityType::track), "GB", limit: 5);
-	ob_clean();
+	$filterQuery = new FilterQuery(
+		album: $product->title,
+		artist: $product->artist->name,
+	);
+	$result = $spotify->search->query($filterQuery, new SearchFilter(EntityType::album, EntityType::track), limit: 5);
 
 	if(!is_dir(dirname($filePath))) {
 		mkdir(dirname($filePath), recursive: true);
@@ -33,10 +37,6 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 
 	/** @var Album|Track $match */
 	foreach(array_merge($result->albums->items, $result->tracks->items) as $match) {
-		if($match->name !== $product->title) {
-			continue;
-		}
-
 		if($match instanceof Track) {
 			$album = $match->album;
 		}
@@ -45,6 +45,12 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 		}
 
 		if(!$album) {
+			echo "No album on $match->name", PHP_EOL;
+			continue;
+		}
+
+		if($album->name !== $product->title) {
+			echo "Skipping $album->name...", PHP_EOL;
 			continue;
 		}
 
@@ -61,6 +67,7 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 			exit;
 		}
 
+		ob_clean();
 		header("Content-type: image/jpeg");
 		$imageData = file_get_contents($smallestImage->url);
 
