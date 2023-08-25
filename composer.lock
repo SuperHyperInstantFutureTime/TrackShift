@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "15b69c6a043412b5e8e3625a9b7bf7c1",
+    "content-hash": "fb4cd5a2e3aaed7361c37b8f1d257cfb",
     "packages": [
         {
             "name": "composer/semver",
@@ -1091,10 +1091,16 @@
         {
             "name": "phpgt/database",
             "version": "dev-dynamic-sets",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PhpGt/Database.git",
+                "reference": "4e48d3d390d0a54be969636535dfaa1e1def82b5"
+            },
             "dist": {
-                "type": "path",
-                "url": "/home/g105b/Code/PhpGt/Database",
-                "reference": "094856deae168d832208d98e5037f5710cb055ef"
+                "type": "zip",
+                "url": "https://api.github.com/repos/PhpGt/Database/zipball/4e48d3d390d0a54be969636535dfaa1e1def82b5",
+                "reference": "4e48d3d390d0a54be969636535dfaa1e1def82b5",
+                "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
@@ -1118,11 +1124,7 @@
                     "Gt\\Database\\": "./src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Gt\\Database\\Test\\": "./test/phpunit"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1141,16 +1143,17 @@
                 }
             ],
             "description": "Database API organisation.",
+            "support": {
+                "issues": "https://github.com/PhpGt/Database/issues",
+                "source": "https://github.com/PhpGt/Database/tree/dynamic-sets"
+            },
             "funding": [
                 {
-                    "type": "github",
-                    "url": "https://github.com/sponsors/PhpGt"
+                    "url": "https://github.com/sponsors/PhpGt",
+                    "type": "github"
                 }
             ],
-            "transport-options": {
-                "symlink": true,
-                "relative": false
-            }
+            "time": "2023-08-18T11:21:10+00:00"
         },
         {
             "name": "phpgt/dataobject",
@@ -2214,10 +2217,16 @@
         {
             "name": "phpgt/webengine",
             "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "/home/g105b/Code/PhpGt/WebEngine",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PhpGt/WebEngine.git",
                 "reference": "f1f40b3ce6d03eeb238e779344b9022847c1429e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PhpGt/WebEngine/zipball/f1f40b3ce6d03eeb238e779344b9022847c1429e",
+                "reference": "f1f40b3ce6d03eeb238e779344b9022847c1429e",
+                "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
@@ -2244,22 +2253,20 @@
                 "phpstan/phpstan": "v1.8.0",
                 "phpunit/phpunit": "v9.5.21"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Gt\\WebEngine\\": "./src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Gt\\WebEngine\\Test\\": "./test/phpunit"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "Rapid development engine.",
             "keywords": [
+                "Toolbox",
                 "framework",
                 "gt",
                 "php",
@@ -2267,20 +2274,20 @@
                 "phpgt",
                 "prototype",
                 "router",
-                "toolbox",
                 "webengine",
                 "webservice"
             ],
+            "support": {
+                "issues": "https://github.com/PhpGt/WebEngine/issues",
+                "source": "https://github.com/PhpGt/WebEngine/tree/master"
+            },
             "funding": [
                 {
-                    "type": "github",
-                    "url": "https://github.com/sponsors/PhpGt"
+                    "url": "https://github.com/sponsors/PhpGt",
+                    "type": "github"
                 }
             ],
-            "transport-options": {
-                "symlink": true,
-                "relative": false
-            }
+            "time": "2023-07-20T15:02:42+00:00"
         },
         {
             "name": "psr/container",
@@ -2557,12 +2564,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SuperHyperInstantFutureTime/SpotifyAPI.git",
-                "reference": "a71b81d56be8f6e3d3683e335fdfbbbe32782215"
+                "reference": "a9d1e102233b01884893bab44fc33109f2589426"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SuperHyperInstantFutureTime/SpotifyAPI/zipball/a71b81d56be8f6e3d3683e335fdfbbbe32782215",
-                "reference": "a71b81d56be8f6e3d3683e335fdfbbbe32782215",
+                "url": "https://api.github.com/repos/SuperHyperInstantFutureTime/SpotifyAPI/zipball/a9d1e102233b01884893bab44fc33109f2589426",
+                "reference": "a9d1e102233b01884893bab44fc33109f2589426",
                 "shasum": ""
             },
             "require": {
@@ -2584,9 +2591,9 @@
             "description": " Self-documenting Spotify web API.",
             "support": {
                 "issues": "https://github.com/SuperHyperInstantFutureTime/SpotifyAPI/issues",
-                "source": "https://github.com/SuperHyperInstantFutureTime/SpotifyAPI/tree/master"
+                "source": "https://github.com/SuperHyperInstantFutureTime/SpotifyAPI/tree/v0.0.1"
             },
-            "time": "2023-08-13T18:35:01+00:00"
+            "time": "2023-08-15T17:22:11+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -3790,12 +3797,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pdepend/pdepend.git",
-                "reference": "71430594ba803ebf15e7512954afd2ebbfd94421"
+                "reference": "445e288ddf5d240906c0b60fa61e496c331a886a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pdepend/pdepend/zipball/71430594ba803ebf15e7512954afd2ebbfd94421",
-                "reference": "71430594ba803ebf15e7512954afd2ebbfd94421",
+                "url": "https://api.github.com/repos/pdepend/pdepend/zipball/445e288ddf5d240906c0b60fa61e496c331a886a",
+                "reference": "445e288ddf5d240906c0b60fa61e496c331a886a",
                 "shasum": ""
             },
             "require": {
@@ -3846,7 +3853,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-13T16:55:54+00:00"
+            "time": "2023-08-24T10:50:46+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -4044,16 +4051,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.29",
+            "version": "1.10.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ee5d8f2d3977fb09e55603eee6fb53bdd76ee9c1"
+                "reference": "c47e47d3ab03137c0e121e77c4d2cb58672f6d44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ee5d8f2d3977fb09e55603eee6fb53bdd76ee9c1",
-                "reference": "ee5d8f2d3977fb09e55603eee6fb53bdd76ee9c1",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c47e47d3ab03137c0e121e77c4d2cb58672f6d44",
+                "reference": "c47e47d3ab03137c0e121e77c4d2cb58672f6d44",
                 "shasum": ""
             },
             "require": {
@@ -4102,7 +4109,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-14T13:24:11+00:00"
+            "time": "2023-08-24T21:54:50+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

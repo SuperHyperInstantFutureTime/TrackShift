@@ -2,23 +2,6 @@
 	"name": "shift/trackshift",
 	"description": "",
 
-	"repositories": [
-		{
-			"type": "path",
-			"url": "/home/g105b/Code/PhpGt/WebEngine",
-			"options": {
-				"symlink": true
-			}
-		},
-		{
-			"type": "path",
-			"url": "/home/g105b/Code/PhpGt/Database",
-			"options": {
-				"symlink": true
-			}
-		}
-	],
-
 	"require": {
 		"php": ">=8.2",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
