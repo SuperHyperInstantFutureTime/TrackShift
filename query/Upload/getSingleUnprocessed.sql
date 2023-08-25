@@ -8,6 +8,9 @@ select
 from
 	Upload
 
+where
+	usagesProcessed = false
+
 order by
 	id
 

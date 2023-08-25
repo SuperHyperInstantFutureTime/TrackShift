@@ -6,16 +6,23 @@ use Gt\Database\Database;
 use Gt\Logger\Log;
 use SHIFT\Trackshift\Upload\UploadManager;
 
-function go(UploadManager $uploadManager):void {
+function go(UploadManager $uploadManager, Database $database):void {
 	if($upload = $uploadManager->getNextUploadNotYetProcessed()) {
 		$startTime = microtime(true);
+		$database->executeSql("begin transaction");
+		$database->executeSql("PRAGMA foreign_keys = 0");
 		$uploadManager->processUploadIntoUsages($upload);
-		$t = microtime(true) - $startTime;
+		$database->executeSql("PRAGMA foreign_keys = 1");
+		$database->executeSql("end transaction");
 
-		Log::info("Processed upload: $upload->filePath in $t seconds");
+		$database->executeSql("begin transaction");
+		$database->executeSql("PRAGMA foreign_keys = 0");
 		$uploadManager->processUsages($upload);
-		$t = microtime(true) - $startTime - $t;
-		Log::info("Processed usages in $t seconds");
+		$database->executeSql("PRAGMA foreign_keys = 1");
+		$database->executeSql("end transaction");
+
+		$t = microtime(true) - $startTime;
+		Log::info("Processed upload: $upload->filePath in $t seconds");
 	}
 }
 
@@ -44,7 +51,7 @@ $uploadManager = new UploadManager(
 	$database->queryCollection("Product"),
 );
 
-go($uploadManager);
+go($uploadManager, $database);
 sleep(1);
 echo ".";
 goto cronLoopStart;
