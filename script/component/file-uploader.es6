@@ -19,48 +19,14 @@ function formSubmit(e) {
 	e.preventDefault();
 	let form = e.target;
 	let fileUploader = e.target.closest("file-uploader");
-	fileUploader.classList.add("uploading");
 	let uploadProgress = fileUploader.querySelector("upload-progress");
-	let nextPageTimeout = null;
-	let nextPageCallback = null;
-	let nextPageCallbackTimeout = null;
 	let nextPageUrl = form.action || location.href;
 
-	let animContext = fileUploader;
-	while(animContext.parentNode !== document.body) {
-		animContext = animContext.parentNode;
-	}
+// Minimum time to wait on the loading screen.
+	let futureTimeDelay = (+new Date) + 10000;
 
-	animContext.nextElementSibling.addEventListener("transitionend", e => {
-		console.log("page has faded out");
-	});
-
-	uploadProgress.querySelectorAll("p").forEach(p => {
-		p.addEventListener("animationend", e => {
-			if(nextPageTimeout) {
-				clearTimeout(nextPageTimeout);
-				nextPageTimeout = null;
-			}
-			console.log("reset trigger");
-			nextPageDelayTriggered = false;
-
-			nextPageTimeout = setTimeout(() => {
-				console.log("triggered trigger");
-				nextPageDelayTriggered = true;
-			}, nextPageDelay);
-
-			if(nextPageCallbackTimeout) {
-				clearTimeout(nextPageCallbackTimeout);
-				nextPageCallbackTimeout = setTimeout(nextPageCallback, nextPageDelay);
-			}
-		});
-	});
-
-	do {
-		animContext = animContext.nextElementSibling;
-		animContext.classList.add("fade-away");
-	}
-	while(animContext.nextElementSibling);
+	fadeOutPage(fileUploader);
+	fileUploader.classList.add("uploading");
 
 	let formData = new FormData(form);
 	formData.set("do", "upload");
@@ -68,19 +34,21 @@ function formSubmit(e) {
 		method: "post",
 		body: formData,
 	}).then(response => {
+		let completeTime = (+new Date);
 		nextPageUrl = response.url;
-		if(nextPageDelayTriggered) {
-			console.log("Next page delay triggered");
-			location.href = nextPageUrl;
+		console.log(`Upload complete, next page = ${nextPageUrl}`);
+
+		if(completeTime < futureTimeDelay) {
+			let remainingTime = futureTimeDelay - completeTime;
+			console.log(`Waiting ${remainingTime}`)
+			setTimeout(() => {
+				location.href = nextPageUrl;
+			}, remainingTime);
 		}
 		else {
-			console.log("Next page delay NOT triggered");
-			nextPageCallback = () => {
-				location.href = nextPageUrl;
-			};
-			nextPageCallbackTimeout = setTimeout(nextPageCallback, nextPageDelay);
+			location.href = nextPageUrl;
 		}
-	})
+	});
 }
 
 function initBodyDragDrop() {
@@ -102,4 +70,16 @@ function initBodyDragDrop() {
 		let changeEvent = new Event("change");
 		form.dispatchEvent(changeEvent);
 	});
+}
+
+function fadeOutPage(animContext) {
+	while(animContext.parentNode !== document.body) {
+		animContext = animContext.parentNode;
+	}
+
+	do {
+		animContext = animContext.nextElementSibling;
+		animContext.classList.add("fade-away");
+	}
+	while(animContext.nextElementSibling);
 }

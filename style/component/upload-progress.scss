@@ -65,10 +65,10 @@ upload-progress {
 
 		@for $i from 1 through 10 {
 			&:nth-of-type(#{$i}) {
-				animation-delay: #{$i * 1.5}s;
+				animation-delay: #{$i * 2.5}s;
 
 				&::after {
-					animation-delay: #{($i * 1.5) + 1}s;
+					animation-delay: #{($i * 2.5) + 1}s;
 				}
 			}
 		}

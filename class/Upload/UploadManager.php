@@ -34,9 +34,9 @@ readonly class UploadManager extends Repository {
 		parent::__construct($db);
 	}
 
-	/** @return array<string> List of file names that have been uploaded */
+	/** @return array<Upload> List of file names that have been uploaded */
 	public function upload(User $user, FileUpload...$uploadList):array {
-		$filePathList = [];
+		$completedUploadList = [];
 
 		$userDir = $this->getUserDataDir($user);
 		foreach($uploadList as $file) {
@@ -47,15 +47,12 @@ readonly class UploadManager extends Repository {
 				mkdir(dirname($targetPath), 0775, true);
 			}
 			$file->moveTo($targetPath);
-			array_push($filePathList, $targetPath);
-		}
 
-		foreach($filePathList as $filePath) {
-			$uploadType = $this->detectUploadType($filePath);
+			$uploadType = $this->detectUploadType($targetPath);
 			/** @var Upload $upload */
-			$upload = new $uploadType(new Ulid(), $filePath);
+			$upload = new $uploadType(new Ulid(), $targetPath);
 
-			if($this->uploadDb->fetch("findByFilePath", $filePath)) {
+			if($this->uploadDb->fetch("findByFilePath", $targetPath)) {
 				continue;
 			}
 
@@ -65,9 +62,10 @@ readonly class UploadManager extends Repository {
 				"filePath" => $upload->filePath,
 				"type" => $upload::class,
 			]);
+			array_push($completedUploadList, $upload);
 		}
 
-		return $filePathList;
+		return $completedUploadList;
 	}
 
 	/** @return array<Upload> */

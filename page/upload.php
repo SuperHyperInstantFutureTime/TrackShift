@@ -1,4 +1,5 @@
 <?php
+use Gt\Database\Database;
 use Gt\Dom\HTMLDocument;
 use Gt\DomTemplate\DocumentBinder;
 use Gt\Http\Response;
@@ -19,11 +20,21 @@ function do_upload(
 	UserRepository $userRepository,
 	User $user,
 	UploadManager $uploadManager,
+	Database $database,
 ):void {
-	$userRepository->persistUser($user);
+	$database->executeSql("begin transaction");
+	$database->executeSql("PRAGMA foreign_keys = 0");
 
-	$uploadManager->upload($user, ...$input->getMultipleFile("upload"));
-//	$productList = $uploadManager->processUploads($user, ...$fileNameList);
+	$userRepository->persistUser($user);
+	$uploadList = $uploadManager->upload($user, ...$input->getMultipleFile("upload"));
+
+	foreach($uploadList as $upload) {
+		$uploadManager->processUploadIntoUsages($upload);
+		$uploadManager->processUsages($upload);
+	}
+
+	$database->executeSql("PRAGMA foreign_keys = 1");
+	$database->executeSql("end transaction");
 
 	if($advanceTo = $input->getString("advance")) {
 		$response->redirect($advanceTo);
