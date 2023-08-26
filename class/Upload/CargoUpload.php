@@ -5,7 +5,7 @@ use SHIFT\Trackshift\Royalty\Money;
 use SHIFT\Trackshift\Usage\Usage;
 
 class CargoUpload extends Upload {
-	const KNOWN_CSV_COLUMNS = ["Royalty ID", "Asset ISRC", "Sale net receipts"];
+	const KNOWN_CSV_COLUMNS = ["Royalty ID", "Asset ISRC", "Reported Royalty"];
 
 	public function extractArtistName(array $row):string {
 		return $row["Asset Artist"];
@@ -16,6 +16,6 @@ class CargoUpload extends Upload {
 	}
 
 	public function extractEarning(array $row):Money {
-		return new Money((float)$row["Sale net receipts"]);
+		return new Money((float)$row["Reported Royalty"]);
 	}
 }

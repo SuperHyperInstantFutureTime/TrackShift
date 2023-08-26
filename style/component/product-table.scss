@@ -1,6 +1,6 @@
 product-table {
 	@extend %d-data-table;
-	margin-top: 4rem;
+	margin-top: 2rem;
 	overflow-x: scroll;
 
 	table {
@@ -13,34 +13,40 @@ product-table {
 				td {
 					&.albumArt {
 						position: relative;
-						width: 4rem;
-						height: 4rem;
-						padding: 0;
-						background-color: var(--pal-utility-dark-3);
+						width: 7rem;
+						height: 7rem;
+						padding: 1rem 0;
+						// background-color: var(--pal-utility-dark-3);
 
 						&:empty {
 							&::after {
 								content: "";
 								position: absolute;
-								top: 0;
-								bottom: 0;
+								width:7rem;
+								height:7rem;
+								top: 1rem;
+								bottom: 1rem;
 								left: 0;
 								right: 0;
-								background-color: white;
-								mask-image: url("/asset/icon/music-solid.svg");
-								mask-size: 50%;
-								mask-position: 50%;
-								mask-repeat: no-repeat;
+								background-image: url("/asset/img/product/ts_album_placeholder.svg");
+								background-size: contain;
+								background-repeat: no-repeat;
+								box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
+								border-radius:3px;
 							}
 						}
 
 						img {
 							display: block;
-							width: 4rem;
-							height: 4rem;
+							width: 7em;
+							height: 7rem;
 							object-fit: contain;
+							border-radius:3px;
+							box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
 						}
+
 					}
+					border-bottom: 2px solid var(--pal-utility-dark-1);
 				}
 			}
 		}

@@ -1,21 +1,22 @@
 account-tabs {
 	@extend %o-container;
 	display: block;
-	margin-top: 12rem;
+	margin-top: 4rem;
 
 	ul {
 		list-style-type: none;
 		margin: 0;
+		padding-left:0;
 		display: flex;
 		border-bottom: 2px solid var(--pal-utility-dark-1);
 
 		li {
-			margin-right: 1rem;
+			margin-right: 0.5rem;
 
 			a {
 				position: relative;
 				display: block;
-				padding: 2rem;
+				padding: 1rem 2rem;
 				border: 2px solid var(--pal-utility-dark-1);
 				border-top-left-radius: 1rem;
 				border-top-right-radius: 1rem;
@@ -26,7 +27,7 @@ account-tabs {
 
 			&.selected {
 				a {
-					background-color: var(--pal-utility-light-1);
+					// background-color: var(--pal-utility-light-1);
 
 					&::after {
 						content: "";
@@ -35,7 +36,7 @@ account-tabs {
 						left: 0;
 						right: 0;
 						height: 1rem;
-						background-color: var(--pal-utility-light-1);
+						background-color: var(--pal-6);
 					}
 				}
 			}

@@ -46,8 +46,8 @@ abstract class Upload {
 		$className = get_class($this);
 		$this->type = match($className) {
 			default => str_replace("Upload", "", substr($className, strrpos($className, "\\") + 1)),
-			PRSStatementUpload::class => "PRS Statement",
-			BandcampUpload::class => "Bandcamp Statement",
+			PRSStatementUpload::class => "PRS",
+			BandcampUpload::class => "Bandcamp",
 		};
 	}
 

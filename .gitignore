@@ -2,3 +2,6 @@
 /data/
 /ts.db
 /config.*.ini
+/www/
+.DS_Store
+access-token.dat

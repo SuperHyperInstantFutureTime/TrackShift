@@ -23,18 +23,20 @@ global-footer {
 		background-position-x: 50%;
 		rotate: 1deg;
 		pointer-events: none;
+		scale:104%;
 	}
 
 	&::after {
 		content: "";
 		position: absolute;
 		left: calc(50% - calc($size-gfx / 2));
-		top: -(calc($size-gfx / 2));
+		top: -(calc($size-gfx / 3));
 		width: $size-gfx;
 		height: $size-gfx;
 		z-index: 1;
 		display: block;
-		background-image: url("/asset/img/abstract/tape.svg");
+		background-image: url("/asset/img/abstract/tape_red.svg");
+		background-repeat: no-repeat;
 		background-size: 100%;
 		pointer-events: none;
 	}

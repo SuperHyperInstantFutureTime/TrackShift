@@ -1,8 +1,14 @@
 :root {
-	--pal-1: #4343f0;
-	--pal-2: #83e68a;
-	--pal-3: #e86353;
-	--pal-4: #d9e366;
+	--pal-1: #e86353;
+	--pal-2: #6ab3df;
+	--pal-3: #f6edef;
+	--pal-4: #453c54;
+	--pal-5: #272635;
+	--pal-6: #fff;
+	--pal-7: #d9e366;
+	--pal-8: #eac142;
+	--pal-9: #83916e;
+	--pal-10: #faefd0;
 
 	--pal-utility-dark-1: #252734;
 	--pal-utility-dark-2: #4f4c6b;
@@ -13,7 +19,7 @@
 
 	--pal-body: var(--pal-utility-dark-1);
 	--pal-page-bg: var(--pal-utility-light-1);
-	--pal-footer: var(--pal-4);
+	--pal-footer: var(--pal-utility-dark-1);
 	--pal-footer-text: var(--pal-utility-dark-1);
 
 	--pal-link-text: var(--pal-1);

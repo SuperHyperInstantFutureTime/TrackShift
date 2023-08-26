@@ -1,23 +1,24 @@
-<table>
+<input type="text" id="uploadTableSearchInput" onkeyup="myFunction()" placeholder="Search uploads...">
+<table id="uploadTable">
 	<thead>
 	<tr>
+		<th>Source</th>
 		<th>File name</th>
-		<th>Type</th>
-		<th>Size</th>
-		<th>Created at</th>
-		<th>Delete</th>
+		<th class="">Date Uploaded</th>
+		<th class="centered">File Size</th>
+		<th class="centered">Delete</th>
 	</tr>
 	</thead>
 	<tbody>
 	<tr data-list>
-		<td data-bind:text="basename">abc.xyz</td>
 		<td data-bind:text="type">Unknown</td>
-		<td data-bind:text="sizeString">0 B</td>
+		<td data-bind:text="basename">abc.xyz</td>
 		<td data-bind:text="createdAtFormattedDate">1st Jan 1970</td>
-		<td>
+		<td class="centered" data-bind:text="sizeString">0 B</td>
+		<td class="centered">
 			<form method="post">
 				<input type="hidden" name="id" data-bind:value="id" />
-				<button name="do" value="delete" onclick="return confirm('Are you sure you want to delete this file?')">
+				<button class="button" name="do" value="delete" onclick="return confirm('Are you sure you want to delete this file?')">
 					Delete <span data-bind:text="filename">file</span>
 				</button>
 			</form>
@@ -25,3 +26,27 @@
 	</tr>
 	</tbody>
 </table>
+
+<script>
+	function myFunction() {
+	  // Declare variables
+	  var input, filter, table, tr, td, i, txtValue;
+	  input = document.getElementById("uploadTableInput");
+	  filter = input.value.toUpperCase();
+	  table = document.getElementById("uploadTable");
+	  tr = table.getElementsByTagName("tr");
+	
+	  // Loop through all table rows, and hide those who don't match the search query
+	  for (i = 0; i < tr.length; i++) {
+		td = tr[i].getElementsByTagName("td")[1];
+		if (td) {
+		  txtValue = td.textContent || td.innerText;
+		  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			tr[i].style.display = "";
+		  } else {
+			tr[i].style.display = "none";
+		  }
+		}
+	  }
+	}
+</script>

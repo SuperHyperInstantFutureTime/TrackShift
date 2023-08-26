@@ -1,0 +1,65 @@
+<style>
+    .loading-page {
+        text-align:center;
+        margin-top: 8rem;
+        margin-bottom:16rem;
+    }
+    progress {
+  border-radius: 0.75rem; 
+  accent-color: var(--pal-1);
+  display: block;
+  margin: 0 auto;
+  width: 50%;
+  height: 1.5rem;
+}
+progress::-webkit-progress-bar {
+  background-color: var(--pal-10);
+  border-radius: 0.75rem;
+}
+progress::-webkit-progress-value {
+  background-color: var(--pal-1);
+  border-radius: 0.75rem;
+}
+progress::-moz-progress-bar {
+  /* style rules */
+  border-radius: 0.75rem;
+  background-color: var(--pal-1);
+}
+.record {
+    display:block;
+    margin:4rem auto; 
+    width:500px;
+    position:relative;
+}
+.sheen {
+    z-index: 2;
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    animation: sheen 0.5s ease-in-out alternate infinite;
+}
+.spin {
+    animation:spin 3s linear infinite;
+}
+@keyframes spin { 
+    100% { 
+        transform:rotate(360deg); 
+    } 
+}
+@keyframes sheen { 
+    100% {      
+        transform:rotate(1.5deg); 
+    } 
+}
+</style>
+<div class="loading-page">
+    <h2>We've got the file, now for processing...</h2>
+    <progress data-bind:value="numProcessed" data-bind:max="totalUsages">
+    </progress>
+    <div class="record">
+        <img src="/asset/img/abstract/record.svg" class="record-play spin">
+        <img src="/asset/img/abstract/record-sheen.svg" class="record-play sheen">
+    </div>
+</div>
