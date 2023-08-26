@@ -27,6 +27,7 @@ function go(UploadManager $uploadManager, Database $database):void {
 }
 
 // TODO: Remove all of this gumpf when https://github.com/PhpGt/WebEngine/issues/639 is implemented.
+cronLoopStart:
 chdir(dirname(__DIR__));
 require("vendor/autoload.php");
 $config = ConfigFactory::createForProject(getcwd(), "vendor/phpgt/webengine/config.default.ini");
@@ -51,3 +52,6 @@ $uploadManager = new UploadManager(
 );
 
 go($uploadManager, $database);
+sleep(1);
+echo ".";
+goto cronLoopStart;
