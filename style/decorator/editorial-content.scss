@@ -9,9 +9,15 @@
         }
         &.left {
             float:left;
+            @media(min-width: $break-medium) {
+            margin-right:2rem;
+            }
         }
         &.right {
             float:right;
+            @media(min-width: $break-medium) {
+            margin-left:2rem;
+            }
         }
     }
     .clear {
@@ -26,5 +32,8 @@
         @media(min-width: $break-medium) {
         
         }
+    }
+    h2 {
+        margin-top:0;
     }
 }

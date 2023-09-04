@@ -25,7 +25,7 @@ We're building an innovative royalties processor to solve that.
 <!-- who? -->
 
 {.float.right}
-![alt text for image](https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg)
+![alt text for image](/asset/img/product/ts_album_placeholder.svg)
 
 ## About Us
 
@@ -37,7 +37,9 @@ Maybe a headshot and simple bio for both of us. Link to the development blog?
 
 <!-- how? -->
 
-{.clear}
+{.float.left}
+![alt text for image](/asset/img/editorial/homepage/spin-your-records.png)
+
 ## Some detail about our approach to the problem
 
 Close by the ever-burning brimstone beds <br />
