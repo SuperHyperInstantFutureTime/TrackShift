@@ -49,8 +49,13 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 			continue;
 		}
 
-		if($album->name !== $product->title) {
-			echo "Skipping $album->name...", PHP_EOL;
+		$albumMatch = strtolower($album->name);
+		$albumMatch = str_replace(["[", "]", "{", "}", "(", ")"], "", $albumMatch);
+		$productMatch = strtolower($product->title);
+		$productMatch = str_replace(["[", "]", "{", "}", "(", ")"], "", $productMatch);
+		if($albumMatch !== $productMatch) {
+			echo "Album:\t\"$album->name\"", PHP_EOL;
+			echo "Prod:\t\"$product->title\"...", PHP_EOL;
 			continue;
 		}
 
