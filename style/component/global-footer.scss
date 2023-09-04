@@ -20,9 +20,8 @@ global-footer {
 		background-size: $size-gfx * 4;
 		background-repeat: repeat-x;
 		background-position-x: 50%;
-		rotate: 1deg;
+		// rotate: 1deg;
 		pointer-events: none;
-		scale:104%;
 	}
 
 	&::after {
