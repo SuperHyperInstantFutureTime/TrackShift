@@ -1,0 +1,30 @@
+%d-editorial-content {
+    section {
+        margin-bottom:4rem;
+        overflow:hidden;
+    }
+    .float {
+        @media(min-width: $break-medium) {
+        width: 50%;
+        }
+        &.left {
+            float:left;
+        }
+        &.right {
+            float:right;
+        }
+    }
+    .clear {
+        clear:both;
+    }
+    p {
+        margin-top:0;
+    }
+    img {
+        width:100%;
+
+        @media(min-width: $break-medium) {
+        
+        }
+    }
+}

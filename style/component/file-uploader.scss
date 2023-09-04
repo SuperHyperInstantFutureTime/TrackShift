@@ -2,24 +2,16 @@ file-uploader {
 	display: block;
 	box-sizing: border-box;
 	text-align: center;
-	max-width: 20rem;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 4rem;
+	width:100%;
 	cursor: pointer;
 
-	position: absolute;
-	top: -1rem;
-	left: calc(50% - $break-small + 12rem);
-	right: calc(50% - $break-small + 12rem);
-
+	
 	@media(min-width: $break-small) {
 		max-width: 48vw;
-		margin-top: 0;
+		margin: 0 auto;
 	}
 
 	body.uri--index & {
-		position: static;
 		top: auto;
 		left: auto;
 		right: auto;
@@ -37,7 +29,7 @@ file-uploader {
 		margin: 1rem;
 
 		body.uri--index & {
-			margin: 6rem 1rem;
+			margin: 2rem 1rem 4rem 1rem;
 		}
 	}
 

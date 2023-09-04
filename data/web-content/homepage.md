@@ -1,16 +1,16 @@
 <!-- what? -->
 
-# We make releasing music easier.
+# Simple, loveable admin tools for music and publishing.
 
 ## We are DIY artists, label people, software developers and music consumers who are building tools to give indies superpowers in the age of big data.
 
 ***
 
 
-
 <!-- why? -->
 
-### Main feature 
+
+<section>
 
 Music is a £20 billion global industry run on shared spreadsheets and antiquated systems that takes ages to pay artists (and not always correctly). 
 
@@ -18,24 +18,33 @@ Independent record labels with the most artist-friendly deals often spend a mont
 
 We're building an innovative royalties processor to solve that. 
 
+</section>
+
+<section>
 
 <!-- who? -->
 
-### Biff & Greg
+{.float.right}
+![alt text for image](https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg)
+
+## About Us
 
 Maybe a headshot and simple bio for both of us. Link to the development blog?
 
+</section>
 
+<section>
 
 <!-- how? -->
 
-### Some detail about our approach to the problem
+{.clear}
+## Some detail about our approach to the problem
 
-Close by the ever-burning brimstone beds
-Where Bedloe, Oates and Judas, hide their heads,
-I saw great Satan like a Sexton stand
-With his intolerable spade in hand,
-Digging three graves. Of coffin shape they were,
+Close by the ever-burning brimstone beds <br />
+Where Bedloe, Oates and Judas, hide their heads,<br />
+I saw great Satan like a Sexton stand<br />
+With his intolerable spade in hand,<br />
+Digging three graves. Of coffin shape they were,<br />
 For those who, coffinless, must enter there
 With unblest rites. The shrouds were of that cloth
 Which Clotho weaveth in her blackest wrath:
@@ -55,5 +64,7 @@ I ask’d the fiend, for whom these rites were meant?
 “These graves,” quoth he, “when life’s brief oil is spent,
 When the dark night comes, and they’re sinking bedwards,
 —I mean for Castles, Oliver, and Edwards.”
+
+</section>
 
 <!-- etc. -->
