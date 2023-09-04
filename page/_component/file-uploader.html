@@ -14,16 +14,3 @@
 </form>
 
 <upload-progress />
-
-<script>
-document.addEventListener("keydown", e => {
-	if(e.key === "1") {
-		document.querySelector("form").style.display = "block";
-		document.querySelector("upload-progress").style.display = "none";
-	}
-	if(e.key === "2") {
-		document.querySelector("form").style.display = "none";
-		document.querySelector("upload-progress").style.display = "block";
-	}
-})
-</script>
