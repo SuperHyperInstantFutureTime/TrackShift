@@ -1,5 +1,6 @@
 @import "font/gilroy";
 @import "font/inter";
+@import "font/geomanist";
 
 @import "variable/break";
 @import "variable/font";
@@ -92,7 +93,7 @@ table {
 			&:hover {
 				// background-color: #444;
 				color:var(--pal-1);
-				
+
 			}
 
 			td {
