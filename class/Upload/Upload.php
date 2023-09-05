@@ -48,6 +48,8 @@ abstract class Upload {
 			default => str_replace("Upload", "", substr($className, strrpos($className, "\\") + 1)),
 			PRSStatementUpload::class => "PRS",
 			BandcampUpload::class => "Bandcamp",
+			CargoUpload::class => "Cargo",
+			TunecoreUpload::class => "Tunecore",
 		};
 	}
 

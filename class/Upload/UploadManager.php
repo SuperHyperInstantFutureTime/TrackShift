@@ -430,6 +430,9 @@ readonly class UploadManager extends Repository {
 			elseif($this->hasCsvColumns($filePath, ...CargoUpload::KNOWN_CSV_COLUMNS)) {
 				$type = CargoUpload::class;
 			}
+			elseif($this->hasCsvColumns($filePath, ...TunecoreUpload::KNOWN_CSV_COLUMNS)) {
+				$type = TunecoreUpload::class;
+			}
 		}
 
 		return $type;
