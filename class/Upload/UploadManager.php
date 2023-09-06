@@ -69,16 +69,27 @@ readonly class UploadManager extends Repository {
 	}
 
 	/** @return array<Upload> */
-	public function getUploadsForUser(User $user):array {
+	public function getUploadsForUser(?User $user):array {
+		if(!$user) {
+			return [];
+		}
+
 		$uploadList = [];
 
 		foreach($this->uploadDb->fetchAll("getForUser", [
 			"userId" => $user->id,
 		]) as $row) {
 			$type = $row->getString("type");
+			/** @var Upload $upload */
+			$filePath = $row->getString("filePath");
+			if(!is_file($filePath)) {
+				continue;
+			}
+
+			$upload = new $type($row->getString("id"), $filePath);
 			array_push(
 				$uploadList,
-				new $type($row->getString("id"), $row->getString("filePath")),
+				$upload,
 			);
 		}
 
@@ -210,7 +221,7 @@ readonly class UploadManager extends Repository {
 		return $count;
 	}
 
-	public function delete(User $user, string $id):void {
+	public function deleteById(User $user, string $id):void {
 		$row = $this->uploadDb->fetch("getById", [
 			"id" => $id,
 			"userId" => $user->id,
@@ -231,6 +242,11 @@ readonly class UploadManager extends Repository {
 		}
 	}
 
+	public function deleteByFileName(string $filePath):void {
+		unlink($filePath);
+		$this->uploadDb->delete("deleteByFilePath", $filePath);
+	}
+
 	public function extendExpiry(User $user):void {
 		$userDir = $this->getUserDataDir($user);
 		touch($userDir);
@@ -238,22 +254,17 @@ readonly class UploadManager extends Repository {
 
 	public function clearUserFiles(User $user):void {
 		$userDir = $this->getUserDataDir($user);
-		$this->recursiveRemove($userDir);
+		foreach(glob("$userDir/*") as $filePath) {
+			unlink($filePath);
+		}
+
+		rmdir($userDir);
 		$this->uploadDb->delete("deleteAllForUser", $user->id);
 	}
 
 	public function getExpiry(User $user):DateTime {
 		$userDir = $this->getUserDataDir($user);
-		$youngest = filemtime($userDir);
-
-		foreach(glob("$userDir/*.*") as $userFilePath) {
-			$fileMTime = filemtime($userFilePath);
-			if($fileMTime > $youngest) {
-				$youngest = $fileMTime;
-			}
-		}
-
-		$expiry = new DateTime("@" . $youngest);
+		$expiry = $this->getYoungestFileInDir($userDir);
 		$expiry->setTimezone(new DateTimeZone(date_default_timezone_get()));
 		$expiry->add(new DateInterval("P3W"));
 		return $expiry;
@@ -390,36 +401,35 @@ readonly class UploadManager extends Repository {
 		]);
 	}
 
-	public function purgeOldFiles(string $dir = "data"):int {
+	public function purgeOldFiles(string $dir = "data/upload"):int {
 		$count = 0;
-		$expiredTimestamp = strtotime("-3 weeks");
+		$expiryDate = new DateTime("-3 weeks");
 
-		foreach(glob("$dir/*") as $file) {
-			if(is_dir($file)) {
-				$file .= "/.";
-			}
-
-			if(filemtime($file) <= $expiredTimestamp) {
-				$count += $this->recursiveRemove($file);
-				rmdir(rtrim($file, "."));
+		foreach(glob("$dir/*") as $userDir) {
+			if($this->getYoungestFileInDir($userDir) < $expiryDate) {
+				foreach(glob("$userDir/*") as $filePath) {
+					$this->deleteByFileName($filePath);
+				}
 			}
 		}
 		return $count;
 	}
 
-	private function recursiveRemove(string $filePath):int {
-		$count = 0;
-		if(is_dir($filePath)) {
-			foreach(glob("$filePath/*") as $subFile) {
-				$count += $this->recursiveRemove($subFile);
-			}
-		}
-		else {
-			unlink($filePath);
-			$count++;
+	private function getYoungestFileInDir(string $dir):DateTime {
+		if(!is_dir($dir)) {
+			return new DateTime("@0");
 		}
 
-		return $count;
+		$youngest = filemtime($dir);
+
+		foreach(glob("$dir/*.*") as $userFilePath) {
+			$fileMTime = filemtime($userFilePath);
+			if($fileMTime > $youngest) {
+				$youngest = $fileMTime;
+			}
+		}
+
+		return new DateTime("@" . $youngest);
 	}
 
 	private function getUserDataDir(User $user):string {

@@ -45,7 +45,7 @@ function do_upload(
 }
 
 function do_delete(Input $input, Response $response, User $user, UploadManager $uploadManager):void {
-	$uploadManager->delete($user, $input->getString("filename"));
+	$uploadManager->deleteById($user, $input->getString("filename"));
 	$response->reload();
 }
 

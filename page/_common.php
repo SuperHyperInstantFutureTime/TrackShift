@@ -12,15 +12,16 @@ function go(
 	HTMLDocument $document,
 	DocumentBinder $binder,
 	UploadManager $uploadManager,
-	User $user,
+	?User $user,
 ):void {
+	// TODO: Load this from the session, allowing the user to set their timezone.
+	date_default_timezone_set("Europe/London");
+
 	if(empty($uploadManager->getUploadsForUser($user))) {
 		$document->querySelector("global-header nav a")->remove();
 	}
 
 	$document->body->dataset->set("hash", substr($user->id, -6));
-	// TODO: Load this from the session, allowing the user to set their timezone.
-	date_default_timezone_set("Europe/London");
 	$contentRepo->bindNodeList($document->querySelectorAll("[data-content]"));
 	$uploadManager->purgeOldFiles();
 

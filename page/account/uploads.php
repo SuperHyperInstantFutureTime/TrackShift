@@ -5,13 +5,16 @@ use Gt\Input\Input;
 use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Upload\UploadManager;
 
-function go(DocumentBinder $binder, UploadManager $uploadManager, User $user):void {
-	$binder->bindList($uploadManager->getUploadsForUser($user));
+function go(DocumentBinder $binder, UploadManager $uploadManager, User $user, Response $response):void {
+	$uploadCount = $binder->bindList($uploadManager->getUploadsForUser($user));
+	if($uploadCount === 0) {
+		$response->redirect("/");
+	}
 	$binder->bindKeyValue("expiryDateString", $uploadManager->getExpiry($user)->format("jS M Y @ h:i a"));
 }
 
 function do_delete(Input $input, UploadManager $uploadManager, User $user, Response $response):void {
-	$uploadManager->delete($user, $input->getString("id"));
+	$uploadManager->deleteById($user, $input->getString("id"));
 	$response->reload();
 }
 
