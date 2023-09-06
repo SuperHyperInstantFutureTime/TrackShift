@@ -29,7 +29,6 @@ readonly class ContentRepository {
 
 	private function markdownToHtml(string $markdown):string {
 		$environment = new Environment([
-//			"allow_unsafe_links" => true,
 			"html_input" => "allow"
 		]);
 		$environment->addExtension(new CommonMarkCoreExtension());

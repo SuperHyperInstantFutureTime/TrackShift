@@ -13,3 +13,12 @@ function do_delete(Input $input, UploadManager $uploadManager, User $user, Respo
 	$uploadManager->delete($user, $input->getString("id"));
 	$response->reload();
 }
+
+function do_extend():void {
+
+}
+
+function do_clear(UploadManager $uploadManager, User $user, Response $response):void {
+	$uploadManager->clearUserFiles($user);
+	$response->reload();
+}
