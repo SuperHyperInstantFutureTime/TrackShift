@@ -1,6 +1,6 @@
 upload-table {
 	@extend %d-data-table;
-	min-height: 100%;
+	min-height: 24rem;
 	margin-top: 2rem;
 
 	table {
@@ -11,7 +11,7 @@ upload-table {
 					padding: 1rem 0;
 					border-bottom: 2px solid var(--pal-utility-dark-1);
 				}
-				
+
 			}
 		}
 	}

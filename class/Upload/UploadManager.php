@@ -244,7 +244,16 @@ readonly class UploadManager extends Repository {
 
 	public function getExpiry(User $user):DateTime {
 		$userDir = $this->getUserDataDir($user);
-		$expiry = new DateTime("@" . filemtime($userDir));
+		$youngest = filemtime($userDir);
+
+		foreach(glob("$userDir/*.*") as $userFilePath) {
+			$fileMTime = filemtime($userFilePath);
+			if($fileMTime > $youngest) {
+				$youngest = $fileMTime;
+			}
+		}
+
+		$expiry = new DateTime("@" . $youngest);
 		$expiry->setTimezone(new DateTimeZone(date_default_timezone_get()));
 		$expiry->add(new DateInterval("P3W"));
 		return $expiry;
