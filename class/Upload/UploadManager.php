@@ -239,6 +239,7 @@ readonly class UploadManager extends Repository {
 	public function clearUserFiles(User $user):void {
 		$userDir = $this->getUserDataDir($user);
 		$this->recursiveRemove($userDir);
+		$this->uploadDb->delete("deleteAllForUser", $user->id);
 	}
 
 	public function getExpiry(User $user):DateTime {
