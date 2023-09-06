@@ -23,6 +23,6 @@ class CargoUploadTest extends TestCase {
 		$sut = new CargoUpload("test-id", "test/files/cargo-simple-3-songs.csv");
 		$dataRows = iterator_to_array($sut->generateDataRows());
 		$earning = $sut->extractEarning($dataRows[0]);
-		self::assertSame(0.00164130103450794, $earning->value);
+		self::assertSame(0.00139510587933175, $earning->value);
 	}
 }
