@@ -48,6 +48,8 @@ We're working with a handful of small independent record labels, learning how th
 
 TrackShift v1 will be launched for Record Labels early 2024 as part of an Innovate UK funded development sprint through 2023.
 
+Interested? Get in touch with <a href="mailto:biff@trackshift.app">biff@trackshift.app</a>
+
 </section>
 
 <!-- etc. -->
