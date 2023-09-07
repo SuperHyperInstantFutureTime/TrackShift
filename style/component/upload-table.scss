@@ -2,6 +2,7 @@ upload-table {
 	@extend %d-data-table;
 	margin-top: 2rem;
 	margin-bottom:2rem;
+	overflow-x: hidden;
 
 	table {
 		border-collapse: collapse;

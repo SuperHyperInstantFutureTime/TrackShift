@@ -1,8 +1,7 @@
-<section>
+
 	<form method="post">
 		<p>This is TrackShift Alpha v1.0. We've not added a login to TrackShift yet, but your data is stored securely and only you can see your data via this browser.</p>
-		<p>During this testing phase your uploads will be automatically deleted from the server on <time data-bind:text="expiryDateString">1st Jan 1970 @ 00:00am</time>.</p>
-		<button name="do" value="extend">Extend file expiry by 3 weeks</button>
-		<button name="do" value="clear" onclick="return confirm('Are you sure you want to remove all your uploaded files?')">Delete all data</button>
+		<!-- <p>During this testing phase your uploads will be automatically deleted from the server on <time data-bind:text="expiryDateString">1st Jan 1970 @ 00:00am</time>.</p>
+		<button name="do" value="extend">Extend file expiry by 3 weeks</button> -->
+		<button name="do" class="button" value="clear" onclick="return confirm('Are you sure you want to remove all your uploaded files?')">Delete all data</button>
 	</form>
-</section>
