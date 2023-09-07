@@ -1,0 +1,8 @@
+delete-me {
+	@extend %o-container;
+	display: block;
+	max-width: $break-small;
+	margin: 4rem auto;
+	text-align: center;
+	line-height: 1.5rem;
+}

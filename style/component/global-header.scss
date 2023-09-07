@@ -1,0 +1,95 @@
+global-header {
+	@extend %o-container;
+	position: relative;
+
+	display: block;
+
+	header {
+		>h1 {
+			position: relative;
+			text-align: center;
+			font-family: 'Gilroy', sans-serif;
+			font-weight: 900;
+
+			@media(min-width: $break-small) {
+				text-align: left;
+			}
+
+			.brand {
+				font-family: 'Gilroy', sans-serif !important;
+			}
+
+			a {
+				--pal-link-text: var(--pal-utility-dark-1);
+				--pal-link-text--visited: var(--pal-utility-dark-1);
+
+				text-decoration: none;
+				transition: color 0.3s ease-in-out;
+
+				&:hover {
+					color: var(--pal-1);
+					transition: 0.3s ease-in-out
+				}
+			}
+
+			// &::before {
+			// 	$size: 12rem;
+
+			// 	content: "";
+			// 	position: absolute;
+			// 	display: block;
+			// 	z-index: -1;
+			// 	top: calc(50% - ($size / 2));
+			// 	left: calc(50% - ($size / 2));
+			// 	width: $size;
+			// 	height: $size;
+
+			// 	border-radius: $size;
+			// 	background-color: var(--pal-1);
+			// 	pointer-events: none;
+
+			// 	@media(min-width: $break-small) {
+			// 		left: -1.5rem;
+			// 	}
+			// }
+		}
+
+		nav {
+			position: relative;
+			top: 0rem;
+			left: 0;
+			right: 0;
+			display: flex;
+			justify-content: center;
+
+			@media(min-width: $break-small) {
+				position: absolute;
+				margin: 0;
+				top: 0;
+				right: 0;
+				left: auto;
+			}
+
+			ul {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+
+				@media(min-width: $break-small) {
+					max-width: calc($break-small - 6rem);
+					text-align: right;
+					margin-top: 0;
+				}
+
+				li {
+					a {
+						display: block;
+						padding: 0rem;
+						margin:0;
+						background-color: var(--pal-page-bg);
+					}
+				}
+			}
+		}
+	}
+}

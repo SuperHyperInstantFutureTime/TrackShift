@@ -1,0 +1,94 @@
+file-uploader {
+	display: block;
+	box-sizing: border-box;
+	text-align: center;
+	width:100%;
+	cursor: pointer;
+
+	
+	@media(min-width: $break-small) {
+		max-width: 48vw;
+		margin: 0 auto;
+	}
+
+	body.uri--index & {
+		top: auto;
+		left: auto;
+		right: auto;
+		margin-top: 0;
+	}
+
+	&.uploading {
+		form {
+			opacity: 0;
+		}
+	}
+
+	form {
+		padding: 0;
+		margin: 1rem;
+
+		body.uri--index & {
+			margin: 2rem 1rem 4rem 1rem;
+		}
+	}
+
+	label {
+		@extend %d-dropzone, %o-container;
+		background-color: var(--pal-page-bg);
+
+		body:not(.uri--index) & {
+			padding: 0;
+		}
+
+		p {
+			@media(max-width: $break-small) {
+				&:not(:last-of-type) {
+					display: none;
+				}
+			}
+
+			a {
+				span {
+					&.desktop-text {
+						display: none;
+					}
+
+					@media(min-width: $break-small) {
+						&.desktop-text {
+							display: block;
+							width:auto;
+						}
+						&.mobile-text {
+							display: none;
+						}
+					}
+				}
+			}
+
+			@media(min-width: $break-small) {
+				body:not(.uri--index) & {
+					display: inline-block;
+				}
+			}
+
+
+			a {
+				--pal-link-text: var(--pal-1);
+
+				--pal-link-text--visited: var(--pal-1);
+
+				text-decoration: underline;
+				cursor: pointer;
+			}
+		}
+
+		input {
+			display: none;
+		}
+	}
+
+	button[name=do][value=upload] {
+		display: none;
+	}
+}

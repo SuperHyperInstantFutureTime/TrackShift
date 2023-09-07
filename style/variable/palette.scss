@@ -1,0 +1,36 @@
+:root {
+	--pal-1: #e86353;
+	--pal-2: #6ab3df;
+	--pal-3: #f6edef;
+	--pal-4: #453c54;
+	--pal-5: #272635;
+	--pal-6: #fff;
+	--pal-7: #d9e366;
+	--pal-8: #eac142;
+	--pal-9: #83916e;
+	--pal-10: #faefd0;
+
+	--pal-utility-dark-1: #252734;
+	--pal-utility-dark-2: #4f4c6b;
+	--pal-utility-dark-3: #aca9c7;
+	--pal-utility-light-1: #f2f2f2;
+
+// For palettes below, only reference variables from above - no cross-referencing.
+
+	--pal-body: var(--pal-utility-dark-1);
+	--pal-page-bg: var(--pal-utility-light-1);
+	--pal-footer: var(--pal-utility-dark-1);
+	--pal-footer-text: var(--pal-utility-dark-1);
+
+	--pal-link-text: var(--pal-1);
+	--pal-link-bg: transparent;
+	--pal-link-text--visited: color-mix(in srgb, var(--pal-1), var(--pal-3));
+	--pal-link-bg--visited: transparent;
+
+	--pal-button: var(--pal-1);
+	--pal-button--contrast: #eceff7;
+
+	--pal-ui-bg: #ffffff;
+	--pal-ui-bg--hover: var(--pal-2);
+	--pal-ui-text: #252734;
+}

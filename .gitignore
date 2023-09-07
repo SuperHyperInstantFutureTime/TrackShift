@@ -1,2 +1,9 @@
 /vendor/
-.phpunit.result.cache
+/data/
+/ts.db
+/config.*.ini
+/www/
+.DS_Store
+access-token.dat
+asset/font/.DS_Store
+asset/.DS_Store

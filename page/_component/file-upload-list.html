@@ -1,0 +1,29 @@
+<form data-element method="post" class="advance" data-bind:data-advance="advance">
+	<label>
+		<input type="checkbox" name="advance-auto" data-bind:checked="?advance-auto" />
+		<span>Automatically advance when processing completes</span>
+	</label>
+</form>
+
+<h3>Your uploaded files (<span data-bind:text="uploadCount">0</span>)</h3>
+
+<ul>
+	<li data-list>
+		<form method="post">
+			<input type="hidden" name="filename" data-bind:value="basename" />
+
+			<time data-bind:datetime="uploadedAt">
+				<span class="date" data-bind:text="uploadedAtFormattedDate">01/01/1970</span>
+				<span class="time" data-bind:text="uploadedAtFormattedTime">12:00 am</span>
+			</time>
+
+			<strong data-bind:text="basename">abc.xyz</strong>
+			- <span data-bind:text="sizeString">0B</span>
+			- <span data-bind:text="type">Type</span>
+
+			<button name="do" value="delete" onclick="return confirm('Are you sure you want to remove {{filename}}?')">
+				<span>Delete <span data-bind:text="filename" hidden>filename</span></span>
+			</button>
+		</form>
+	</li>
+</ul>

@@ -1,0 +1,20 @@
+:root {
+	--font-family-main: "Inter", sans-serif;
+	--font-family-heading: "Geomanist", sans-serif;
+
+	--font-readable-line-height: 1.6;
+
+	--font-size-base: 16px;
+	--font-size-1: calc(var(--font-size-base) * 3);
+	--font-size-2: calc(var(--font-size-1) * (1 / var(--size-golden-ratio)));
+
+	@media(min-width: $break-small) {
+		--font-size-base: 1rem;
+	}
+	@media(min-width: $break-medium) {
+		--font-size-base: 1.1rem;
+	}
+	@media(min-width: $break-large) {
+		--font-size-base: 1.1rem;
+	}
+}

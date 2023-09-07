@@ -1,11 +1,14 @@
 <?php
-namespace Trackshift\Usage;
+namespace SHIFT\Trackshift\Usage;
 
-use Trackshift\Royalty\Money;
+use SHIFT\Trackshift\Repository\Entity;
+use SHIFT\Trackshift\Upload\Upload;
 
-class Usage {
+readonly class Usage extends Entity {
+	/** @param array<string, string> $row */
 	public function __construct(
-		public readonly string $workTitle,
-		public readonly Money $amount,
+		public string $id,
+		public Upload $upload,
+		public array $row,
 	) {}
 }

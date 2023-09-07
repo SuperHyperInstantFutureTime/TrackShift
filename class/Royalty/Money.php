@@ -1,5 +1,5 @@
 <?php
-namespace Trackshift\Royalty;
+namespace SHIFT\Trackshift\Royalty;
 
 use Stringable;
 
@@ -11,8 +11,7 @@ class Money implements Stringable {
 	) {}
 
 	public function __toString():string {
-		$rounded = (float)substr((string)$this->value, 0, 4);
-		return "£" . number_format($rounded, 2);
+		return "£" . number_format($this->value, 2);
 	}
 
 	public function withAddition(Money $add):self {

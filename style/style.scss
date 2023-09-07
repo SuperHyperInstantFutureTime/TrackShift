@@ -1,44 +1,78 @@
 @import "font/gilroy";
+@import "font/inter";
+@import "font/geomanist";
 
-label.dragging {
-	&::before {
-		content: "Drop your files to upload!";
-		display: block;
-		border: 4px dashed black;
-		padding: 2rem 1rem;
-	}
+@import "variable/break";
+@import "variable/font";
+@import "variable/palette";
+@import "variable/size";
+@import "variable/theme";
+
+@import "decorator/dropzone";
+@import "decorator/typography";
+@import "decorator/ui-element";
+@import "decorator/data-table";
+@import "decorator/editorial-content";
+
+@import "object/container";
+
+@import "element/a";
+@import "element/button";
+@import "element/body";
+@import "element/html";
+@import "element/section";
+@import "element/main";
+
+@import "component/delete-me";
+@import "component/global-header";
+@import "component/global-footer";
+@import "component/file-uploader";
+@import "component/file-upload-list";
+@import "component/file-expiry";
+@import "component/upload-progress";
+@import "component/account-tabs";
+@import "component/upload-table";
+@import "component/product-table";
+
+@import "page/index";
+@import "page/_common";
+
+::selection {
+	background-color: var(--pal-4);
 }
 
-details {
-	summary {
-		cursor: pointer;
-	}
+[hidden] {
+	display: none;
+}
 
-	li {
-		&[data-type="Unknown"] {
-			color: red;
-		}
-	}
+.fade-away {
+	opacity: 0;
+	transition: 1s;
 }
 
 body {
-	font-family: "Gilroy", sans-serif;
-	margin: 40px auto;
-	max-width: 1200px;
-	line-height: 1.6;
-	font-size: 18px;
-	color: #444;
-	padding: 0 10px
-}
-h1, h2, h3 {
-	line-height: 1.2
+	background-image: url("/asset/img/abstract/bg2.svg");
+	background-repeat: no-repeat;
+	background-position: right -12rem top -2rem ;
+	background-size: 24rem;
+	background-color: var(--pal-6);
+	background-attachment: scroll;
+
+	@media(min-width: $break-small) {
+		background-size: 32vw;
+		background-position: right -20rem top -2rem ;
+	}
+
+	@media(min-width: $break-medium) {
+		background-size: 38vw;
+	}
 }
 
 table {
 	width: 100%;
-
+	margin-bottom:60px;
 	th, td {
-		padding: 0.5rem;
+		padding-right:1rem !important;
 
 		&:last-of-type {
 			text-align: right;
@@ -47,19 +81,75 @@ table {
 
 	thead {
 		th {
-			background-color: #444;
-			color: white;
+			// background-color: var(--pal-4);
+			color: var(--pal-5);
 			text-align: left;
+			padding-bottom:1rem;
+			border-bottom: 2px solid var(--pal-5);
+			&.centered {
+				text-align: center !important;
+			}
 		}
 	}
 	tbody {
 		tr {
+			transition: 0.3s ease-in-out;
 			&:nth-of-type(even) {
-				background-color: #eee;
+				// background-color: #eee;
+			}
+			&:hover {
+				// background-color: #444;
+				color:var(--pal-1);
+
 			}
 
 			td {
+
+				&.centered {
+					text-align: center !important;
+				}
+
 			}
 		}
 	}
+}
+
+.button {
+	color:black;
+	background-color: white;
+	border: 2px black solid;
+	border-radius: 5px;
+	font-weight:bold !important;
+	font-size:18px;
+	padding:10px 15px;
+	// margin:15px 0;
+	text-decoration: none;
+	transition: 0.3s ease-in-out
+}
+
+.button:hover {
+	background-color: var(--pal-1);
+	transition: 0.3sec ease-in-out;
+	color:white;
+	border-color:var(--pal-1);
+}
+
+.footer {
+	position: fixed;
+  	right: 0;
+  	bottom: 0;
+  	left: 0;
+  	padding: 1rem;
+  	background-color: #efefef;
+  	text-align: center
+}
+
+input[type="text"] {
+	padding:15px;
+	font-size:18px;
+	border-radius:15px;
+	border: 2px solid var(--pal-utility-dark-1);
+	outline-color: var(--pal-utility-dark-1);
+	box-shadow:none !important;
+	margin-bottom:2rem
 }

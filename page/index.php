@@ -6,7 +6,8 @@ use Gt\Http\Response;
 use Gt\Input\Input;
 use Gt\Session\Session;
 use Gt\Ulid\Ulid;
-use Trackshift\Upload\UploadManager;
+use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\Trackshift\Upload\UploadManager;
 
 function go(
 	UploadManager $uploadManager,
@@ -15,6 +16,7 @@ function go(
 	DocumentBinder $binder,
 	Session $session,
 ):void {
+	return;
 	$uploadManager->purge();
 
 	if($userId = $session->getString("ulid")) {
@@ -35,22 +37,52 @@ function go(
 			$document->querySelector("details")->hidden = true;
 		}
 
-		$aggregatedUsages = $statement->getAggregatedUsages("workTitle");
 		$tableData = [];
-		foreach($aggregatedUsages as $name => $usageList) {
-			array_push(
-				$tableData, [
-					"title" => $name,
-					"total" => $usageList->getTotalAmount(),
-				]
+
+		$aggregatedArtists = $statement->getArtistUsages("workTitle");
+		foreach($aggregatedArtists->getAllArtists() as $i => $artist) {
+			$usageList = $aggregatedArtists->getUsageListForArtist($artist);
+
+			if(!isset($tableData[$artist->id])) {
+				$tableData[$artist->id] = [
+					"artistId" => $artist->id,
+					"artistName" => $artist->name,
+					"artistTotal" => $usageList->getTotalAmount(),
+					"usages" => [],
+				];
+			}
+//var_dump($usageList);die();
+			foreach($usageList as $usage) {
+				if(!isset($tableData[$artist->id]["usages"][$usage->workTitle])) {
+					$tableData[$artist->id]["usages"][$usage->workTitle] = [
+						"workTitle" => $usage->workTitle,
+						"amount" => new Money(),
+					];
+				}
+
+				/** @var Money $money */
+				$money = $tableData[$artist->id]["usages"][$usage->workTitle]["amount"];
+				$money = $money->withAddition(new Money($usage->amount->value));
+				$tableData[$artist->id]["usages"][$usage->workTitle]["amount"] = $money;
+			}
+
+			usort(
+				$tableData[$artist->id]["usages"],
+				fn($a, $b) => $b["amount"] <=> $a["amount"],
 			);
 		}
-		usort($tableData, fn($a, $b) => $a["total"]->value < $b["total"]->value);
 
-		$tableEl = $document->querySelector("table");
-		$bound = $binder->bindList($tableData, $tableEl);
-		if($bound === 0) {
-			$tableEl->hidden = true;
+		usort($tableData, fn($a, $b) => $b["artistTotal"] <=> $a["artistTotal"]);
+
+		$binder->bindList(
+			$tableData,
+			$document->querySelector("artist-statement-list")
+		);
+
+		if(count($tableData) === 1) {
+			$details = $document->querySelector("artist-statement-list details");
+			$details->open = true;
+			$details->classList->add("single");
 		}
 	}
 	else {

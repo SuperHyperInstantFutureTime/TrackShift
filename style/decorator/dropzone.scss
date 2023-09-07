@@ -1,0 +1,19 @@
+%d-dropzone {
+	display: block;
+	padding: 2rem;
+	border: 4px dashed var(--pal-body);
+	transition: background-color 0.25s ease-in-out;
+	cursor: pointer;
+
+	&:hover {
+		background-color: white;
+	}
+	&:active {
+		transition-duration: 0s;
+		background-color: var(--pal-2);
+	}
+
+	.dragging & {
+		background-color: var(--pal-3);
+	}
+}

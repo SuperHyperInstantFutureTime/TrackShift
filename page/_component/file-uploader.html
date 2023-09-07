@@ -1,0 +1,16 @@
+<form method="post" enctype="multipart/form-data" action="/upload/?advance=/account/products/" onchange="this.querySelector('button').click()">
+	<label>
+		<p>Drop your sales reports here</p>
+		<p>or</p>
+		<p class="browse">
+			<a class="btn" href="#upload" onclick="this.closest('label').click()">
+				<span class="desktop-text">Browse</span>
+				<span class="mobile-text">Upload sales report</span>
+			</a>
+		</p>
+		<input type="file" name="upload[]" multiple required/>
+	</label>
+	<button name="do" value="upload" class="button">Upload</button>
+</form>
+
+<upload-progress />

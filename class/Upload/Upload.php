@@ -1,29 +1,38 @@
 <?php
-namespace Trackshift\Upload;
+namespace SHIFT\Trackshift\Upload;
 
+use DateTime;
+use DateTimeInterface;
+use DateTimeZone;
+use Generator;
+use Gt\DomTemplate\BindGetter;
+use Gt\Ulid\Ulid;
+use SHIFT\Trackshift\Auth\User;
 use SplFileObject;
-use Trackshift\Royalty\Money;
-use Trackshift\Usage\Aggregation;
-use Trackshift\Usage\UsageList;
+use SHIFT\Trackshift\Artist\Artist;
+use SHIFT\Trackshift\Artist\ArtistIdentifier;
+use SHIFT\Trackshift\Royalty\Money;
 
 abstract class Upload {
+	protected SplFileObject $file;
 	public readonly string $filename;
+	public readonly string $basename;
 	public readonly int $size;
 	public readonly string $sizeString;
 	public readonly string $type;
-
-	protected SplFileObject $file;
-	protected UsageList $usageList;
+	public readonly DateTime $createdAt;
 
 	public function __construct(
+		public readonly string $id,
 		public readonly string $filePath,
 	) {
 		$this->file = new SplFileObject($this->filePath);
-		$this->usageList = new UsageList();
-		$this->processUsages();
-
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);
+		$this->basename = pathinfo($this->filePath, PATHINFO_BASENAME);
 		$this->size = filesize($this->filePath);
+// TODO: Use the ULID to get the timestamp from the ID.
+		$this->createdAt = new DateTime("@" . filectime($this->filePath));
+		$this->createdAt->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
 		$bytes = $this->size;
 		$units = ["B", "KB", "MB", "GB", "TB", "PB"];
@@ -37,38 +46,93 @@ abstract class Upload {
 		$className = get_class($this);
 		$this->type = match($className) {
 			default => str_replace("Upload", "", substr($className, strrpos($className, "\\") + 1)),
-			PRSStatementUpload::class => "PRS Statement",
+			PRSStatementUpload::class => "PRS",
+			BandcampUpload::class => "Bandcamp",
+			CargoUpload::class => "Cargo",
+			TunecoreUpload::class => "Tunecore",
 		};
 	}
 
-	public function getUsageTotal():Money {
-		$total = new Money();
-		foreach($this->usageList as $usage) {
-			$total = $total->withAddition($usage->amount);
-		}
+	/** @param array<string, string> $row */
+	abstract public function extractArtistName(array $row):string;
 
-		return $total;
+	/** @param array<string, string> $row */
+	abstract public function extractProductTitle(array $row):string;
+
+	/** @param array<string, string> $row */
+	abstract public function extractEarning(array $row):Money;
+
+	/** @return Generator<array<string, string>> */
+	public function generateDataRows():Generator {
+		$headerRow = null;
+
+		$this->file->rewind();
+		while(!$this->file->eof()) {
+			$row = $this->stripNullBytes($this->file->fgetcsv());
+			if(empty($row) || !$row[0]) {
+				continue;
+			}
+			if(!$headerRow) {
+				$headerRow = $row;
+				continue;
+			}
+
+			yield $this->rowToData($headerRow, $row);
+		}
 	}
 
-	public function getAggregatedUsages(string $propertyName):Aggregation {
-		$aggregation = new Aggregation();
-
-		foreach($this->usageList as $usage) {
-			$aggregateKey = $usage->{$propertyName} ?? null;
-// TODO: Throw meaningful exception here where aggregate key is null.
-// It means the name has been picked incorrectly by the developer.
-			$aggregation->add($aggregateKey, $usage);
-		}
-
-		return $aggregation;
+	#[BindGetter]
+	public function getCreatedAtFormattedDate():string {
+		return $this->createdAt->format("d/m/Y");
 	}
 
-	abstract protected function processUsages():void;
+	#[BindGetter]
+	public function getUploadedAtFormattedTime():string {
+		return $this->createdAt->format("H:i");
+	}
 
-	public function delete():void {
-		$path = $this->file->getRealPath();
-		unset($this->file);
-		unlink($path);
-		$this->usageList = new UsageList();
+	/**
+	 * TODO: Extract this into a CSVProcessor trait or similar.
+	 * Convert an indexed array of row data into an associative array,
+	 * according to the provided header row.
+	 * @param array<string> $headerRow
+	 * @param array<string> $row
+	 * @return array<string, string>
+	 */
+	protected function rowToData(array $headerRow, array $row):array {
+		$data = [];
+		foreach($row as $i => $datum) {
+			if(isset($headerRow[$i])) {
+				$data[$headerRow[$i]] = $datum;
+			}
+		}
+		return $data;
+	}
+
+	/**
+	 * @param string|array<?string> $data
+	 * @return string|array<?string>
+	 */
+	protected function stripNullBytes(string|array $data):string|array {
+		if(empty($data) || is_null($data[0])) {
+			return $data;
+		}
+		$input = $data;
+		if(!is_array($input)) {
+			$input = [$input];
+		}
+
+		foreach($input as $i => $value) {
+			$input[$i] = preg_replace(
+				'/[[:^print:]]/',
+				'',
+				$value
+			);
+		}
+
+		if(is_string($data)) {
+			return $input[0];
+		}
+		return $input;
 	}
 }

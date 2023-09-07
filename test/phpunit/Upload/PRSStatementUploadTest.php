@@ -1,27 +1,28 @@
 <?php
-namespace Trackshift\Test\Upload;
+namespace SHIFT\Trackshift\Test\Upload;
 
-use Trackshift\Upload\PRSStatementUpload;
+use PHPUnit\Framework\TestCase;
+use SHIFT\Trackshift\Upload\PRSStatementUpload;
 
-class PRSStatementUploadTest extends UploadTestCase {
-	public function testGetUsageTotal():void {
-		$tmpFile = self::getTempFile("prs-simple-3-songs.csv");
-		$sut = new PRSStatementUpload($tmpFile);
-		$moneyTotalUsage = $sut->getUsageTotal();
-
-		self::assertSame(0.372, $moneyTotalUsage->value);
-		self::assertSame("£0.37", (string)$moneyTotalUsage);
+class PRSStatementUploadTest extends TestCase {
+	public function testExtractArtistName():void {
+		$sut = new PRSStatementUpload("test-id", "test/files/prs-simple-3-songs.csv");
+		$dataRows = iterator_to_array($sut->generateDataRows());
+		$artistName = $sut->extractArtistName($dataRows[0]);
+		self::assertSame("Person 1", $artistName);
 	}
 
-	public function testGetAggregatedUsageTotals():void {
-		$tmpFileName = self::getTempFile("prs-simple-3-songs.csv");
-		$sut = new PRSStatementUpload($tmpFileName);
-		$aggregation = $sut->getAggregatedUsages("workTitle");
+	public function testExtractProductName():void {
+		$sut = new PRSStatementUpload("test-id", "test/files/prs-simple-3-songs.csv");
+		$dataRows = iterator_to_array($sut->generateDataRows());
+		$productName = $sut->extractProductTitle($dataRows[0]);
+		self::assertSame("Song 1", $productName);
+	}
 
-		self::assertSame(0.104, $aggregation->getTotalValueForAggregate("Song 1")->value);
-		self::assertSame(0.174, $aggregation->getTotalValueForAggregate("Song 2")->value);
-		self::assertSame(0.094, $aggregation->getTotalValueForAggregate("Song 3")->value);
-
-		self::assertSame(0.372, $aggregation->getTotalValue()->value);
+	public function testExtractEarning():void {
+		$sut = new PRSStatementUpload("test-id", "test/files/prs-simple-3-songs.csv");
+		$dataRows = iterator_to_array($sut->generateDataRows());
+		$earning = $sut->extractEarning($dataRows[0]);
+		self::assertSame(0.016, $earning->value);
 	}
 }

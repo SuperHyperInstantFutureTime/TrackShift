@@ -5,34 +5,38 @@ Feature: App should list out and remove uploaded files
 
 	Scenario: I can see uploads list
 		Given I am on the homepage
-		Then I should see "Uploaded files (0)"
-
-		When I attach the file "prs-simple-3-songs.csv" to "statement"
+		When I attach the file "prs-simple-3-songs.csv" to "upload[]"
 		And I press "Upload"
-		Then I should see "Uploaded files (1)"
-		And I should see "prs-simple-3-songs - 299 B - PRS Statement"
+		When I go to "/account/uploads/"
+		Then I should see 1 rows in the table
+		And I should see the following table data:
+			| File name | Type |
+			| prs-simple-3-songs.csv | PRS Statement |
 
-		When I attach the file "prs-simple-3-songs-another-statement.csv" to "statement"
+		Given I am on the homepage
+		When I attach the file "prs-simple-3-songs-another-statement.csv" to "upload[]"
 		And I press "Upload"
-		Then I should see "Uploaded files (2)"
-		And I should see "prs-simple-3-songs-another-statement - 273 B - PRS Statement"
-		# Existing file should still be present!
-		And I should see "prs-simple-3-songs - 299 B - PRS Statement"
+		When I go to "/account/uploads/"
+		Then I should see 2 rows in the table
+		And I should see the following table data:
+			| File name | Type |
+			| prs-simple-3-songs.csv | PRS Statement |
+			| prs-simple-3-songs-another-statement.csv| PRS Statement |
 
-		When I attach the file "gubbins.txt" to "statement"
+		Given I am on the homepage
+		When I attach the file "gubbins.txt" to "upload[]"
 		And I press "Upload"
-		Then I should see "Uploaded files (3)"
-		And I should see "gubbins - 2.2 KB - Unknown"
-		# Existing file should still be present!
-		And I should see "prs-simple-3-songs-another-statement - 273 B - PRS Statement"
-		And I should see "prs-simple-3-songs - 299 B - PRS Statement"
+		When I go to "/account/uploads/"
+		Then I should see 3 rows in the table
 
 	Scenario: I can delete an individual upload
 		Given I am on the homepage
-		When I attach the file "prs-simple-3-songs.csv" to "statement"
+		When I attach the file "prs-simple-3-songs.csv" to "upload[]"
 		And I press "Upload"
-		And I attach the file "prs-simple-3-songs-another-statement.csv" to "statement"
+		And I am on the homepage
+		And I attach the file "prs-simple-3-songs-another-statement.csv" to "upload[]"
 		And I press "Upload"
-		Then I should see "Uploaded files (2)"
+		And I go to "/account/uploads/"
+		Then I should see 2 rows in the table
 		When I press "Delete prs-simple-3-songs"
-		Then I should see "Uploaded files (1)"
+		Then I should see 1 rows in the table

@@ -1,0 +1,44 @@
+<input type="text" id="productTableSearchInput" onkeyup="myFunction()" placeholder="Search for artists or title...">
+<table id="productTable">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Artist</th>
+			<th>Title</th>
+			<th class="centered">Earnings</th>
+			<th class="centered">Balance</th>
+			<th class="centered">Outgoing</th>
+			<th class="centered">Profit</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr data-list data-bind:data-id="product.id">
+			<td class="albumArt"><img data-element data-bind:src="product.artUrl" /></td>
+			<td data-bind:text="product.artist.name">Artist</td>
+			<td data-bind:text="product.title">Title</td>
+			<td  class="centered" data-bind:text="earning">Earnings</td>
+			<td class="centered">-</td>
+			<td class="centered">-</td>
+			<td class="centered">-</td>
+		</tr>
+	</tbody>
+</table>
+
+<script>
+function filterTable(event) {
+    var filter = event.target.value.toUpperCase();
+    var rows = document.querySelector("#productTable tbody").rows;
+    
+    for (var i = 0; i < rows.length; i++) {
+        var firstCol = rows[i].cells[1].textContent.toUpperCase();
+        var secondCol = rows[i].cells[2].textContent.toUpperCase();
+        if (firstCol.indexOf(filter) > -1 || secondCol.indexOf(filter) > -1) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }      
+    }
+}
+
+document.querySelector('#productTableSearchInput').addEventListener('keyup', filterTable, false);
+</script>
