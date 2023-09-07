@@ -90,8 +90,11 @@ upload-progress {
 
 		&::after {
 			background-color: var(--pal-1);
+			-webkit-mask-image: url("/asset/icon/check-solid.svg");
 			mask-image: url("/asset/icon/check-solid.svg");
+			-webkit-mask-size: contain;
 			mask-size: contain;
+			-webkit-mask-repeat: no-repeat;
 			mask-repeat: no-repeat;
 			width: 2rem;
 			height: 2rem;
