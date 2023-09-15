@@ -10,8 +10,8 @@ Feature: App should list out and remove uploaded files
 		When I go to "/account/uploads/"
 		Then I should see 1 rows in the table
 		And I should see the following table data:
-			| File name | Type |
-			| prs-simple-3-songs.csv | PRS Statement |
+			| File name 			| Source	|
+			| prs-simple-3-songs.csv 	| PRS	|
 
 		Given I am on the homepage
 		When I attach the file "prs-simple-3-songs-another-statement.csv" to "upload[]"
@@ -19,15 +19,19 @@ Feature: App should list out and remove uploaded files
 		When I go to "/account/uploads/"
 		Then I should see 2 rows in the table
 		And I should see the following table data:
-			| File name | Type |
-			| prs-simple-3-songs.csv | PRS Statement |
-			| prs-simple-3-songs-another-statement.csv| PRS Statement |
+			| File name | Source |
+			| prs-simple-3-songs.csv | PRS |
+			| prs-simple-3-songs-another-statement.csv| PRS |
 
 		Given I am on the homepage
 		When I attach the file "gubbins.txt" to "upload[]"
 		And I press "Upload"
 		When I go to "/account/uploads/"
-		Then I should see 3 rows in the table
+		Then I should see the following table data:
+			| File name | Source |
+			| prs-simple-3-songs.csv | PRS |
+			| prs-simple-3-songs-another-statement.csv| PRS |
+			| gubbins.txt| Unknown |
 
 	Scenario: I can delete an individual upload
 		Given I am on the homepage

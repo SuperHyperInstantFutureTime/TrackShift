@@ -9,5 +9,5 @@ Feature: App should handle Bandcamp CSV files
 		And I press "Upload"
 		When I go to "/account/uploads/"
 		Then I should see the following table data:
-			| File name | Size | Type |
-			| bandcamp-simple-3-songs.csv | 1.1 KB | Bandcamp Statement |
+			| File name | File Size | Source |
+			| bandcamp-simple-3-songs.csv | 1.1 KB | Bandcamp |

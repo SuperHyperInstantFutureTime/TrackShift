@@ -26,7 +26,8 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"SHIFT\\Trackshift\\Test\\": "./test/phpunit"
+			"SHIFT\\Trackshift\\Test\\": "./test/phpunit",
+			"SHIFT\\Trackshift\\BehatContext\\": "./test/behat/Context"
 		}
 	}
 }
