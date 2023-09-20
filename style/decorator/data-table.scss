@@ -1,3 +1,33 @@
 %d-data-table {
 	@extend %o-container;
+	margin-top: 2rem;
+	overflow-x: scroll;
+
+	>.actions {
+		margin: 1rem 0;
+
+		a {
+			@extend button;
+		}
+	}
+
+	table {
+		thead {
+			tr {
+				th {
+
+				}
+			}
+		}
+		tbody {
+			tr {
+				td {
+					a {
+						display: block;
+						padding: 1rem 0;
+					}
+				}
+			}
+		}
+	}
 }

@@ -1,0 +1,11 @@
+cost-editor {
+	@extend %o-container;
+
+	form {
+		@extend %d-form-fields;
+	}
+
+	.auto-submit {
+		display: none;
+	}
+}

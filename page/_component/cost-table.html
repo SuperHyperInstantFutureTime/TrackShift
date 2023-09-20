@@ -1,0 +1,41 @@
+<div class="actions">
+	<a href="/account/costs/_new/">Add cost</a>
+</div>
+
+<table>
+	<thead>
+		<tr>
+			<th>Artist</th>
+			<th>Product</th>
+			<th>Cost</th>
+			<th>Description</th>
+			<th>Added</th>
+			<th>Delete</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr data-list>
+			<td>
+				<a href="/account/costs/{{id}}" data-bind:text="product.artist.name">Artist Name</a>
+			</td>
+			<td>
+				<a href="/account/costs/{{id}}" data-bind:text="product.title">Product Name</a>
+			</td>
+			<td>
+				<a href="/account/costs/{{id}}" data-bind:text="amount">£0.00</a>
+			</td>
+			<td>
+				<a href="/account/costs/{{id}}" data-bind:text="description">Description</a>
+			</td>
+			<td>
+				<a href="/account/costs/{{id}}" data-bind:text="addedOn">01-01-1900</a>
+			</td>
+			<td>
+				<form method="post">
+					<input type="hidden" name="id" data-bind:value="@name" />
+					<button name="do" value="delete" onclick="return confirm('Delete the cost of {{amount}} for {{product.title}} by {{product.artist.name}}?')">Delete</button>
+				</form>
+			</td>
+		</tr>
+	</tbody>
+</table>

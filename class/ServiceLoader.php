@@ -5,9 +5,11 @@ use Gt\Database\Database;
 use Gt\Session\Session;
 use Gt\WebEngine\Middleware\DefaultServiceLoader;
 use SHIFT\Spotify\SpotifyClient;
+use SHIFT\Trackshift\Artist\ArtistRepository;
 use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Auth\UserRepository;
 use SHIFT\Trackshift\Content\ContentRepository;
+use SHIFT\Trackshift\Cost\CostRepository;
 use SHIFT\Trackshift\Product\ProductRepository;
 use SHIFT\Trackshift\Upload\UploadManager;
 
@@ -41,6 +43,7 @@ class ServiceLoader extends DefaultServiceLoader {
 
 		return new ProductRepository(
 			$db->queryCollection("Product"),
+			$this->container->get(ArtistRepository::class),
 		);
 	}
 
@@ -60,5 +63,20 @@ class ServiceLoader extends DefaultServiceLoader {
 		}
 
 		return $user;
+	}
+
+	public function loadArtistRepository():ArtistRepository {
+		$db = $this->container->get(Database::class);
+		return new ArtistRepository(
+			$db->queryCollection("Artist")
+		);
+	}
+
+	public function loadCostRepository():CostRepository {
+		$db = $this->container->get(Database::class);
+		return new CostRepository(
+			$db->queryCollection("Cost"),
+			$this->container->get(ProductRepository::class),
+		);
 	}
 }

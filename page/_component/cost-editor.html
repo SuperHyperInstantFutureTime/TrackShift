@@ -1,0 +1,36 @@
+<account-tabs />
+
+<form method="post" onchange="this.submit()">
+	<label>
+		<span>Artist</span>
+		<select name="artist" required data-bind:value="@name">
+			<option></option>
+			<option data-list data-bind:text="name" data-bind:value="id">Artist</option>
+		</select>
+	</label>
+	<div class="actions auto-submit">
+		<button name="do" value="set-artist">Set artist</button>
+	</div>
+</form>
+<form method="post">
+	<label>
+		<span>Product</span>
+		<select name="product" required data-bind:value="@name">
+			<option></option>
+			<option data-list data-bind:text="title" data-bind:value="id">Product</option>
+		</select>
+	</label>
+	<label>
+		<span>Description</span>
+		<input name="description" data-bind:value="@name" />
+	</label>
+	<label>
+		<span>Amount</span>
+		<input name="amount" required type="number" step="0.01" data-bind:value="amount.value" />
+	</label>
+
+	<div class="actions">
+		<button name="do" value="save">Save</button>
+		<button name="do" value="delete">Delete</button>
+	</div>
+</form>

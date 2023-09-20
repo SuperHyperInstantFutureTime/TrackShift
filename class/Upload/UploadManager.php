@@ -52,11 +52,11 @@ readonly class UploadManager extends Repository {
 			/** @var Upload $upload */
 			$upload = new $uploadType(new Ulid(), $targetPath);
 
-			if($this->uploadDb->fetch("findByFilePath", $targetPath)) {
+			if($this->db->fetch("findByFilePath", $targetPath)) {
 				continue;
 			}
 
-			$this->uploadDb->insert("create", [
+			$this->db->insert("create", [
 				"id" => $upload->id,
 				"userId" => $user->id,
 				"filePath" => $upload->filePath,
@@ -76,7 +76,7 @@ readonly class UploadManager extends Repository {
 
 		$uploadList = [];
 
-		foreach($this->uploadDb->fetchAll("getForUser", [
+		foreach($this->db->fetchAll("getForUser", [
 			"userId" => $user->id,
 		]) as $row) {
 			$type = $row->getString("type");
@@ -97,7 +97,7 @@ readonly class UploadManager extends Repository {
 	}
 
 	public function getNextUploadNotYetProcessed():?Upload {
-		if($row = $this->uploadDb->fetch("getSingleUnprocessed")) {
+		if($row = $this->db->fetch("getSingleUnprocessed")) {
 			return $this->rowToUpload($row);
 		}
 
@@ -118,7 +118,7 @@ readonly class UploadManager extends Repository {
 			]);
 		}
 
-		$this->uploadDb->update("setProcessed", $upload->id);
+		$this->db->update("setProcessed", $upload->id);
 	}
 
 	public function processUsages(Upload $upload):int {
@@ -222,7 +222,7 @@ readonly class UploadManager extends Repository {
 	}
 
 	public function deleteById(User $user, string $id):void {
-		$row = $this->uploadDb->fetch("getById", [
+		$row = $this->db->fetch("getById", [
 			"id" => $id,
 			"userId" => $user->id,
 		]);
@@ -231,7 +231,7 @@ readonly class UploadManager extends Repository {
 			throw new UploadNotFoundException("id: $id");
 		}
 
-		$this->uploadDb->delete("delete", [
+		$this->db->delete("delete", [
 			"id" => $id,
 			"userId" => $user->id,
 		]);
@@ -244,7 +244,7 @@ readonly class UploadManager extends Repository {
 
 	public function deleteByFileName(string $filePath):void {
 		unlink($filePath);
-		$this->uploadDb->delete("deleteByFilePath", $filePath);
+		$this->db->delete("deleteByFilePath", $filePath);
 	}
 
 	public function extendExpiry(User $user):void {
@@ -259,7 +259,7 @@ readonly class UploadManager extends Repository {
 		}
 
 		rmdir($userDir);
-		$this->uploadDb->delete("deleteAllForUser", $user->id);
+		$this->db->delete("deleteAllForUser", $user->id);
 	}
 
 	public function getExpiry(User $user):DateTime {

@@ -1,0 +1,14 @@
+%d-form-fields {
+	label {
+		display: block;
+		margin: 1rem 0;
+
+		>span {
+			display: block;
+		}
+	}
+
+	select, input {
+		@extend %d-ui-element;
+	}
+}
