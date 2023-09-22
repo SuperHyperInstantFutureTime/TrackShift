@@ -48,9 +48,11 @@ readonly class UploadManager extends Repository {
 			}
 			$file->moveTo($targetPath);
 
+			$cost = new Money(0);
+
 			$uploadType = $this->detectUploadType($targetPath);
 			/** @var Upload $upload */
-			$upload = new $uploadType(new Ulid(), $targetPath);
+			$upload = new $uploadType(new Ulid(), $targetPath, $cost);
 
 			if($this->db->fetch("findByFilePath", $targetPath)) {
 				continue;
@@ -87,7 +89,7 @@ readonly class UploadManager extends Repository {
 			}
 
 			$earning = new Money(0);
-			if($earningValue = $row->getFloat("totalEarning")) {
+			if($earningValue = $row->getFloat("totalEarnings")) {
 				$earning = new Money($earningValue);
 			}
 

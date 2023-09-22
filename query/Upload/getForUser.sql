@@ -3,7 +3,7 @@ select
 	Upload.userId,
 	Upload.filePath,
 	Upload.type,
-	coalesce(round(sum(earning), 2), 0) as totalEarning
+	round(coalesce(sum(UsageOfProduct.earning), 0), 2) as totalEarnings
 
 from
 	Upload
@@ -20,3 +20,5 @@ on
 
 where
 	userId = :userId
+
+group by Upload.id
