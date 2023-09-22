@@ -25,6 +25,10 @@ readonly class ProductRepository extends Repository {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
 			$product = new Product($row->getString("productId"), $row->getString("title"), $artist);
 			$earning = new Money($row->getFloat("totalEarning"));
+			$cost = new Money(0);
+			if($costValue = $row->getFloat("totalCost")) {
+				$cost = new Money($costValue);
+			}
 
 			array_push(
 				$earningList,
@@ -32,6 +36,7 @@ readonly class ProductRepository extends Repository {
 					$user,
 					$product,
 					$earning,
+					$cost,
 				)
 			);
 		}

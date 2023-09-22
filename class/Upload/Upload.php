@@ -25,6 +25,7 @@ abstract class Upload {
 	public function __construct(
 		public readonly string $id,
 		public readonly string $filePath,
+		public readonly Money $totalEarnings,
 	) {
 		$this->file = new SplFileObject($this->filePath);
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);

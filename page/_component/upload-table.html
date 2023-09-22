@@ -4,7 +4,8 @@
 	<tr>
 		<th>Source</th>
 		<th>File name</th>
-		<th class="">Date Uploaded</th>
+		<th>Date Uploaded</th>
+		<th>Total earnings</th>
 		<th class="centered">File Size</th>
 		<th class="centered">Delete</th>
 	</tr>
@@ -14,6 +15,7 @@
 		<td data-bind:text="type">Unknown</td>
 		<td data-bind:text="basename">abc.xyz</td>
 		<td data-bind:text="createdAtFormattedDate">1st Jan 1970</td>
+		<td data-bind:text="totalEarnings">-</td>
 		<td class="centered" data-bind:text="sizeString">0 B</td>
 		<td class="centered">
 			<form method="post">
@@ -35,7 +37,7 @@
 	  filter = input.value.toUpperCase();
 	  table = document.getElementById("uploadTable");
 	  tr = table.getElementsByTagName("tr");
-	
+
 	  // Loop through all table rows, and hide those who don't match the search query
 	  for (i = 0; i < tr.length; i++) {
 		td = tr[i].getElementsByTagName("td")[1];

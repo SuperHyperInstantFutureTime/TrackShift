@@ -1,5 +1,5 @@
 <div class="actions">
-	<a href="/account/costs/_new/">Add cost</a>
+	<a href="/account/costs/_new/" target="modal">Add cost</a>
 </div>
 
 <table>
@@ -16,19 +16,19 @@
 	<tbody>
 		<tr data-list>
 			<td>
-				<a href="/account/costs/{{id}}" data-bind:text="product.artist.name">Artist Name</a>
+				<a href="/account/costs/{{id}}" data-bind:text="product.artist.name" target="modal">Artist Name</a>
 			</td>
 			<td>
-				<a href="/account/costs/{{id}}" data-bind:text="product.title">Product Name</a>
+				<a href="/account/costs/{{id}}" data-bind:text="product.title" target="modal">Product Name</a>
 			</td>
 			<td>
-				<a href="/account/costs/{{id}}" data-bind:text="amount">£0.00</a>
+				<a href="/account/costs/{{id}}" data-bind:text="amount" target="modal">£0.00</a>
 			</td>
 			<td>
-				<a href="/account/costs/{{id}}" data-bind:text="description">Description</a>
+				<a href="/account/costs/{{id}}" data-bind:text="description" target="modal">Description</a>
 			</td>
 			<td>
-				<a href="/account/costs/{{id}}" data-bind:text="addedOn">01-01-1900</a>
+				<a href="/account/costs/{{id}}" data-bind:text="addedOn" target="modal">01-01-1900</a>
 			</td>
 			<td>
 				<form method="post">
@@ -39,3 +39,5 @@
 		</tr>
 	</tbody>
 </table>
+
+<iframe src="about:blank" name="modal" onload="this.dataset.loaded=this.contentWindow.location.pathname" />

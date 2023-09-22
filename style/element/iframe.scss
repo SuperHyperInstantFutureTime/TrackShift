@@ -1,0 +1,16 @@
+iframe {
+	&[name="modal"] {
+		display: none;
+		position: fixed;
+		background-color: rgba(white, 0.75);
+		z-index: 1000;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+
+		&:not([data-loaded="blank"]) {
+			display: block;
+		}
+	}
+}

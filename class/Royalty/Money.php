@@ -19,4 +19,10 @@ class Money implements Stringable {
 		$newValue = (float)substr((string)$newValue, 0, 2 + self::DECIMAL_ACCURACY);
 		return new Money($newValue);
 	}
+
+	public function withSubtraction(Money $sub):self {
+		$newValue = round($this->value, self::DECIMAL_ACCURACY) - round($sub->value, self::DECIMAL_ACCURACY);
+		$newValue = (float)substr((string)$newValue, 0, 2 + self::DECIMAL_ACCURACY);
+		return new Money($newValue);
+	}
 }

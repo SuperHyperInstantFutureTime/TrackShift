@@ -1,0 +1,43 @@
+{
+	"asset/**/*": {
+		"require": {
+			"vendor/bin/sync": ">=1.3.0"
+		},
+		"execute": {
+			"command": "vendor/bin/sync",
+			"arguments": ["./asset", "./www/asset", "--symlink"]
+		}
+	},
+
+	"data/cache/art/*": {
+		"require": {
+			"vendor/bin/sync": ">=1.3.0"
+		},
+		"execute": {
+			"command": "vendor/bin/sync",
+			"arguments": ["./data/cache/art", "./www/data/cache/art", "--symlink"]
+		}
+	},
+
+	"script/**/*.es6": {
+		"require": {
+			"node": "*",
+			"babel": "*",
+			"webpack": "*"
+		},
+		"execute": {
+			"command": "webpack",
+			"arguments": ["--entry","./script/script.es6", "--output-path", "./www", "--output-filename", "script.js", "--devtool", "source-map", "--mode", "development"]
+		}
+	},
+
+	"style/**/*.scss": {
+		"require": {
+			"sass": "*"
+		},
+		"execute": {
+			"command": "sass",
+			"arguments": ["./style/style.scss", "www/style.css"]
+		}
+	}
+}

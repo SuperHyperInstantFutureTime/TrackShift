@@ -86,7 +86,12 @@ readonly class UploadManager extends Repository {
 				continue;
 			}
 
-			$upload = new $type($row->getString("id"), $filePath);
+			$earning = new Money(0);
+			if($earningValue = $row->getFloat("totalEarning")) {
+				$earning = new Money($earningValue);
+			}
+
+			$upload = new $type($row->getString("id"), $filePath, $earning);
 			array_push(
 				$uploadList,
 				$upload,
