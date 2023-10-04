@@ -1,16 +1,17 @@
 <div class="actions">
-	<a href="/account/costs/_new/" target="modal">Add cost</a>
+	<a href="/account/costs/_new/" target="modal" class="button">Add cost</a>
 </div>
+<input type="text" id="costsTableSearchInput" onkeyup="myFunction()" placeholder="Search costs...">
 
-<table>
+<table id="costsTable">
 	<thead>
 		<tr>
 			<th>Artist</th>
 			<th>Product</th>
 			<th>Cost</th>
 			<th>Description</th>
-			<th>Added</th>
-			<th>Delete</th>
+			<th>Date Added</th>
+			<th class="centered">Delete</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -30,7 +31,7 @@
 			<td>
 				<a href="/account/costs/{{id}}" data-bind:text="addedOn" target="modal">01-01-1900</a>
 			</td>
-			<td>
+			<td class="centered">
 				<form method="post">
 					<input type="hidden" name="id" data-bind:value="@name" />
 					<button name="do" value="delete" onclick="return confirm('Delete the cost of {{amount}} for {{product.title}} by {{product.artist.name}}?')">Delete</button>
@@ -41,3 +42,27 @@
 </table>
 
 <iframe src="about:blank" name="modal" onload="this.dataset.loaded=this.contentWindow.location.pathname" />
+
+<script>
+	function myFunction() {
+	  // Declare variables
+	  var input, filter, table, tr, td, i, txtValue;
+	  input = document.getElementById("costsTableSearchInput");
+	  filter = input.value.toUpperCase();
+	  table = document.getElementById("costsTable");
+	  tr = table.getElementsByTagName("tr");
+
+	  // Loop through all table rows, and hide those who don't match the search query
+	  for (i = 0; i < tr.length; i++) {
+		td = tr[i].getElementsByTagName("td")[1];
+		if (td) {
+		  txtValue = td.textContent || td.innerText;
+		  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			tr[i].style.display = "";
+		  } else {
+			tr[i].style.display = "none";
+		  }
+		}
+	  }
+	}
+</script>

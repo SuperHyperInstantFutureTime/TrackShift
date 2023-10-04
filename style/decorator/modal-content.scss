@@ -1,9 +1,10 @@
 %d-modal-content {
 	body.modal & {
-		margin-top: 4rem;
-		padding: 1rem;
-		border: 2px solid var(--pal-5);
-		background: var(--pal-utility-light-1);
+		margin-top: 25vh;
+		padding: 2rem;
+		border: var(--theme-ui-border);
+		border-radius: var(--theme-ui-border-radius);
+		background: var(--pal-6);
 		max-width: $break-small;
 	}
 }
