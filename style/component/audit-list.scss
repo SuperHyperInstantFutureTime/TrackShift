@@ -1,0 +1,20 @@
+audit-list {
+	@extend %o-container;
+	margin: 4rem auto;
+
+	@media(min-width: $break-small) {
+		max-width: 48vw;
+	}
+
+	>ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+
+		>li {
+			>div {
+				@extend %d-info-text;
+			}
+		}
+	}
+}

@@ -11,7 +11,7 @@ function go(DocumentBinder $documentBinder, CostRepository $costRepository, User
 	);
 }
 
-function do_delete(Input $input, CostRepository $costRepository, Response $response):void {
-	$costRepository->delete($input->getString("id"));
+function do_delete(Input $input, CostRepository $costRepository, Response $response, User $user):void {
+	$costRepository->delete($input->getString("id"), $user);
 	$response->reload();
 }

@@ -1,5 +1,6 @@
 <?php
 use Gt\Database\Database;
+use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 use Gt\DomTemplate\DocumentBinder;
 use SHIFT\Trackshift\Auth\User;
@@ -18,7 +19,7 @@ function go(
 	date_default_timezone_set("Europe/London");
 
 	if(empty($uploadManager->getUploadsForUser($user))) {
-		$document->querySelector("global-header nav a")->remove();
+		$document->querySelectorAll("global-header nav a")->forEach(fn(Element $element) => $element->remove());
 	}
 
 	$document->body->dataset->set("hash", substr($user->id, -6));
