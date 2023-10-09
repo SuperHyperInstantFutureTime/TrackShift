@@ -69,6 +69,7 @@ function do_save(
 	ProductRepository $productRepository,
 	Response $response,
 	DynamicPath $dynamicPath,
+	User $user,
 ):void {
 	$product = $productRepository->getById($input->getString("product"));
 	$description = $input->getString("description");
@@ -84,7 +85,7 @@ function do_save(
 			$description,
 			$amount,
 		);
-		$costRepository->create($cost);
+		$costRepository->create($cost, $user);
 		$response->redirect("/account/costs/?created=$id");
 	}
 	else {
@@ -94,7 +95,7 @@ function do_save(
 			$description,
 			$amount,
 		);
-		$costRepository->update($cost);
+		$costRepository->update($cost, $user);
 		$response->redirect("/account/costs/?updated=$id");
 	}
 }

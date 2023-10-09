@@ -13,6 +13,7 @@ use SHIFT\Spotify\Entity\EntityType;
 use SHIFT\Spotify\Entity\SearchFilter;
 use SHIFT\Spotify\SpotifyClient;
 use SHIFT\Trackshift\Artist\Artist;
+use SHIFT\Trackshift\Audit\AuditRepository;
 use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Product\Product;
 use SHIFT\Trackshift\Product\ProductEarning;
@@ -30,6 +31,7 @@ readonly class UploadManager extends Repository {
 		protected QueryCollection $usageDb,
 		protected QueryCollection $artistDb,
 		protected QueryCollection $productDb,
+		protected AuditRepository $auditRepository,
 	) {
 		parent::__construct($db);
 	}
@@ -52,7 +54,7 @@ readonly class UploadManager extends Repository {
 
 			$uploadType = $this->detectUploadType($targetPath);
 			/** @var Upload $upload */
-			$upload = new $uploadType(new Ulid(), $targetPath, $cost);
+			$upload = new $uploadType(new Ulid("upload"), $targetPath, $cost);
 
 			if($this->db->fetch("findByFilePath", $targetPath)) {
 				continue;
@@ -64,6 +66,8 @@ readonly class UploadManager extends Repository {
 				"filePath" => $upload->filePath,
 				"type" => $upload::class,
 			]);
+
+			$this->auditRepository->create($user, $upload->id, $upload->filename);
 			array_push($completedUploadList, $upload);
 		}
 

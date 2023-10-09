@@ -13,6 +13,7 @@
 @import "decorator/ui-element";
 @import "decorator/data-table";
 @import "decorator/editorial-content";
+@import "decorator/info-text";
 @import "decorator/form-fields";
 @import "decorator/modal-content";
 
@@ -26,6 +27,7 @@
 @import "element/section";
 @import "element/main";
 
+@import "component/audit-list";
 @import "component/delete-me";
 @import "component/global-header";
 @import "component/global-footer";

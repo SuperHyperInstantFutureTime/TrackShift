@@ -1,0 +1,32 @@
+audit-list {
+	@extend %o-container;
+	margin: 4rem auto 10rem auto;
+
+	@media(min-width: $break-small) {
+	}
+
+	>ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+
+		>li {
+			border: 2px solid black;
+			padding:1rem;
+			border-radius: 0.5rem;
+			margin-bottom:1rem;
+			transition: ease-in-out 0.3s;
+			>div {
+				@extend %d-info-text;
+				margin-top: 0.75rem;
+			}
+			&:hover {
+				scale:1.015;
+				transition: ease-in-out 0.3s;
+			}
+			>time {
+				font-size:0.75em;
+			}
+		}
+	}
+}
