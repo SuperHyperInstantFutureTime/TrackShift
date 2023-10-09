@@ -17,11 +17,11 @@
 	</thead>
 	<tbody>
 		<tr data-list>
-			<td data-bind:text="product.artist.name"></td>
-			<td data-bind:text="product.title" ></td>
-			<td data-bind:text="amount"></td>
-			<td data-bind:text="description"></td>	
-			<td data-bind:text="addedOn"></td>
+			<td data-bind:text="product.artist.name">Artist Name</td>
+			<td data-bind:text="product.title">Product Title</td>
+			<td data-bind:text="amount">0.00</td>
+			<td data-bind:text="description">The description of the cost</td>	
+			<td data-bind:text="addedOn">1st Jan 1970</td>
 			<td class="centered">
 				<a href="/account/costs/{{id}}" target="modal">Edit</a>
 			</td>
@@ -48,7 +48,7 @@
 
 	  // Loop through all table rows, and hide those who don't match the search query
 	  for (i = 0; i < tr.length; i++) {
-		td = tr[i].getElementsByTagName("td")[1];
+		td = tr[i].getElementsByTagName("td")[0];
 		if (td) {
 		  txtValue = td.textContent || td.innerText;
 		  if (txtValue.toUpperCase().indexOf(filter) > -1) {
