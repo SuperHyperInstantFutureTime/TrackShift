@@ -31,27 +31,6 @@ global-header {
 					transition: 0.3s ease-in-out
 				}
 			}
-
-			// &::before {
-			// 	$size: 12rem;
-
-			// 	content: "";
-			// 	position: absolute;
-			// 	display: block;
-			// 	z-index: -1;
-			// 	top: calc(50% - ($size / 2));
-			// 	left: calc(50% - ($size / 2));
-			// 	width: $size;
-			// 	height: $size;
-
-			// 	border-radius: $size;
-			// 	background-color: var(--pal-1);
-			// 	pointer-events: none;
-
-			// 	@media(min-width: $break-small) {
-			// 		left: -1.5rem;
-			// 	}
-			// }
 		}
 
 		nav {

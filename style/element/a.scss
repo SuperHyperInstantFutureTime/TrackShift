@@ -7,4 +7,24 @@ a {
 	&:focus {
 		outline: var(--theme-accessibility-outline);
 	}
+
+	&.button {
+		@extend button;
+		// color:black;
+		// background-color: white;
+		// border: 2px black solid;
+		// border-radius: 5px;
+		// font-weight:bold !important;
+		// font-size:18px;
+		// padding:10px 15px;
+		// text-decoration: none;
+		// transition: 0.3s ease-in-out;
+
+		// &:hover {
+		// 	background-color: var(--pal-1);
+		// 	transition: 0.3sec ease-in-out;
+		// 	color:white;
+		// 	border-color:var(--pal-1);
+		// }
+	}
 }

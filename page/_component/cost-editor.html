@@ -39,9 +39,10 @@
 <script>
 if(window !== window.top) {
 	document.body.classList.add("modal");
-	document.querySelector(".actions a").addEventListener("click", e => {
+	let link=document.querySelector(".actions a");
+	link.addEventListener("click", e => {
 		e.preventDefault();
 		location.href = "about:blank";
-	});
+	});	
 }
 </script>

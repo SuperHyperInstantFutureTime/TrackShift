@@ -3,6 +3,10 @@ cost-editor {
 
 	form {
 		@extend %d-form-fields;
+
+		a {
+			margin-left:0.75rem;
+		}
 	}
 
 	.auto-submit {

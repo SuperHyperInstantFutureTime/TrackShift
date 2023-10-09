@@ -5,13 +5,10 @@
 
 	>.actions {
 		margin: 1rem 0;
-
-		a {
-			@extend button;
-		}
 	}
 
 	table {
+		border-collapse: collapse;
 		thead {
 			tr {
 				th {
@@ -22,6 +19,8 @@
 		tbody {
 			tr {
 				td {
+					padding: 1rem 0;
+					border-bottom: 2px solid var(--pal-utility-dark-1);
 					a {
 						display: block;
 						padding: 1rem 0;
