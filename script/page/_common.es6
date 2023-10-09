@@ -1,15 +1,17 @@
 import {Page} from "../inc/Page.es6";
 
 Page.go(function() {
-	document.addEventListener("keydown", e => {
-		// if(window !== window.top) {
-		// 	return;
-		// }
+	window.addEventListener("keydown", e => {
+		let doc = document;
+
+		if(window !== window.top) {
+			doc = window.top.document;
+		}
 
 		if(e.key === "Escape") {
 			e.preventDefault();
 
-			document.querySelectorAll("[name=modal]").forEach(iframe => {
+			doc.querySelectorAll("[name=modal]").forEach(iframe => {
 				console.log(iframe);
 				iframe.src="about:blank"
 			});
