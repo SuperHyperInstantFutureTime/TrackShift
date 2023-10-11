@@ -17,8 +17,8 @@ Feature: App should be usable by anonymous users
 		And I press "Upload"
 		And I go to "/account/uploads/"
 		And I should see the following table data:
-			| File name	| Type		| Size 		|
-			|gubbins.txt	| Unknown	| 2.2 KB 	|
+			| File name	| Source	| File Size 		|
+			| gubbins.txt	| Unknown	| 2.2 KB 	|
 
 	Scenario: I can upload a PRS statement
 		Given I am on the homepage
@@ -26,8 +26,8 @@ Feature: App should be usable by anonymous users
 		And I press "Upload"
 		And I go to "/account/uploads/"
 		And I should see the following table data:
-			|File name		|Type		|
-			|prs-simple-3-songs.csv	|PRS Statement	|
+			| File name			| Source		|
+			| prs-simple-3-songs.csv	| PRS		|
 
 	Scenario: I should not see the account button until I upload something
 		Given I am on the homepage

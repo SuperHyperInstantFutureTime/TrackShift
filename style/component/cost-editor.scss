@@ -1,0 +1,15 @@
+cost-editor {
+	@extend %o-container, %d-modal-content;
+
+	form {
+		@extend %d-form-fields;
+
+		a {
+			margin-left:0.75rem;
+		}
+	}
+
+	.auto-submit {
+		display: none;
+	}
+}

@@ -22,8 +22,8 @@ readonly class UserRepository extends Repository {
 	}
 
 	public function createNewUser():User {
-		$user = new User(new Ulid());
-		$this->uploadDb->insert("create", $user->id);
+		$user = new User(new Ulid("user"));
+		$this->db->insert("create", $user->id);
 		return $user;
 	}
 

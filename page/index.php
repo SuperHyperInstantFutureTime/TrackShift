@@ -93,6 +93,7 @@ function go(
 }
 
 function do_upload(Session $session, Input $input, Response $response):void {
+// TODO: I think this do function is never called, because the actual form has a different action.
 	$userId = $session->getString("ulid");
 	if(!$userId) {
 		$response->reload();

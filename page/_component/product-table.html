@@ -17,7 +17,7 @@
 			<td data-bind:text="product.artist.name">Artist</td>
 			<td data-bind:text="product.title">Title</td>
 			<td  class="centered" data-bind:text="earning">Earnings</td>
-			<td class="centered">-</td>
+			<td class="centered" data-bind:text="balance">-</td>
 			<td class="centered">-</td>
 			<td class="centered">-</td>
 		</tr>
@@ -28,7 +28,7 @@
 function filterTable(event) {
     var filter = event.target.value.toUpperCase();
     var rows = document.querySelector("#productTable tbody").rows;
-    
+
     for (var i = 0; i < rows.length; i++) {
         var firstCol = rows[i].cells[1].textContent.toUpperCase();
         var secondCol = rows[i].cells[2].textContent.toUpperCase();
@@ -36,7 +36,7 @@ function filterTable(event) {
             rows[i].style.display = "";
         } else {
             rows[i].style.display = "none";
-        }      
+        }
     }
 }
 

@@ -31,27 +31,6 @@ global-header {
 					transition: 0.3s ease-in-out
 				}
 			}
-
-			// &::before {
-			// 	$size: 12rem;
-
-			// 	content: "";
-			// 	position: absolute;
-			// 	display: block;
-			// 	z-index: -1;
-			// 	top: calc(50% - ($size / 2));
-			// 	left: calc(50% - ($size / 2));
-			// 	width: $size;
-			// 	height: $size;
-
-			// 	border-radius: $size;
-			// 	background-color: var(--pal-1);
-			// 	pointer-events: none;
-
-			// 	@media(min-width: $break-small) {
-			// 		left: -1.5rem;
-			// 	}
-			// }
 		}
 
 		nav {
@@ -71,6 +50,7 @@ global-header {
 			}
 
 			ul {
+				display: flex;
 				list-style-type: none;
 				margin: 0;
 				padding: 0;
@@ -85,8 +65,37 @@ global-header {
 					a {
 						display: block;
 						padding: 0rem;
-						margin:0;
+						margin: 0 1rem;
 						background-color: var(--pal-page-bg);
+
+						&[href='/account/audit/'] {
+							span {
+								display: none;
+							}
+
+							background: none;
+							opacity: 0.8;
+
+							&:hover {
+								opacity: 1;
+							}
+
+							&::before {
+								content: "";
+								display: block;
+								width: 2.5rem;
+								height: 2.5rem;
+								mask-image: url("/asset/icon/bell-solid.svg");
+								mask-position: center;
+								mask-repeat: no-repeat;
+								mask-size: calc(100% - 1rem);
+								background-color: rgba(black, 0.5);
+							}
+
+							&.notify::before {
+								background-color: red;
+							}
+						}
 					}
 				}
 			}

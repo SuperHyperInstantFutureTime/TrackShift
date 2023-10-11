@@ -1,25 +1,36 @@
 %d-ui-element {
 	display: inline-block;
 	box-sizing: border-box;
-	padding: 0.5rem;
+	padding: 0.5rem 1rem;
 	font-size: 1rem;
+	font-weight:700;
 	font-family: var(--font-family-main);
+	letter-spacing: var(--font-family-main-letterspacing);
 	background-color: var(--pal-ui-bg);
 	color: var(--pal-ui-text);
 	border: var(--theme-ui-border);
 	box-shadow: var(--theme-ui-box-shadow);
+	border-radius: var(--theme-ui-border-radius);
+	width:20rem;
+	// transition: var(--theme-transition);
 
 	&:hover {
-		background-color: var(--pal-ui-bg--hover);
+		// background-color: var(--pal-ui-bg--hover);
+		// transition: var(--theme-transition);
+		// color: var(--pal-3);
+		// border-color:var(--pal-1);
 	}
 	&:focus:not(:active) {
 		outline: var(--theme-ui-outline--focus);
-		background-color: var(--pal-ui-bg--focus);
-		border: var(--theme-ui-border--focus);
+		// background-color: var(--pal-ui-bg--focus);
+		// border-color: var(--theme-ui-border);
 		box-shadow: var(--theme-ui-box-shadow--focus);
+		// color: var(--pal-ui-text);
 	}
 	&:active {
-		background-color: var(--pal-ui-bg--active);
+		// background-color: var(--pal-ui-bg--active--dark);
+		transition:none;
+		border-color: var(--pal-ui-bg--active--dark);
 	}
 	&[disabled] {
 		background-color: var(--pal-ui-bg--disabled);

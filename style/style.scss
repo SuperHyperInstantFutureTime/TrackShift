@@ -13,6 +13,9 @@
 @import "decorator/ui-element";
 @import "decorator/data-table";
 @import "decorator/editorial-content";
+@import "decorator/info-text";
+@import "decorator/form-fields";
+@import "decorator/modal-content";
 
 @import "object/container";
 
@@ -20,9 +23,11 @@
 @import "element/button";
 @import "element/body";
 @import "element/html";
+@import "element/iframe";
 @import "element/section";
 @import "element/main";
 
+@import "component/audit-list";
 @import "component/delete-me";
 @import "component/global-header";
 @import "component/global-footer";
@@ -31,8 +36,10 @@
 @import "component/file-expiry";
 @import "component/upload-progress";
 @import "component/account-tabs";
-@import "component/upload-table";
+@import "component/cost-editor";
+@import "component/cost-table";
 @import "component/product-table";
+@import "component/upload-table";
 
 @import "page/index";
 @import "page/_common";
@@ -112,26 +119,6 @@ table {
 			}
 		}
 	}
-}
-
-.button {
-	color:black;
-	background-color: white;
-	border: 2px black solid;
-	border-radius: 5px;
-	font-weight:bold !important;
-	font-size:18px;
-	padding:10px 15px;
-	// margin:15px 0;
-	text-decoration: none;
-	transition: 0.3s ease-in-out
-}
-
-.button:hover {
-	background-color: var(--pal-1);
-	transition: 0.3sec ease-in-out;
-	color:white;
-	border-color:var(--pal-1);
 }
 
 .footer {

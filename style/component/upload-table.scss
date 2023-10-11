@@ -1,21 +1,6 @@
 upload-table {
 	@extend %d-data-table;
-	margin-top: 2rem;
 	margin-bottom:2rem;
-	overflow-x: hidden;
-
-	table {
-		border-collapse: collapse;
-		tbody {
-			tr {
-				td {
-					padding: 1rem 0;
-					border-bottom: 2px solid var(--pal-utility-dark-1);
-				}
-
-			}
-		}
-	}
 
 	button[name=do][value=delete] {
 		span {

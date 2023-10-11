@@ -1,5 +1,5 @@
 <?php
-use Behat\Behat\Tester\Exception\PendingException;
+namespace behat\Context;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
@@ -10,7 +10,7 @@ class FeatureContext extends MinkContext {
 	private static Process $server;
 
 	/** @BeforeSuite */
-	public static function setUp(BeforeSuiteScope $scope):void {
+	public static function setUp(BeforeSuiteScope $scope): void {
 		$contextSettings = $scope->getSuite()->getSettings();
 		self::checkServerRunning(
 			$contextSettings["serverAddress"],
@@ -19,7 +19,7 @@ class FeatureContext extends MinkContext {
 	}
 
 	/** @AfterSuite */
-	public static function tearDown():void {
+	public static function tearDown(): void {
 		if(isset(self::$server)) {
 			self::$server->terminate();
 		}
@@ -28,7 +28,7 @@ class FeatureContext extends MinkContext {
 	private static function checkServerRunning(
 		string $serverAddress,
 		int $serverPort,
-	):void {
+	): void {
 		$socket = @fsockopen(
 			"localhost",
 			$serverPort,
@@ -54,15 +54,7 @@ class FeatureContext extends MinkContext {
 		PHPUnit::assertSame(6, strlen($body->getAttribute("data-hash")));
 	}
 
-	/** @Then I should see :numRows rows in the table */
-	public function iShouldSeeRowsInTheTable(int $numRows) {
-		$table = $this->getSession()->getPage()->find("css", "table");
-		if(!$table) {
-			return;
-		}
-		$rowList = $table->findAll("css", "tbody>tr");
-		PHPUnit::assertCount($numRows, $rowList);
-	}
+
 
 	/** @Given I should see the total earnings for :artistName as :earnings */
 	public function iShouldSeeTheTotalEarningsForAs(
@@ -82,49 +74,6 @@ class FeatureContext extends MinkContext {
 	public function iShouldSeeArtists(int $artistNum) {
 		$detailsList = $this->getSession()->getPage()->findAll("css", "artist-statement-list details");
 		PHPUnit::assertCount($artistNum, $detailsList);
-	}
-
-	/** @Given I should see the following table data: */
-	public function iShouldSeeTheFollowingTableData(TableNode $data, $table = null):void {
-		if(!$table) {
-			$table = $this->getSession()->getPage()->find("css", "table");
-		}
-		$trList = $table->findAll("css", "tr");
-		$firstTr = array_shift($trList);
-		$tableColumnOrder = [];
-		$headingRow = current($data->getTable());
-
-		foreach($firstTr->findAll("css", "th,td") as $columnIndex => $tableCell) {
-			$text = $tableCell->getText();
-			$matchingColumn = array_search($text, $headingRow);
-			if(false === $matchingColumn) {
-				continue;
-			}
-			$tableColumnOrder[$text] = $columnIndex;
-		}
-
-		PHPUnit::assertCount(count($headingRow), $tableColumnOrder, "Not all required table headings are present");
-
-		foreach($data as $assertionIndex => $kvp) {
-			$matchingTr = true;
-
-			foreach($trList as $tr) {
-				$tdList = $tr->findAll("css", "td");
-				foreach($kvp as $key => $value) {
-					if($columnToCheck = $tableColumnOrder[$key] ?? null) {
-						$columnValue = $tdList[$columnToCheck]->getText();
-						if($value !== $columnValue) {
-							$matchingTr = false;
-						}
-					}
-				}
-				if($matchingTr) {
-					break;
-				}
-			}
-
-			PHPUnit::assertTrue($matchingTr, "Table data missing: $assertionIndex\n" . print_r($kvp, true));
-		}
 	}
 
 	/** @Given I should see the following table data for :artistName: */
