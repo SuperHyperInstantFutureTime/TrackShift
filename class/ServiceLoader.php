@@ -19,6 +19,7 @@ class ServiceLoader extends DefaultServiceLoader {
 		$database = $this->container->get(Database::class);
 		return new AuditRepository(
 			$database->queryCollection("Audit"),
+			$this->container->get(UserRepository::class),
 		);
 	}
 

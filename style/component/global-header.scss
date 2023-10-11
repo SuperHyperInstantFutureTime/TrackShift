@@ -91,8 +91,12 @@ global-header {
 								mask-size: calc(100% - 1rem);
 								background-color: rgba(black, 0.5);
 							}
+						}
+					}
 
-							&.notify::before {
+					&.notify {
+						a {
+							&::before {
 								background-color: red;
 							}
 						}

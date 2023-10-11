@@ -1,12 +1,22 @@
 <?php
 namespace SHIFT\Trackshift\Audit;
 
+use DateTime;
+use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\Row;
 use Gt\Ulid\Ulid;
 use SHIFT\Trackshift\Auth\User;
+use SHIFT\Trackshift\Auth\UserRepository;
 use SHIFT\Trackshift\Repository\Repository;
 
 readonly class AuditRepository extends Repository {
+	public function __construct(
+		QueryCollection $db,
+		private UserRepository $userRepository,
+	) {
+		parent::__construct($db);
+	}
+
 	public function create(User $user, string $newId, ?string $description = null):void {
 		$this->db->insert("insertCreation", [
 			"id" => new Ulid("audit"),
@@ -15,6 +25,16 @@ readonly class AuditRepository extends Repository {
 			"description" => $description,
 		]);
 	}
+
+	public function notify(User $user, string $description, ?string $idInQuestion = null):void {
+		$this->db->insert("insertNotification", [
+			"id" => new Ulid("audit"),
+			"userId" => $user->id,
+			"description" => $description,
+			"valueId" => $idInQuestion,
+		]);
+	}
+
 
 	public function delete(User $user, string $deletedId, ?string $description = null):void {
 		$this->db->insert("insertDeletion", [
@@ -39,9 +59,18 @@ readonly class AuditRepository extends Repository {
 		return $auditItemArray;
 	}
 
+	public function getLatest(User $user):null|AuditItem|NotificationItem {
+		$row = $this->db->fetch("getLatest", $user->id);
+		return $this->rowToAuditItem($row, $user);
+	}
+
 	private function rowToAuditItem(?Row $row, ?User $user = null):?AuditItem {
 		if(!$row) {
 			return null;
+		}
+
+		if(!$user) {
+			$user = $this->userRepository->getById($row->getString("userId"));
 		}
 
 		return new AuditItem(
@@ -85,6 +114,21 @@ readonly class AuditRepository extends Repository {
 		}
 	}
 
+	public function checkNotifications(User $user):void {
+		$this->userRepository->setNotificationCheckTime($user);
+	}
+
+	public function isNewNotification(User $user):bool {
+		$timeLatest = new DateTime();
+		$timeChecked = $this->userRepository->getLatestNotificationCheckTime($user);
+
+		if($latestNotification = $this->getLatest($user)) {
+			$timeLatest->setTimestamp((new Ulid(init: $latestNotification->id))->getTimestamp() / 1000);
+		}
+
+		return $timeLatest > $timeChecked;
+	}
+
 	/** @return array<string, string> key = property name, value = "$oldValue -> $newValue" */
 	private function getDiff(object $from, object $to):array {
 		$fromVars = get_object_vars($from);
@@ -100,6 +144,7 @@ readonly class AuditRepository extends Repository {
 
 		return $diff;
 	}
+
 
 
 }

@@ -6,7 +6,7 @@
 		"php": ">=8.2",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
-		"phpgt/database": "^1.4",
+		"phpgt/database": "dev-datetime-from-timestamp as v1.4.0",
 		"league/commonmark": "^2.4"
 	},
 	"require-dev": {

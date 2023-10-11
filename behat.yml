@@ -14,7 +14,8 @@ default:
         - \SHIFT\Trackshift\BehatContext\AuthContext:
         - \SHIFT\Trackshift\BehatContext\PageContext:
         - \SHIFT\Trackshift\BehatContext\UploadContext:
-        - \SHIFT\Trackshift\BehatContext\AnotherContext:
+        - \SHIFT\Trackshift\BehatContext\NotificationContext:
+        - \SHIFT\Trackshift\BehatContext\DebugContext:
 
   extensions:
     Behat\MinkExtension:

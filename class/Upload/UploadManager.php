@@ -65,7 +65,13 @@ readonly class UploadManager extends Repository {
 				"type" => $upload::class,
 			]);
 
-			$this->auditRepository->create($user, $upload->id, $upload->filename);
+			if($upload instanceof UnknownUpload) {
+				$this->auditRepository->notify($user, "Your latest upload was not processed ($upload->filename)", $upload->id);
+			}
+			else {
+				$this->auditRepository->create($user, $upload->id, $upload->filename);
+			}
+
 			array_push($completedUploadList, $upload);
 		}
 
