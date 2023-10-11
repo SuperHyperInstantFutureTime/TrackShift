@@ -28,6 +28,7 @@ readonly class CostRepository extends Repository {
 		$this->db->insert("create", [
 			"id" => $cost->id,
 			"productId" => $cost->product->id,
+			"userId" => $user->id,
 			"description" => $cost->description,
 			"amount" => $cost->amount->value,
 		]);

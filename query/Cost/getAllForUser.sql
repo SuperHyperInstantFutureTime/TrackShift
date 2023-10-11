@@ -1,6 +1,7 @@
 select distinct
 	Cost.id,
 	Cost.productId,
+	Cost.userId,
 	Cost.description,
 	Cost.amount
 
@@ -17,22 +18,8 @@ inner join
 on
 	Artist.id = Product.artistId
 
-inner join
-	UsageOfProduct
-on
-	UsageOfProduct.productId = Product.id
-
-inner join
-	Usage
-on
-	Usage.id = UsageOfProduct.usageId
-
-inner join
-	Upload
-on
-	Upload.id = Usage.uploadId
-and
-	Upload.userId = ?
+where
+	Cost.userId = ?
 
 order by
 	Artist.name, Product.title
