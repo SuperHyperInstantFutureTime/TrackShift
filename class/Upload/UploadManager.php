@@ -22,9 +22,7 @@ use SHIFT\Trackshift\Royalty\Money;
 use SHIFT\Trackshift\Usage\Usage;
 use SplFileObject;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 readonly class UploadManager extends Repository {
 	public function __construct(
 		QueryCollection $db,
@@ -405,6 +403,4 @@ readonly class UploadManager extends Repository {
 			$artist // ?? $this->getArtistById($row->getString("artistId")
 		);
 	}
-
-
 }
