@@ -1,3 +1,5 @@
+drop table Cost;
+
 create table Cost
 (
     id          text           not null

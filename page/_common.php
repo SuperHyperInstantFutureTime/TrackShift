@@ -33,7 +33,7 @@ function go(
 	}
 }
 
-function go_after(User $user, AuditRepository $auditRepository, HTMLDocument $document):void {
+function go_after(?User $user, AuditRepository $auditRepository, HTMLDocument $document):void {
 	if($user && $auditRepository->isNewNotification($user)) {
 		$document->querySelector("global-header .bell")->classList->add("notify");
 	}

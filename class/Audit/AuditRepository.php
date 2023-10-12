@@ -59,8 +59,13 @@ readonly class AuditRepository extends Repository {
 		return $auditItemArray;
 	}
 
-	public function getLatest(User $user):null|AuditItem|NotificationItem {
-		$row = $this->db->fetch("getLatest", $user->id);
+	public function getLatest(User $user, bool $notificationOnly = false):null|AuditItem|NotificationItem {
+		if($notificationOnly) {
+			$row = $this->db->fetch("getLatestNotification", $user->id);
+		}
+		else {
+			$row = $this->db->fetch("getLatest", $user->id);
+		}
 		return $this->rowToAuditItem($row, $user);
 	}
 
@@ -119,14 +124,15 @@ readonly class AuditRepository extends Repository {
 	}
 
 	public function isNewNotification(User $user):bool {
-		$timeLatest = new DateTime();
-		$timeChecked = $this->userRepository->getLatestNotificationCheckTime($user);
+		$timeLatestNotification = null;
+		$timeLastChecked = $this->userRepository->getLatestNotificationCheckTime($user);
 
-		if($latestNotification = $this->getLatest($user)) {
-			$timeLatest->setTimestamp((new Ulid(init: $latestNotification->id))->getTimestamp() / 1000);
+		if($latestNotification = $this->getLatest($user, true)) {
+			$timeLatestNotification = new DateTime();
+			$timeLatestNotification->setTimestamp((new Ulid(init: $latestNotification->id))->getTimestamp() / 1000);
 		}
 
-		return $timeLatest > $timeChecked;
+		return $timeLatestNotification && $timeLatestNotification > $timeLastChecked;
 	}
 
 	/** @return array<string, string> key = property name, value = "$oldValue -> $newValue" */
