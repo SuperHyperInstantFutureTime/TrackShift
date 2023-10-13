@@ -13,9 +13,11 @@
 	</form>
 
 	<form method="post" onchange="this.submit()">
+		<input type="hidden" name="artist" data-bind:value="@name" />
+
 		<label>
 			<span>Product</span>
-			<select name="product" required data-bind:value="@name">
+			<select name="product" required data-bind:value="@name" data-bind:disabled="?!artist">
 				<option></option>
 				<option data-list data-bind:text="title" data-bind:value="id">Product</option>
 			</select>
@@ -26,31 +28,35 @@
 	</form>
 </div>
 
-<form class="split-records" method="post">
-	<div data-list-no>
+<div class="split-percentage-list" method="post">
+	<form class="split-percentage" method="post" data-list>
+		<input type="hidden" name="artist" data-bind:value="@name" />
+		<input type="hidden" name="product" data-bind:value="@name" />
+		<input type="hidden" name="id" data-bind:value="splitPercentage" />
+
 		<label class="owner">
 			<span>Split owner</span>
-			<input name="owner" required />
+			<input name="owner[]" required />
 		</label>
 		<label class="amount">
 			<span>Amount</span>
-			<input name="percentage" type="number" required />
+			<input name="percentage[]" type="number" required />
 		</label>
 		<label class="contact">
 			<span>Contact details</span>
-			<input name="email" autocomplete="off" />
+			<input name="email[]" autocomplete="off" />
 		</label>
 		<div class="split-actions">
 			<button name="do" value="add-split"><span>Add</span></button>
 			<button name="do" value="delete-split"><span>Delete</span></button>
 		</div>
-	</div>
+	</form>
 	<div class="actions">
 		<button name="do" value="save">Save</button>
 		<button name="do" value="delete">Delete</button>
 		<a href="/account/splits/">Cancel</a>
 	</div>
-</form>
+</div>
 
 <script>
 	if(window !== window.top) {

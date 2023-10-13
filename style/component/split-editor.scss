@@ -1,5 +1,9 @@
 split-editor {
 	@extend %o-container, %d-modal-content;
+	max-width: 46rem;
+	body:not(.modal) & {
+		margin-top: 4rem;
+	}
 
 	.artist-product-picker {
 		display: flex;
@@ -8,6 +12,7 @@ split-editor {
 
 		form {
 			flex-grow: 1;
+			width: calc(50% - 1rem);
 
 			select {
 				width: 100%;
@@ -17,11 +22,17 @@ split-editor {
 
 	form {
 		@extend %d-form-fields;
+	}
 
-		&.split-records {
-			>div {
-				display: flex;
-				gap: 1rem;
+	.split-percentage-list {
+		form.split-percentage {
+			display: flex;
+			gap: 1rem;
+
+			&:last-of-type {
+				button[name=do][value=delete-split] {
+					display: none;
+				}
 			}
 
 			label {
