@@ -1,5 +1,5 @@
 <div class="artist-product-picker">
-	<form method="post" onchange="this.submit()">
+	<form onchange="this.submit()">
 		<label>
 			<span>Artist</span>
 			<select name="artist" required data-bind:value="@name">
@@ -12,7 +12,7 @@
 		</div>
 	</form>
 
-	<form method="post" onchange="this.submit()">
+	<form onchange="this.submit()">
 		<input type="hidden" name="artist" data-bind:value="@name" />
 
 		<label>
@@ -28,33 +28,36 @@
 	</form>
 </div>
 
-<div class="split-percentage-list" method="post">
+<div class="split-percentage-list">
 	<form class="split-percentage" method="post" data-list>
-		<input type="hidden" name="artist" data-bind:value="@name" />
-		<input type="hidden" name="product" data-bind:value="@name" />
-		<input type="hidden" name="id" data-bind:value="splitPercentage" />
+		<input type="hidden" name="id" data-bind:value="@name" />
 
 		<label class="owner">
 			<span>Split owner</span>
-			<input name="owner[]" required />
+			<input name="owner" required data-bind:value="owner" data-bind:readonly="?isReadOnly" />
 		</label>
 		<label class="amount">
 			<span>Amount</span>
-			<input name="percentage[]" type="number" required />
+			<input name="percentage" type="number" required data-bind:value="percentage" data-bind:readonly="?isReadOnly" />
 		</label>
 		<label class="contact">
 			<span>Contact details</span>
-			<input name="email[]" autocomplete="off" />
+			<input name="contact" autocomplete="off" data-bind:value="contact" data-bind:readonly="?isReadOnly" />
 		</label>
 		<div class="split-actions">
 			<button name="do" value="add-split"><span>Add</span></button>
 			<button name="do" value="delete-split"><span>Delete</span></button>
 		</div>
 	</form>
-	<div class="actions">
-		<button name="do" value="save">Save</button>
-		<button name="do" value="delete">Delete</button>
-		<a href="/account/splits/">Cancel</a>
+
+	<div>
+		<form method="post">
+			<div class="actions">
+				<a href="/account/splits/" class="button">OK</a>
+				<button name="do" value="delete" onclick="return confirm('Are you sure you wish to delete this product split?');">Delete</button>
+				<a href="/account/splits/">Cancel</a>
+			</div>
+		</form>
 	</div>
 </div>
 

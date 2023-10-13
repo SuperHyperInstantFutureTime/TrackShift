@@ -1,9 +1,11 @@
 <?php
 namespace SHIFT\Trackshift\Split;
 
-use SHIFT\Trackshift\Split\SplitPercentage;
+use Gt\DomTemplate\Bind;
+use SHIFT\Trackshift\Repository\Entity;
 
-readonly class EmptySplitPercentage extends SplitPercentage {
-	/** @noinspection PhpMissingParentConstructorInspection */
-	public function __construct() {}
+readonly class EmptySplitPercentage extends Entity {
+	public function __construct(
+		public string $productId,
+	) {}
 }

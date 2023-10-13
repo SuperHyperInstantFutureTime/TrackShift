@@ -94,8 +94,11 @@ class ServiceLoader extends DefaultServiceLoader {
 
 	public function loadSplitRepository():SplitRepository {
 		$database = $this->container->get(Database::class);
+
 		return new SplitRepository(
 			$database->queryCollection("Split"),
+			$this->container->get(UserRepository::class),
+			$this->container->get(ProductRepository::class),
 		);
 	}
 }

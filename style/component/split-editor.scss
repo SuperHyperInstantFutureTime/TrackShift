@@ -25,25 +25,66 @@ split-editor {
 	}
 
 	.split-percentage-list {
-		form.split-percentage {
+		.split-percentage {
 			display: flex;
 			gap: 1rem;
 
-			&:last-of-type {
+			&:nth-last-of-type(2) {
 				button[name=do][value=delete-split] {
+					opacity: 0;
+					pointer-events: none;
+				}
+			}
+			&:nth-last-of-type(1) {
+				.contact {
 					display: none;
+				}
+
+				button[name=do][value=add-split] {
+					display: none;
+				}
+				button[name=do][value=delete-split] {
+					opacity: 0;
+					pointer-events: none;
 				}
 			}
 
 			label {
+				position: relative;
+
 				&.owner {
 					width: 25%;
 				}
 				&.amount {
-					width: 15%
+					width: 15%;
+
+					&::after {
+						content: "%";
+						position: absolute;
+						bottom: 0;
+						right: 2rem;
+						padding: 0.6rem;
+						pointer-events: none;
+					}
 				}
 				&.contact {
+					flex-grow: 1;
+				}
 
+				input[readonly] {
+					border-color: rgba(black, 0.1);
+				}
+
+				span {
+					display: none;
+				}
+			}
+
+			&:first-of-type {
+				label {
+					span {
+						display: block;
+					}
 				}
 			}
 

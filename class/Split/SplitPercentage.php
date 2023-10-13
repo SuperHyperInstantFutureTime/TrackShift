@@ -9,6 +9,7 @@ readonly class SplitPercentage extends Entity {
 		public Split $split,
 		public string $owner,
 		public float $percentage,
-		public string $email,
+		public string $contact,
+		public bool $isReadOnly = true,
 	) {}
 }

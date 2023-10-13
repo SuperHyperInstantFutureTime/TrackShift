@@ -7,5 +7,5 @@ create table SplitPercentage
             on update cascade on delete cascade,
     owner       text           not null,
     percentage decimal(10, 6) not null,
-    email      text
+    contact      text
 );
