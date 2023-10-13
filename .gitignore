@@ -1,6 +1,6 @@
 /vendor/
-data/*
-!data/web-content/*
+data/cache
+data/upload
 /ts.db
 /config.*.ini
 /www/
