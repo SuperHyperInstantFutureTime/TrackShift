@@ -11,5 +11,12 @@
 
 	select, input {
 		@extend %d-ui-element;
+		width: 100%;
+	}
+
+	.actions:not(.auto-submit) {
+		display: flex;
+		align-items: center;
+		margin: 1rem 0;
 	}
 }

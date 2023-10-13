@@ -1,45 +1,48 @@
-<form method="post" onchange="this.submit()">
-	<label>
-		<span>Artist</span>
-		<select name="artist" required data-bind:value="@name">
-			<option></option>
-			<option data-list data-bind:text="name" data-bind:value="id">Artist</option>
-		</select>
-	</label>
-	<div class="actions auto-submit">
-		<button name="do" value="set-artist">Set artist</button>
-	</div>
-</form>
-
-<form method="post" onchange="this.submit()">
-	<label>
-		<span>Product</span>
-		<select name="product" required data-bind:value="@name">
-			<option></option>
-			<option data-list data-bind:text="title" data-bind:value="id">Product</option>
-		</select>
-	</label>
-	<div class="actions auto-submit">
-		<button name="do" value="set-product">Set artist</button>
-	</div>
-</form>
-
-<form method="post">
-	<div data-list-no>
+<div class="artist-product-picker">
+	<form method="post" onchange="this.submit()">
 		<label>
+			<span>Artist</span>
+			<select name="artist" required data-bind:value="@name">
+				<option></option>
+				<option data-list data-bind:text="name" data-bind:value="id">Artist</option>
+			</select>
+		</label>
+		<div class="actions auto-submit">
+			<button name="do" value="set-artist">Set artist</button>
+		</div>
+	</form>
+
+	<form method="post" onchange="this.submit()">
+		<label>
+			<span>Product</span>
+			<select name="product" required data-bind:value="@name">
+				<option></option>
+				<option data-list data-bind:text="title" data-bind:value="id">Product</option>
+			</select>
+		</label>
+		<div class="actions auto-submit">
+			<button name="do" value="set-product">Set artist</button>
+		</div>
+	</form>
+</div>
+
+<form class="split-records" method="post">
+	<div data-list-no>
+		<label class="owner">
 			<span>Split owner</span>
 			<input name="owner" required />
 		</label>
-		<label>
+		<label class="amount">
 			<span>Amount</span>
 			<input name="percentage" type="number" required />
 		</label>
-		<label>
+		<label class="contact">
 			<span>Contact details</span>
-			<input name="email" />
+			<input name="email" autocomplete="off" />
 		</label>
-		<div>
-			<button name="do" value="add">Add</button>
+		<div class="split-actions">
+			<button name="do" value="add-split"><span>Add</span></button>
+			<button name="do" value="delete-split"><span>Delete</span></button>
 		</div>
 	</div>
 	<div class="actions">
@@ -48,3 +51,14 @@
 		<a href="/account/splits/">Cancel</a>
 	</div>
 </form>
+
+<script>
+	if(window !== window.top) {
+		document.body.classList.add("modal");
+		let link=document.querySelector(".actions a");
+		link.addEventListener("click", e => {
+			e.preventDefault();
+			location.href = "about:blank";
+		});
+	}
+</script>

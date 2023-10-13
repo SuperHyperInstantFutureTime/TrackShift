@@ -35,7 +35,7 @@ global-header {
 
 		nav {
 			position: relative;
-			top: 0rem;
+			top: 0;
 			left: 0;
 			right: 0;
 			display: flex;
@@ -49,7 +49,7 @@ global-header {
 				left: auto;
 			}
 
-			ul {
+			menu {
 				display: flex;
 				list-style-type: none;
 				margin: 0;

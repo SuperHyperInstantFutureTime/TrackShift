@@ -1,7 +1,73 @@
 split-editor {
 	@extend %o-container, %d-modal-content;
 
+	.artist-product-picker {
+		display: flex;
+		gap: 1rem;
+		justify-content: stretch;
+
+		form {
+			flex-grow: 1;
+
+			select {
+				width: 100%;
+			}
+		}
+	}
+
 	form {
 		@extend %d-form-fields;
+
+		&.split-records {
+			>div {
+				display: flex;
+				gap: 1rem;
+			}
+
+			label {
+				&.owner {
+					width: 25%;
+				}
+				&.amount {
+					width: 15%
+				}
+				&.contact {
+
+				}
+			}
+
+			.split-actions {
+				display: flex;
+				align-items: flex-end;
+				gap: 1rem;
+				margin-bottom: 1rem;
+
+				button{
+					height: 2.5rem;
+
+					&::before {
+						content: "";
+						display: block;
+						width: 1rem;
+						aspect-ratio: 1;
+						background-size: 100%;
+						background-position: center;
+						background-repeat: no-repeat;
+					}
+
+					&[name=do][value=add-split]::before {
+						background-image: url("/asset/icon/plus-solid.svg");
+					}
+
+					&[name=do][value=delete-split]::before {
+						background-image: url("/asset/icon/minus-solid.svg");
+					}
+
+					span {
+						display: none;
+					}
+				}
+			}
+		}
 	}
 }
