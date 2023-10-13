@@ -1,0 +1,64 @@
+splits-list {
+	@extend %o-container;
+	margin-top: 2rem;
+
+	.actions {
+		margin: 1rem 0;
+	}
+
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		margin-top: 1rem;
+		border: var(--theme-ui-border);
+		border-radius: var(--theme-ui-border-radius);
+
+		&:empty {
+			&::before {
+				content: "There are currently no splits added";
+				font-style: italic;
+				display: block;
+				padding: 2rem;
+				text-align: center;
+			}
+		}
+
+		li {
+			>div {
+				display: flex;
+				justify-content: space-between;
+				background-color: var(--pal-utility-light-1);
+				border-bottom: var(--theme-ui-border);
+			}
+		}
+	}
+
+	h1, h2 {
+		margin: 0;
+		padding: 1rem;
+		font-size: 1rem;
+	}
+	h2 {
+		margin-right: auto;
+	}
+	a {
+		display: block;
+		padding: 1rem;
+		margin-left: auto
+	}
+
+	table {
+		thead {
+			display: none;
+		}
+
+		tbody {
+			tr {
+				td {
+					padding: 1rem;
+				}
+			}
+		}
+	}
+}
