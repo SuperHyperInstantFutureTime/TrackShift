@@ -17,7 +17,7 @@
 
 		<label>
 			<span>Product</span>
-			<select name="product" required data-bind:value="@name" data-bind:disabled="?!artist">
+			<select name="product" required data-bind:value="@name">
 				<option></option>
 				<option data-list data-bind:text="title" data-bind:value="id">Product</option>
 			</select>
@@ -64,10 +64,12 @@
 <script>
 	if(window !== window.top) {
 		document.body.classList.add("modal");
-		let link=document.querySelector(".actions a");
-		link.addEventListener("click", e => {
-			e.preventDefault();
-			location.href = "about:blank";
-		});
+		document.querySelectorAll(".actions a").forEach(link => {
+			link.addEventListener("click", e => {
+				e.preventDefault();
+				location.href = "about:blank";
+				window.top.location = link.href;
+			});
+		})
 	}
 </script>

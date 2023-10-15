@@ -1,5 +1,6 @@
 <?php
 
+use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 use Gt\DomTemplate\DocumentBinder;
 use Gt\Http\Response;
@@ -7,6 +8,7 @@ use Gt\Input\Input;
 use Gt\Routing\Path\DynamicPath;
 use Gt\Ulid\Ulid;
 use SHIFT\Trackshift\Artist\ArtistRepository;
+use SHIFT\Trackshift\Audit\AuditRepository;
 use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Product\ProductRepository;
 use SHIFT\Trackshift\Split\EmptySplitPercentage;
@@ -29,11 +31,15 @@ function go(
 	$id = $dynamicPath->get("split");
 
 	if($id === "_new") {
-//		$document->querySelector("button[name=do][value=save]")->textContent = "Create";
 		$document->querySelector("button[name=do][value=delete]")->remove();
 	}
 	else {
-
+		$split = $splitRepository->getById($id, $user);
+		$productId = $split->product->id;
+		$artistId = $split->product->artist->id;
+		$document->querySelectorAll(".artist-product-picker select")->forEach(function(Element $select) {
+			$select->setAttribute("disabled", true);
+		});
 	}
 
 	$binder->bindList(
@@ -61,6 +67,7 @@ function go(
 		}
 		array_push($percentageList, new EmptySplitPercentage($productId));
 		array_push($percentageList, new RemainderSplitPercentage($percentageList));
+
 		$binder->bindList(
 			$percentageList,
 			$document->querySelector(".split-percentage-list"),
@@ -74,29 +81,32 @@ function do_add_split(
 	SplitRepository $splitRepository,
 	ArtistRepository $artistRepository,
 	ProductRepository $productRepository,
+	AuditRepository $auditRepository,
 	User $user,
 	Response $response,
 ):void {
 	$id = $dynamicPath->get("split");
-	$artist = $artistRepository->getById($input->getString("artist"));
-	$product = $productRepository->getById($input->getString("product"));
 
 	if($id === "_new") {
+		$artist = $artistRepository->getById($input->getString("artist"));
+		$product = $productRepository->getById($input->getString("product"));
 		$split = $splitRepository->create($product, $user);
 	}
 	else {
 		$split = $splitRepository->getById($id, $user);
 	}
 
+	$owner = $input->getString("owner");
+	$percentage = $input->getFloat("percentage");
 	$splitPercentage = new SplitPercentage(
 		new Ulid("splitperc"),
-		$split,
-		$input->getString("owner"),
-		$input->getFloat("percentage"),
+		$owner,
+		$percentage,
 		$input->getString("contact"),
 	);
+	$auditRepository->create($user, $splitPercentage->id, "$owner $percentage%");
 
-	$splitRepository->addSplitPercentage($splitPercentage);
+	$splitRepository->addSplitPercentage($split, $splitPercentage, );
 	$response->redirect("/account/splits/$split->id/?artist=$artist->id&product=$product->id");
 }
 
@@ -105,6 +115,8 @@ function do_delete_split(
 	DynamicPath $dynamicPath,
 	Input $input,
 	Response $response,
+	AuditRepository $auditRepository,
+	User $user,
 ):void {
 	$splitPercentageId = $input->getString("id");
 	$splitRepository->deleteSplitPercentage($splitPercentageId);
@@ -112,16 +124,19 @@ function do_delete_split(
 	$splitId = $dynamicPath->get("split");
 	$artistId = $input->getString("artist");
 	$productId = $input->getString("product");
+	$auditRepository->delete($user, $splitPercentageId);
 	$response->redirect("/account/splits/$splitId/?artist=$artistId&product=$productId");
 }
 
 function do_delete(
 	DynamicPath $dynamicPath,
 	SplitRepository $splitRepository,
+	AuditRepository $auditRepository,
 	User $user,
 	Response $response,
 ):void {
 	$splitId = $dynamicPath->get("split");
 	$splitRepository->delete($splitId, $user);
+	$auditRepository->delete($user, $splitId);
 	$response->redirect("/account/splits");
 }

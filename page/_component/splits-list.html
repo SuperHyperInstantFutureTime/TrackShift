@@ -5,8 +5,8 @@
 <ul>
 	<li data-list>
 		<div>
-			<h1>Artist name</h1>
-			<h2>Product title</h2>
+			<h1 data-bind:text="product.artist.name">Artist name</h1>
+			<h2 data-bind:text="product.title">Product title</h2>
 			<a href="/account/splits/{{id}}">Edit</a>
 		</div>
 
@@ -19,10 +19,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>You</td>
-					<td>100%</td>
-					<td></td>
+				<tr data-list>
+					<td data-bind:text="owner">You</td>
+					<td data-bind:text="percentage">100%</td>
+					<td data-bind:text="contact"></td>
 				</tr>
 			</tbody>
 		</table>

@@ -19,8 +19,23 @@ readonly class SplitRepository extends Repository {
 		parent::__construct($db);
 	}
 
+	/** @return array<Split> */
+	public function getAll(User $user, bool $withRemainder = false):array {
+		$splitList = [];
+
+		$resultSet = $this->db->fetchAll("getAll", $user->id);
+		foreach($resultSet as $row) {
+			array_push(
+				$splitList,
+				$this->rowToSplit($row, withRemainderSplitPercentage: true),
+			);
+		}
+
+		return $splitList;
+	}
+
 	/** @return array<SplitPercentage> */
-	public function getSplitPercentageList(User $user, string $splitId):array {
+	public function getSplitPercentageList(User $user, string $splitId, bool $withRemainderSplitPercentage = false):array {
 		$resultSet = $this->db->fetchAll("getSplitPercentageList", $splitId, $user->id);
 
 		$splitPercentageList = [];
@@ -29,6 +44,10 @@ readonly class SplitRepository extends Repository {
 				$splitPercentageList,
 				$this->rowToSplitPercentage($row, $user),
 			);
+		}
+
+		if($withRemainderSplitPercentage) {
+			array_push($splitPercentageList, new RemainderSplitPercentage($splitPercentageList));
 		}
 		return $splitPercentageList;
 	}
@@ -53,40 +72,45 @@ readonly class SplitRepository extends Repository {
 			"id" => $id,
 			"userId" => $user->id,
 		]);
+
 		return $this->rowToSplit($row, $user);
 	}
 
-	public function addSplitPercentage(SplitPercentage $splitPercentage):void {
+	public function addSplitPercentage(Split $split, SplitPercentage $splitPercentage):void {
 		$this->db->insert("addSplitPercentage", [
 			"id" => $splitPercentage->id,
-			"splitId" =>  $splitPercentage->split->id,
+			"splitId" =>  $split->id,
 			"owner" => $splitPercentage->owner,
 			"percentage" => $splitPercentage->percentage,
 			"contact" => $splitPercentage->contact,
 		]);
 	}
 
+
 	public function deleteSplitPercentage(string $id):void {
 		$this->db->delete("deleteSplitPercentage", $id);
 	}
-
 
 	public function delete(string $splitId, User $user):void {
 		$this->db->delete("delete", $splitId, $user->id);
 	}
 
-	private function rowToSplit(?Row $row, ?User $user = null):?Split {
+	private function rowToSplit(?Row $row, ?User $user = null, bool $withRemainderSplitPercentage = false):?Split {
 		if(!$row) {
 			return null;
 		}
 
+		$id = $row->getString("id");
 		$user = $user ?? $this->userRepository->getById($row->getString("userId"));
 		$product = $this->productRepository->getById($row->getString("productId"));
 
+		$splitPercentageList = $this->getSplitPercentageList($user, $id, $withRemainderSplitPercentage);
+
 		return new Split(
-			$row->getString("id"),
+			$id,
 			$user,
 			$product,
+			$splitPercentageList,
 		);
 	}
 
@@ -94,13 +118,16 @@ readonly class SplitRepository extends Repository {
 		if(!$row) {
 			return null;
 		}
+
+		$id = $row->getString("id");
 		if(!$user) {
 			$user = $this->userRepository->getById($row->getString("userId"));
 		}
 
+		$splitId = $row->getString("splitId");
+
 		return new SplitPercentage(
-			$row->getString("id"),
-			$this->getById($row->getString("splitId"), $user),
+			$id,
 			$row->getString("owner"),
 			$row->getFloat("percentage"),
 			$row->getString("contact"),

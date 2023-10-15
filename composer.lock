@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ca323d77187aab6d407099eaa037543",
+    "content-hash": "33b00572a8b10c8159ebb8b4df6e14dd",
     "packages": [
         {
             "name": "composer/semver",
@@ -1371,16 +1371,16 @@
         },
         {
             "name": "phpgt/domtemplate",
-            "version": "v3.2.3",
+            "version": "dev-iterator-aggregate",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PhpGt/DomTemplate.git",
-                "reference": "af9f6936e5a204eda0404b7a9fe3f9b339e3264d"
+                "reference": "7fb9b32aaed6f87ba0b97b87351d391466fb599e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhpGt/DomTemplate/zipball/af9f6936e5a204eda0404b7a9fe3f9b339e3264d",
-                "reference": "af9f6936e5a204eda0404b7a9fe3f9b339e3264d",
+                "url": "https://api.github.com/repos/PhpGt/DomTemplate/zipball/7fb9b32aaed6f87ba0b97b87351d391466fb599e",
+                "reference": "7fb9b32aaed6f87ba0b97b87351d391466fb599e",
                 "shasum": ""
             },
             "require": {
@@ -1405,7 +1405,7 @@
             "description": "Bind dynamic data to reusable HTML components.",
             "support": {
                 "issues": "https://github.com/PhpGt/DomTemplate/issues",
-                "source": "https://github.com/PhpGt/DomTemplate/tree/v3.2.3"
+                "source": "https://github.com/PhpGt/DomTemplate/tree/iterator-aggregate"
             },
             "funding": [
                 {
@@ -1413,7 +1413,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-09T14:39:41+00:00"
+            "time": "2023-10-14T18:18:50+00:00"
         },
         {
             "name": "phpgt/fetch",
@@ -7574,6 +7574,12 @@
             "version": "dev-318-semicolon",
             "alias": "v1.4.0",
             "alias_normalized": "1.4.0.0"
+        },
+        {
+            "package": "phpgt/domtemplate",
+            "version": "dev-iterator-aggregate",
+            "alias": "v3.3.0",
+            "alias_normalized": "3.3.0.0"
         }
     ],
     "minimum-stability": "stable",
@@ -7581,6 +7587,7 @@
         "superhyperinstantfuturetime/spotify-api": 20,
         "phpgt/webengine": 20,
         "phpgt/database": 20,
+        "phpgt/domtemplate": 20,
         "pdepend/pdepend": 20
     },
     "prefer-stable": false,
