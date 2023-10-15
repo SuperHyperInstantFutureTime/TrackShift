@@ -45,7 +45,7 @@ readonly class AuditRepository extends Repository {
 		]);
 	}
 
-	/** @return array<AuditItem,NotificationItem> */
+	/** @return array<AuditItem|NotificationItem> */
 	public function getAll(User $user):array {
 		$auditItemArray = [];
 

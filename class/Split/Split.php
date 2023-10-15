@@ -2,14 +2,15 @@
 namespace SHIFT\Trackshift\Split;
 
 use ArrayIterator;
-use Iterator;
 use IteratorAggregate;
 use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Product\Product;
 use SHIFT\Trackshift\Repository\Entity;
 use Traversable;
 
+/** @implements IteratorAggregate<SplitPercentage> */
 readonly class Split extends Entity implements IteratorAggregate {
+	/** @param array<SplitPercentage> $splitPercentageList */
 	public function __construct(
 		public string $id,
 		public User $user,

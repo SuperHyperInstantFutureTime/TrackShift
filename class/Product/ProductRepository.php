@@ -54,6 +54,7 @@ readonly class ProductRepository extends Repository {
 		);
 	}
 
+	/** @return array<Product> */
 	public function getForArtist(string|Artist $artist):array {
 		$artist = is_string($artist) ? $this->artistRepository->getById($artist) : $artist;
 
