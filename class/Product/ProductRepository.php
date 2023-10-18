@@ -25,10 +25,19 @@ readonly class ProductRepository extends Repository {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
 			$product = new Product($row->getString("productId"), $row->getString("title"), $artist);
 			$earning = new Money($row->getFloat("totalEarning"));
-			$cost = new Money(0);
+			$cost = new Money();
 			if($costValue = $row->getFloat("totalCost")) {
 				$cost = new Money($costValue);
 			}
+
+			$outgoing = new Money();
+			if($outgoingPercentage = $row->getFloat("percentageOutgoing")) {
+				$balance = $earning->withSubtraction($cost);
+				$outgoingValue = ($outgoingPercentage / 100) * $balance->value;
+				$outgoing = new Money(round($outgoingValue, 2));
+			}
+
+			$profit = $earning->withSubtraction($outgoing);
 
 			array_push(
 				$earningList,
@@ -37,6 +46,8 @@ readonly class ProductRepository extends Repository {
 					$product,
 					$earning,
 					$cost,
+					$outgoing,
+					$profit,
 				)
 			);
 		}

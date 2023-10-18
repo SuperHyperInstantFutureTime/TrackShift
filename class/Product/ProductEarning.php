@@ -12,6 +12,8 @@ readonly class ProductEarning extends Entity {
 		public Product $product,
 		public Money $earning,
 		public Money $cost,
+		private Money $outgoing,
+		public Money $profit,
 	) {}
 
 	public function getArtistName():string {
@@ -26,6 +28,15 @@ readonly class ProductEarning extends Entity {
 	public function getBalance():?string {
 		if($this->cost->value) {
 			return $this->earning->withSubtraction($this->cost);
+		}
+
+		return null;
+	}
+
+	#[BindGetter]
+	public function getOutgoing():?string {
+		if($this->outgoing->value) {
+			return $this->outgoing;
 		}
 
 		return null;
