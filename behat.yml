@@ -14,6 +14,7 @@ default:
         - \SHIFT\Trackshift\BehatContext\AuthContext:
         - \SHIFT\Trackshift\BehatContext\PageContext:
         - \SHIFT\Trackshift\BehatContext\UploadContext:
+        - \SHIFT\Trackshift\BehatContext\ProductContext:
         - \SHIFT\Trackshift\BehatContext\SplitContext:
         - \SHIFT\Trackshift\BehatContext\NotificationContext:
         - \SHIFT\Trackshift\BehatContext\DebugContext:
