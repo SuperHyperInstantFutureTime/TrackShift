@@ -29,15 +29,15 @@ readonly class ProductRepository extends Repository {
 			if($costValue = $row->getFloat("totalCost")) {
 				$cost = new Money($costValue);
 			}
-
+			$balance = $earning->withSubtraction($cost);
 			$outgoing = new Money();
 			if($outgoingPercentage = $row->getFloat("percentageOutgoing")) {
-				$balance = $earning->withSubtraction($cost);
+				
 				$outgoingValue = ($outgoingPercentage / 100) * $balance->value;
 				$outgoing = new Money(round($outgoingValue, 2));
 			}
 
-			$profit = $earning->withSubtraction($outgoing);
+			$profit = $balance->withSubtraction($outgoing);
 
 			array_push(
 				$earningList,
