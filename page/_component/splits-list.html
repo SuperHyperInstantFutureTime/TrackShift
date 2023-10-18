@@ -1,8 +1,7 @@
 <div class="actions">
 	<a href="/account/splits/_new/" target="modal" class="button">Add new split</a>
 </div>
-
-<ul>
+<ul id="splitsList">
 	<li data-list>
 		<div>
 			<h1 data-bind:text="product.artist.name">Artist name</h1>
@@ -21,7 +20,7 @@
 			<tbody>
 				<tr data-list>
 					<td data-bind:text="owner">You</td>
-					<td data-bind:text="percentage">100%</td>
+					<td data-bind:text="percentage" class="percentage">100%</td>
 					<td data-bind:text="contact"></td>
 				</tr>
 			</tbody>
@@ -30,3 +29,4 @@
 </ul>
 
 <modal-popup />
+

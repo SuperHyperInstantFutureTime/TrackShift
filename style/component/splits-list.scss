@@ -16,7 +16,7 @@ splits-list {
 
 		&:empty {
 			&::before {
-				content: "There are currently no splits added";
+				content: "No splits added yet!";
 				font-style: italic;
 				display: block;
 				padding: 2rem;
@@ -30,6 +30,8 @@ splits-list {
 				justify-content: space-between;
 				background-color: var(--pal-utility-light-1);
 				border-bottom: var(--theme-ui-border);
+				border-top-left-radius: var(--theme-ui-border-radius);
+				border-top-right-radius: var(--theme-ui-border-radius);
 			}
 		}
 	}
@@ -47,15 +49,19 @@ splits-list {
 		padding: 1rem;
 		margin-left: auto
 	}
+	.percentage {
+		&::after {
+			content:'%';
+		}
+	}
 
 	table {
 		margin: 0;
-
+		border-collapse: collapse;
 		thead {
 			tr {
 				th {
 					padding: 1rem;
-
 					&:last-of-type {
 						text-align: left;
 					}
