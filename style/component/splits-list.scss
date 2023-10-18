@@ -11,8 +11,7 @@ splits-list {
 		margin: 0;
 		padding: 0;
 		margin-top: 1rem;
-		border: var(--theme-ui-border);
-		border-radius: var(--theme-ui-border-radius);
+		
 
 		&:empty {
 			&::before {
@@ -25,6 +24,9 @@ splits-list {
 		}
 
 		li {
+			border: var(--theme-ui-border);
+			border-radius: var(--theme-ui-border-radius);
+			margin-bottom: 1rem;
 			>div {
 				display: flex;
 				justify-content: space-between;
