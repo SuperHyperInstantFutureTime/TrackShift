@@ -22,7 +22,10 @@ use SHIFT\Trackshift\Royalty\Money;
 use SHIFT\Trackshift\Usage\Usage;
 use SplFileObject;
 
-/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity) Tracked in #114 https://github.com/SuperHyperInstantFutureTime/TrackShift/issues/114
+ */
 readonly class UploadManager extends Repository {
 	public function __construct(
 		QueryCollection $db,

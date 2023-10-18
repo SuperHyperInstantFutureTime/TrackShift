@@ -27,7 +27,7 @@ readonly class SplitRepository extends Repository {
 		foreach($resultSet as $row) {
 			array_push(
 				$splitList,
-				$this->rowToSplit($row, withRemainderSplitPercentage: true),
+				$this->rowToSplit($row, withRemainderSplitPercentage: $withRemainder),
 			);
 		}
 
@@ -42,7 +42,7 @@ readonly class SplitRepository extends Repository {
 		foreach($resultSet as $row) {
 			array_push(
 				$splitPercentageList,
-				$this->rowToSplitPercentage($row, $user),
+				$this->rowToSplitPercentage($row),
 			);
 		}
 
@@ -114,17 +114,12 @@ readonly class SplitRepository extends Repository {
 		);
 	}
 
-	private function rowToSplitPercentage(?Row $row, ?User $user = null):?SplitPercentage {
+	private function rowToSplitPercentage(?Row $row):?SplitPercentage {
 		if(!$row) {
 			return null;
 		}
 
 		$id = $row->getString("id");
-		if(!$user) {
-			$user = $this->userRepository->getById($row->getString("userId"));
-		}
-
-		$splitId = $row->getString("splitId");
 
 		return new SplitPercentage(
 			$id,

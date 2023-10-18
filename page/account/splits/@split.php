@@ -107,7 +107,7 @@ function do_add_split(
 	$auditRepository->create($user, $splitPercentage->id, "$owner $percentage%");
 
 	$splitRepository->addSplitPercentage($split, $splitPercentage, );
-	$response->redirect("/account/splits/$split->id/?artist=$artist->id&product=$product->id");
+	$response->redirect("/account/splits/$split->id/?artist=$artist?->id&product=$product?->id");
 }
 
 function do_delete_split(
