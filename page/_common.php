@@ -1,4 +1,5 @@
 <?php
+use Authwave\Authenticator;
 use Gt\Database\Database;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
@@ -13,13 +14,17 @@ function go(
 	HTMLDocument $document,
 	DocumentBinder $binder,
 	UploadManager $uploadManager,
+	Authenticator $authenticator,
 	?User $user,
 ):void {
 	// TODO: Load this from the session, allowing the user to set their timezone.
 	date_default_timezone_set("Europe/London");
 
-	if(empty($uploadManager->getUploadsForUser($user))) {
-		$document->querySelectorAll("global-header nav a")->forEach(fn(Element $element) => $element->remove());
+	if($authenticator->isLoggedIn()) {
+		$document->querySelector("global-header li.login")->remove();
+	}
+	else {
+		$document->querySelector("global-header li.logout")->remove();
 	}
 
 	$document->body->dataset->set("hash", substr($user->id, -6));

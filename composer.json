@@ -1,12 +1,20 @@
 {
 	"name": "shift/trackshift",
 	"description": "",
-
+	"repositories": [{
+		"type": "path",
+		"url": "/home/g105b/Code/Authwave/php-client",
+		"options": {
+			"symlink": true
+		}
+	}
+	],
 	"require": {
 		"php": ">=8.2",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
-		"phpgt/database": "dev-dynamic-sets as v1.5.0",
+		"phpgt/database": "^1.4",
+		"authwave/php-client": "2022.x-dev",
 		"league/commonmark": "^2.4"
 	},
 	"require-dev": {

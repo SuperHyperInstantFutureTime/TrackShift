@@ -1,7 +1,9 @@
 <?php
 namespace SHIFT\Trackshift;
 
+use Authwave\Authenticator;
 use Gt\Database\Database;
+use Gt\Http\Uri;
 use Gt\Session\Session;
 use Gt\WebEngine\Middleware\DefaultServiceLoader;
 use SHIFT\Spotify\SpotifyClient;
@@ -87,6 +89,19 @@ class ServiceLoader extends DefaultServiceLoader {
 			$db->queryCollection("Cost"),
 			$this->container->get(ProductRepository::class),
 			$this->container->get(AuditRepository::class),
+		);
+	}
+
+	public function loadAuthenticator():Authenticator {
+		$config = $this->config->getSection("authwave");
+		$session = $this->container->get(Session::class);
+		$uri = $this->container->get(Uri::class);
+
+		return new Authenticator(
+			$config->getString("key"),
+			$uri,
+			$config->getString("host"),
+			$session->getStore(UserRepository::SESSION_AUTHENTICATOR_STORE_KEY, true),
 		);
 	}
 }

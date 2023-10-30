@@ -2,13 +2,15 @@
 namespace SHIFT\Trackshift\Auth;
 
 use Gt\Database\Query\QueryCollection;
+use Gt\Database\Result\Row;
 use Gt\Session\SessionStore;
 use Gt\Ulid\Ulid;
 use SHIFT\Trackshift\Repository\Repository;
 
 readonly class UserRepository extends Repository {
-	const SESSION_STORE_KEY = "trackshift-auth-store";
-	const SESSION_USER = "user";
+	const SESSION_STORE_KEY = "trackshift-user-store";
+	const SESSION_AUTHENTICATOR_STORE_KEY = "trackshift-authwave-store";
+	const SESSION_USER = "trackshift-user";
 
 	public function __construct(
 		QueryCollection $db,
@@ -16,6 +18,13 @@ readonly class UserRepository extends Repository {
 	) {
 		parent::__construct($db);
 	}
+
+	public function findByAuthwaveId(string $id):?User {
+		return $this->rowToUser(
+			$this->db->fetch("getByAuthwaveId", $id)
+		);
+	}
+
 
 	public function getLoggedInUser():?User {
 		return $this->session->getInstance(self::SESSION_USER, User::class);
@@ -30,4 +39,13 @@ readonly class UserRepository extends Repository {
 	public function persistUser(User $user):void {
 		$this->session->set(self::SESSION_USER, $user);
 	}
+
+	private function rowToUser(?Row $row):?User {
+		if(!$row) {
+			return null;
+		}
+
+		return new User($row->getString("id"));
+	}
+
 }
