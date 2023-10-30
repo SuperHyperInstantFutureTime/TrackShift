@@ -25,10 +25,20 @@ readonly class ProductRepository extends Repository {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
 			$product = new Product($row->getString("productId"), $row->getString("title"), $artist);
 			$earning = new Money($row->getFloat("totalEarning"));
-			$cost = new Money(0);
+			$cost = new Money();
 			if($costValue = $row->getFloat("totalCost")) {
 				$cost = new Money($costValue);
 			}
+
+			$balance = $earning->withSubtraction($cost);
+
+			$outgoing = new Money();
+			if($outgoingPercentage = $row->getFloat("percentageOutgoing")) {
+				$outgoingValue = ($outgoingPercentage / 100) * $balance->value;
+				$outgoing = new Money(round($outgoingValue, 2));
+			}
+
+			$profit = $balance->withSubtraction($outgoing);
 
 			array_push(
 				$earningList,
@@ -37,6 +47,8 @@ readonly class ProductRepository extends Repository {
 					$product,
 					$earning,
 					$cost,
+					$outgoing,
+					$profit,
 				)
 			);
 		}
@@ -54,6 +66,7 @@ readonly class ProductRepository extends Repository {
 		);
 	}
 
+	/** @return array<Product> */
 	public function getForArtist(string|Artist $artist):array {
 		$artist = is_string($artist) ? $this->artistRepository->getById($artist) : $artist;
 

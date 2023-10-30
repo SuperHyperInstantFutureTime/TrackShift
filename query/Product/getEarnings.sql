@@ -4,7 +4,8 @@ select
 	Artist.name as artistName,
 	title,
 	round(sum(UsageOfProduct.earning), 2) as totalEarning,
-	coalesce(Cost.sumAmount, 0) as totalCost
+	coalesce(Cost.sumAmount, 0) as totalCost,
+	coalesce(SplitPercentage.sumPercentage, 0) as percentageOutgoing
 
 from
 	Product
@@ -21,6 +22,23 @@ left join
 	) cost
 on
 	Cost.productId = Product.id
+
+left join
+	(
+		select
+			Split.productId,
+			sum(SplitPercentage.percentage) as sumPercentage
+		from
+			Split
+		inner join
+			SplitPercentage
+		on
+			Split.id = SplitPercentage.splitId
+		group by
+			Split.productId
+	) SplitPercentage
+on
+	SplitPercentage.productId = Product.id
 
 inner join
 	Artist

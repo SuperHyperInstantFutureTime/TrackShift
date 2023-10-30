@@ -16,6 +16,12 @@ audit-list {
 			border-radius: 0.5rem;
 			margin-bottom:1rem;
 			transition: ease-in-out 0.3s;
+
+			&.notification {
+				box-shadow: inset 0 0 0 4px red;
+				font-weight: bold;
+			}
+
 			>div {
 				@extend %d-info-text;
 				margin-top: 0.75rem;

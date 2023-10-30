@@ -24,6 +24,7 @@ use SplFileObject;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity) Tracked in #114 https://github.com/SuperHyperInstantFutureTime/TrackShift/issues/114
  */
 readonly class UploadManager extends Repository {
 	public function __construct(
@@ -67,7 +68,13 @@ readonly class UploadManager extends Repository {
 				"type" => $upload::class,
 			]);
 
-			$this->auditRepository->create($user, $upload->id, $upload->filename);
+			if($upload instanceof UnknownUpload) {
+				$this->auditRepository->notify($user, "Your latest upload was not processed ($upload->filename)", $upload->id);
+			}
+			else {
+				$this->auditRepository->create($user, $upload->id, $upload->filename);
+			}
+
 			array_push($completedUploadList, $upload);
 		}
 
@@ -118,7 +125,7 @@ readonly class UploadManager extends Repository {
 	public function processUploadIntoUsages(Upload $upload):void {
 		foreach($upload->generateDataRows() as $row) {
 			$usage = new Usage(
-				new Ulid(),
+				new Ulid("usage"),
 				$upload,
 				$row,
 			);
@@ -166,7 +173,7 @@ readonly class UploadManager extends Repository {
 			$artist = $this->rowToArtist($this->artistDb->fetch("getArtistByName", $artistName));
 			if(!$artist) {
 				$artist = new Artist(
-					new Ulid(),
+					new Ulid("artist"),
 					$artistName,
 				);
 				array_push($toCreateArtistList, $artist);
@@ -189,7 +196,7 @@ readonly class UploadManager extends Repository {
 			]), $artistList[$artistId]);
 			if(!$product) {
 				$product = new Product(
-					new Ulid(),
+					new Ulid("product"),
 					$productTitle,
 					$artistList[$artistId],
 				);
@@ -221,7 +228,7 @@ readonly class UploadManager extends Repository {
 			$product = $mapCombinedArtistNameProductTitleToProduct[$combinedArtistProduct];
 
 			$this->usageDb->insert("assignProductUsage", [
-				"id" => (string)(new Ulid()),
+				"id" => (string)(new Ulid("pu")),
 				"usageId" => $importedUsageIdList[$i],
 				"productId" => $product->id,
 				"earning" => $earning->value,
@@ -377,7 +384,7 @@ readonly class UploadManager extends Repository {
 		$uploadType = $this->detectUploadType($filePath);
 		/** @var Upload $upload */
 		$upload = new $uploadType(
-			$row->getString("id") ?? new Ulid(),
+			$row->getString("id") ?? new Ulid("upload"),
 			$filePath
 		);
 		return $upload;
@@ -405,6 +412,4 @@ readonly class UploadManager extends Repository {
 			$artist // ?? $this->getArtistById($row->getString("artistId")
 		);
 	}
-
-
 }

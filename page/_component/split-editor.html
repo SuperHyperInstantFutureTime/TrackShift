@@ -1,0 +1,75 @@
+<div class="artist-product-picker">
+	<form onchange="this.submit()">
+		<label>
+			<span>Artist</span>
+			<select name="artist" required data-bind:value="@name">
+				<option></option>
+				<option data-list data-bind:text="name" data-bind:value="id">Artist</option>
+			</select>
+		</label>
+		<div class="actions auto-submit">
+			<button name="do" value="set-artist">Set artist</button>
+		</div>
+	</form>
+
+	<form onchange="this.submit()">
+		<input type="hidden" name="artist" data-bind:value="@name" />
+
+		<label>
+			<span>Product</span>
+			<select name="product" required data-bind:value="@name">
+				<option></option>
+				<option data-list data-bind:text="title" data-bind:value="id">Product</option>
+			</select>
+		</label>
+		<div class="actions auto-submit">
+			<button name="do" value="set-product">Set product</button>
+		</div>
+	</form>
+</div>
+
+<div class="split-percentage-list">
+	<form class="split-percentage" method="post" data-list>
+		<input type="hidden" name="id" data-bind:value="@name" />
+
+		<label class="owner">
+			<span>Split owner</span>
+			<input name="owner" required data-bind:value="owner" data-bind:readonly="?isReadOnly" />
+		</label>
+		<label class="amount">
+			<span>Amount</span>
+			<input name="percentage" type="number" required data-bind:value="percentage" data-bind:readonly="?isReadOnly" />
+		</label>
+		<label class="contact">
+			<span>Contact details</span>
+			<input name="contact" autocomplete="off" data-bind:value="contact" data-bind:readonly="?isReadOnly" />
+		</label>
+		<div class="split-actions">
+			<button name="do" value="add-split"><span>Add</span></button>
+			<button name="do" value="delete-split"><span>Delete</span></button>
+		</div>
+	</form>
+
+	<div>
+		<form method="post">
+			<div class="actions">
+				<a href="/account/splits/" class="button">OK</a>
+				<button name="do" value="delete" onclick="return confirm('Are you sure you wish to delete this product split?');">Delete</button>
+				<a href="/account/splits/" class="form-cancel">Cancel</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	if(window !== window.top) {
+		document.body.classList.add("modal");
+		document.querySelectorAll(".actions a").forEach(link => {
+			link.addEventListener("click", e => {
+				e.preventDefault();
+				location.href = "about:blank";
+				window.top.location = link.href;
+			});
+		})
+	}
+</script>

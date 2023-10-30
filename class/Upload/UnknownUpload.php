@@ -8,12 +8,12 @@ class UnknownUpload extends Upload {
 
 	// phpcs:ignore
 	public function extractArtistName(array $row):string {
-		return "";
+		return "Unknown";
 	}
 
 	// phpcs:ignore
 	public function extractProductTitle(array $row):string {
-		return "";
+		return "Unknown";
 	}
 
 	// phpcs:ignore
