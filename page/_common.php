@@ -17,7 +17,7 @@ function go(
 	DocumentBinder $binder,
 	UploadManager $uploadManager,
 	Authenticator $authenticator,
-	?User $user,
+	User $user,
 ):void {
 	// TODO: Load this from the session, allowing the user to set their timezone.
 	date_default_timezone_set("Europe/London");

@@ -10,6 +10,7 @@ use SHIFT\Spotify\SpotifyClient;
 use SHIFT\Trackshift\Artist\ArtistRepository;
 use SHIFT\Trackshift\Audit\AuditRepository;
 use SHIFT\Trackshift\Auth\User;
+use SHIFT\Trackshift\Auth\UserMerger;
 use SHIFT\Trackshift\Auth\UserRepository;
 use SHIFT\Trackshift\Content\ContentRepository;
 use SHIFT\Trackshift\Cost\CostRepository;
@@ -68,7 +69,7 @@ class ServiceLoader extends DefaultServiceLoader {
 		);
 	}
 
-	public function loadUser():User {
+	public function loadUser():?User {
 		$userRepo = $this->container->get(UserRepository::class);
 		$user = $userRepo->getLoggedInUser();
 		if(!$user) {

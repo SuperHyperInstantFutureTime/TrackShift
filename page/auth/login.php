@@ -7,19 +7,19 @@ use SHIFT\Trackshift\Auth\UserRepository;
 function go(
 	Response $response,
 	Authenticator $authenticator,
-	UserMerger $userMerger,
 	UserRepository $userRepository,
-	?User $user,
+	User $user,
 ):void {
 	if($authenticator->isLoggedIn()) {
 		$authwaveUser = $authenticator->getUser();
-		$currentUser = $user;
-		if($existingUser = $userRepository->findByAuthwaveId($authwaveUser->id)) {
-// TODO: Move all of $user's stuff to $existingUser's.
-			$currentUser = $existingUser;
+		if($existingDbUser = $userRepository->findByAuthwaveId($authwaveUser->id)) {
+			$user = $existingDbUser;
+		}
+		else {
+			$userRepository->associateAuthwave($user, $authenticator->getUser());
 		}
 
-		$userRepository->persistUser($currentUser);
+		$userRepository->persistUser($user);
 	}
 	else {
 		$authenticator->login();

@@ -1,6 +1,7 @@
 <?php
 namespace SHIFT\Trackshift\Auth;
 
+use Authwave\User as AuthwaveUser;
 use DateTime;
 use DateTimeInterface;
 use Gt\Database\Query\QueryCollection;
@@ -26,7 +27,6 @@ readonly class UserRepository extends Repository {
 			$this->db->fetch("getByAuthwaveId", $id)
 		);
 	}
-
 
 	public function getLoggedInUser():?User {
 		return $this->session->getInstance(self::SESSION_USER, User::class);
@@ -68,6 +68,13 @@ readonly class UserRepository extends Repository {
 		}
 
 		return new User($row->getString("id"));
+	}
+
+	public function associateAuthwave(User $user, AuthwaveUser $authwaveUser):void {
+		$this->db->update("associateAuthwave", [
+			"userId" => $user->id,
+			"authwaveId" => $authwaveUser->id,
+		]);
 	}
 
 

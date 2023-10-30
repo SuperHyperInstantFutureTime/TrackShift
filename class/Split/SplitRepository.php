@@ -86,7 +86,6 @@ readonly class SplitRepository extends Repository {
 		]);
 	}
 
-
 	public function deleteSplitPercentage(string $id):void {
 		$this->db->delete("deleteSplitPercentage", $id);
 	}
@@ -128,5 +127,4 @@ readonly class SplitRepository extends Repository {
 			$row->getString("contact"),
 		);
 	}
-
 }
