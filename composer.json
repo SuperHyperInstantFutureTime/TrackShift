@@ -13,7 +13,8 @@
 		"php": ">=8.2",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
-		"phpgt/database": "dev-318-semicolon as v1.5.0",
+		"phpgt/database": "dev-master as v1.5.0",
+		"phpgt/domtemplate": "dev-master as v3.3.0",
 		"authwave/php-client": "2022.x-dev",
 		"league/commonmark": "^2.4"
 	},

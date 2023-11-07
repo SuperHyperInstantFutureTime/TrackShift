@@ -1,11 +1,14 @@
 select
 	id,
-	name
+	name,
+	userId
 
 from
 	Artist
 
 where
 	name = ?
+and
+	userId = ?
 
 limit 1

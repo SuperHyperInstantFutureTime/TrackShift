@@ -7,6 +7,12 @@ Feature: App should be usable by anonymous users
 		Given I am on the homepage
 		Then a new user ID should be generated
 
+	Scenario: My user ID is persisted
+		Given I am on the homepage
+		Then a new user ID should be generated
+		When I reload the page
+		Then I should see the same user ID
+
 	Scenario: I can see the upload form without logging in
 		Given I am on the homepage
 		Then I should see "Drop your sales report"
@@ -31,7 +37,7 @@ Feature: App should be usable by anonymous users
 
 	Scenario: I should not see the account button until I upload something
 		Given I am on the homepage
-		Then I should not see a "nav a" element
+		Then I should see a ".login .button" element
 
 		When I attach the file "gubbins.txt" to "upload[]"
 		And I press "Upload"

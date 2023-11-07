@@ -1,9 +1,12 @@
 select
 	id,
-	name
+	name,
+	userId
 
 from
 	Artist
 
 where
-	id = ?
+	id = :id
+and
+	userId = :userId

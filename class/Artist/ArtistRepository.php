@@ -20,10 +20,16 @@ readonly class ArtistRepository extends Repository {
 		return $artistArray;
 	}
 
-	public function getById(string $id):?Artist {
-		return $this->rowToArtist($this->db->fetch("getById", $id));
+	public function getById(string $id, User $user):?Artist {
+		return $this->rowToArtist($this->db->fetch("getById", [
+			"id" => $id,
+			"userId" => $user->id,
+		]));
 	}
 
+	public function getByName(string $artistName, User $user):?Artist {
+		return $this->rowToArtist($this->db->fetch("getArtistByName", $artistName, $user->id));
+	}
 
 	private function rowToArtist(?Row $row):?Artist {
 		if(!$row) {
@@ -34,5 +40,18 @@ readonly class ArtistRepository extends Repository {
 			$row->getString("id"),
 			$row->getString("name"),
 		);
+	}
+
+	public function create(User $user, Artist...$artistsToCreate):int {
+		$count = 0;
+		foreach($artistsToCreate as $artist) {
+			$count += $this->db->insert("create", [
+				"id" => $artist->id,
+				"name" => $artist->name,
+				"userId" => $user->id,
+			]);
+		}
+
+		return $count;
 	}
 }

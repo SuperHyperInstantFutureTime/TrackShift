@@ -1,21 +1,18 @@
 <?php
 use Authwave\Authenticator;
-use Gt\Database\Database;
-use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
-use Gt\DomTemplate\DocumentBinder;
+use Gt\DomTemplate\Binder;
 use SHIFT\Trackshift\Audit\AuditRepository;
 use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Auth\UserRepository;
 use SHIFT\Trackshift\Content\ContentRepository;
 use SHIFT\Trackshift\Egg\UploadMessageList;
-use SHIFT\Trackshift\Upload\UploadManager;
+use SHIFT\Trackshift\Upload\UploadRepository;
 
 function go(
 	ContentRepository $contentRepo,
 	HTMLDocument $document,
-	DocumentBinder $binder,
-	UploadManager $uploadManager,
+	Binder $binder,
+	UploadRepository $uploadRepository,
 	Authenticator $authenticator,
 	User $user,
 ):void {
@@ -31,7 +28,7 @@ function go(
 
 	$document->body->dataset->set("hash", substr($user->id, -6));
 	$contentRepo->bindNodeList($document->querySelectorAll("[data-content]"));
-	$uploadManager->purgeOldFiles();
+	$uploadRepository->purgeOldFiles();
 
 	foreach($document->querySelectorAll("file-uploader") as $fileUploader) {
 		$binder->bindList(new UploadMessageList(3), $fileUploader);

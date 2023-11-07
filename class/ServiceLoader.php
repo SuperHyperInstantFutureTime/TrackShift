@@ -10,13 +10,13 @@ use SHIFT\Spotify\SpotifyClient;
 use SHIFT\Trackshift\Artist\ArtistRepository;
 use SHIFT\Trackshift\Audit\AuditRepository;
 use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Auth\UserMerger;
 use SHIFT\Trackshift\Auth\UserRepository;
 use SHIFT\Trackshift\Content\ContentRepository;
 use SHIFT\Trackshift\Cost\CostRepository;
 use SHIFT\Trackshift\Product\ProductRepository;
 use SHIFT\Trackshift\Split\SplitRepository;
-use SHIFT\Trackshift\Upload\UploadManager;
+use SHIFT\Trackshift\Upload\UploadRepository;
+use SHIFT\Trackshift\Usage\UsageRepository;
 
 class ServiceLoader extends DefaultServiceLoader {
 	public function loadAuditRepo():AuditRepository {
@@ -31,14 +31,18 @@ class ServiceLoader extends DefaultServiceLoader {
 		return new ContentRepository("data/web-content");
 	}
 
-	public function loadUploadManager():UploadManager {
+	public function loadUploadRepo():UploadRepository {
 		$db = $this->container->get(Database::class);
-		return new UploadManager(
+		return new UploadRepository(
 			$db->queryCollection("Upload"),
-			$db->queryCollection("Usage"),
-			$db->queryCollection("Artist"),
-			$db->queryCollection("Product"),
 			$this->container->get(AuditRepository::class),
+		);
+	}
+
+	public function loadUsageRepo():UsageRepository {
+		$db = $this->container->get(Database::class);
+		return new UsageRepository(
+			$db->queryCollection("Usage"),
 		);
 	}
 
@@ -69,13 +73,14 @@ class ServiceLoader extends DefaultServiceLoader {
 		);
 	}
 
-	public function loadUser():?User {
+	public function loadUser():User {
 		$userRepo = $this->container->get(UserRepository::class);
 		$user = $userRepo->getLoggedInUser();
 		if(!$user) {
 			$user = $userRepo->createNewUser();
 		}
 
+		$userRepo->persistUser($user);
 		return $user;
 	}
 

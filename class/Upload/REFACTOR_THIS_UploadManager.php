@@ -26,7 +26,7 @@ use SplFileObject;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity) Tracked in #114 https://github.com/SuperHyperInstantFutureTime/TrackShift/issues/114
  */
-readonly class UploadManager extends Repository {
+readonly class REFACTOR_THIS_UploadManager extends Repository {
 	public function __construct(
 		QueryCollection $db,
 		protected QueryCollection $usageDb,
@@ -42,14 +42,14 @@ readonly class UploadManager extends Repository {
 		$completedUploadList = [];
 
 		$userDir = $this->getUserDataDir($user);
-		foreach($uploadList as $file) {
-			$originalFileName = $file->getClientFilename();
+		foreach($uploadList as $uploadedFile) {
+			$originalFileName = $uploadedFile->getClientFilename();
 
 			$targetPath = "$userDir/$originalFileName";
 			if(!is_dir(dirname($targetPath))) {
 				mkdir(dirname($targetPath), 0775, true);
 			}
-			$file->moveTo($targetPath);
+			$uploadedFile->moveTo($targetPath);
 
 			$cost = new Money(0);
 

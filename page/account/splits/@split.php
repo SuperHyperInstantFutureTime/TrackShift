@@ -2,7 +2,7 @@
 
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
-use Gt\DomTemplate\DocumentBinder;
+use Gt\DomTemplate\Binder;
 use Gt\Http\Response;
 use Gt\Input\Input;
 use Gt\Routing\Path\DynamicPath;
@@ -18,7 +18,7 @@ use SHIFT\Trackshift\Split\SplitRepository;
 
 function go(
 	HTMLDocument $document,
-	DocumentBinder $binder,
+	Binder $binder,
 	DynamicPath $dynamicPath,
 	Input $input,
 	ArtistRepository $artistRepository,
@@ -51,7 +51,7 @@ function go(
 		$binder->bindKeyValue("artist", $artistId);
 
 		$binder->bindList(
-			$productRepository->getForArtist($artistId),
+			$productRepository->getForArtist($artistId, $user),
 			$document->querySelector("select[name=product]"),
 		);
 	}
@@ -88,7 +88,7 @@ function do_add_split(
 	$id = $dynamicPath->get("split");
 
 	if($id === "_new") {
-		$artist = $artistRepository->getById($input->getString("artist"));
+		$artist = $artistRepository->getById($input->getString("artist"), $user);
 		$product = $productRepository->getById($input->getString("product"));
 		$split = $splitRepository->create($product, $user);
 	}

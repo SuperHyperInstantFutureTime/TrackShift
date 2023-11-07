@@ -47,6 +47,10 @@ readonly class UserRepository extends Repository {
 		$this->session->set(self::SESSION_USER, $user);
 	}
 
+	public function forget():void {
+		$this->session->remove(self::SESSION_USER);
+	}
+
 	public function setNotificationCheckTime(User $user, DateTime $when = null):void {
 		if(is_null($when)) {
 			$when = new DateTime();
@@ -76,7 +80,6 @@ readonly class UserRepository extends Repository {
 			"authwaveId" => $authwaveUser->id,
 		]);
 	}
-
 
 
 }

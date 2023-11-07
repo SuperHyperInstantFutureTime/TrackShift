@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02ce596a74892fc12bea70ae4df90389",
+    "content-hash": "73f99c8c07502f44cc01294896898542",
     "packages": [
         {
             "name": "authwave/php-client",
@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "/home/g105b/Code/Authwave/php-client",
-                "reference": "62ec6fbd2627b19cd65396919e0130e95a91958b"
+                "reference": "1f60dfe03f643e1e1afc1b64c90b5e1948a391f3"
             },
             "require": {
                 "ext-openssl": "*",
@@ -1237,16 +1237,16 @@
         },
         {
             "name": "phpgt/database",
-            "version": "dev-318-semicolon",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PhpGt/Database.git",
-                "reference": "6b55cc17323425e2547bf160fb32b7aeef06c054"
+                "reference": "388b6f74da1ede9e37daf4748fe78299e268fee1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhpGt/Database/zipball/6b55cc17323425e2547bf160fb32b7aeef06c054",
-                "reference": "6b55cc17323425e2547bf160fb32b7aeef06c054",
+                "url": "https://api.github.com/repos/PhpGt/Database/zipball/388b6f74da1ede9e37daf4748fe78299e268fee1",
+                "reference": "388b6f74da1ede9e37daf4748fe78299e268fee1",
                 "shasum": ""
             },
             "require": {
@@ -1263,6 +1263,7 @@
                 "phpunit/phpunit": "^10.1",
                 "squizlabs/php_codesniffer": "^3.7"
             },
+            "default-branch": true,
             "bin": [
                 "bin/migrate"
             ],
@@ -1293,7 +1294,7 @@
             "description": "Database API organisation.",
             "support": {
                 "issues": "https://github.com/PhpGt/Database/issues",
-                "source": "https://github.com/PhpGt/Database/tree/318-semicolon"
+                "source": "https://github.com/PhpGt/Database/tree/v1.4.1"
             },
             "funding": [
                 {
@@ -1301,7 +1302,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-10-17T20:32:44+00:00"
+            "time": "2023-10-19T11:08:15+00:00"
         },
         {
             "name": "phpgt/dataobject",
@@ -1459,16 +1460,16 @@
         },
         {
             "name": "phpgt/domtemplate",
-            "version": "v3.2.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PhpGt/DomTemplate.git",
-                "reference": "af9f6936e5a204eda0404b7a9fe3f9b339e3264d"
+                "reference": "12bf0c6f52612a7e0fc61f3f069d568a35219d87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhpGt/DomTemplate/zipball/af9f6936e5a204eda0404b7a9fe3f9b339e3264d",
-                "reference": "af9f6936e5a204eda0404b7a9fe3f9b339e3264d",
+                "url": "https://api.github.com/repos/PhpGt/DomTemplate/zipball/12bf0c6f52612a7e0fc61f3f069d568a35219d87",
+                "reference": "12bf0c6f52612a7e0fc61f3f069d568a35219d87",
                 "shasum": ""
             },
             "require": {
@@ -1480,6 +1481,7 @@
                 "phpstan/phpstan": "^1.8",
                 "phpunit/phpunit": "^10.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1493,7 +1495,7 @@
             "description": "Bind dynamic data to reusable HTML components.",
             "support": {
                 "issues": "https://github.com/PhpGt/DomTemplate/issues",
-                "source": "https://github.com/PhpGt/DomTemplate/tree/v3.2.3"
+                "source": "https://github.com/PhpGt/DomTemplate/tree/master"
             },
             "funding": [
                 {
@@ -1501,7 +1503,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-09T14:39:41+00:00"
+            "time": "2023-10-19T11:02:52+00:00"
         },
         {
             "name": "phpgt/fetch",
@@ -2312,16 +2314,16 @@
         },
         {
             "name": "phpgt/ulid",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PhpGt/Ulid.git",
-                "reference": "2b66808ccde55e34513a8ffbfc7028baef01eb5b"
+                "reference": "8026eb5ba18292e80c7fc04eb49a8aeca7fcb546"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhpGt/Ulid/zipball/2b66808ccde55e34513a8ffbfc7028baef01eb5b",
-                "reference": "2b66808ccde55e34513a8ffbfc7028baef01eb5b",
+                "url": "https://api.github.com/repos/PhpGt/Ulid/zipball/8026eb5ba18292e80c7fc04eb49a8aeca7fcb546",
+                "reference": "8026eb5ba18292e80c7fc04eb49a8aeca7fcb546",
                 "shasum": ""
             },
             "require": {
@@ -2354,7 +2356,7 @@
             "description": "Unique, lexicographically sortable identifiers.",
             "support": {
                 "issues": "https://github.com/PhpGt/Ulid/issues",
-                "source": "https://github.com/PhpGt/Ulid/tree/v1.2.0"
+                "source": "https://github.com/PhpGt/Ulid/tree/v1.2.1"
             },
             "funding": [
                 {
@@ -2362,7 +2364,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-09-13T18:36:39+00:00"
+            "time": "2023-10-19T10:57:57+00:00"
         },
         {
             "name": "phpgt/webengine",
@@ -3947,19 +3949,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pdepend/pdepend.git",
-                "reference": "d12f25bcdfb7754bea458a4a5cb159d55e9950d0"
+                "reference": "bfb52ab6410d1d06a4162be9fc3a3e3a93233166"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pdepend/pdepend/zipball/d12f25bcdfb7754bea458a4a5cb159d55e9950d0",
-                "reference": "d12f25bcdfb7754bea458a4a5cb159d55e9950d0",
+                "url": "https://api.github.com/repos/pdepend/pdepend/zipball/bfb52ab6410d1d06a4162be9fc3a3e3a93233166",
+                "reference": "bfb52ab6410d1d06a4162be9fc3a3e3a93233166",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.7",
-                "symfony/config": "^2.3.0|^3|^4|^5|^6.0",
-                "symfony/dependency-injection": "^2.3.0|^3|^4|^5|^6.0",
-                "symfony/filesystem": "^2.3.0|^3|^4|^5|^6.0"
+                "symfony/config": "^2.3.0|^3|^4|^5|^6.0|^7.0",
+                "symfony/dependency-injection": "^2.3.0|^3|^4|^5|^6.0|^7.0",
+                "symfony/filesystem": "^2.3.0|^3|^4|^5|^6.0|^7.0"
             },
             "require-dev": {
                 "easy-doc/easy-doc": "0.0.0|^1.2.3",
@@ -3995,7 +3997,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pdepend/pdepend/issues",
-                "source": "https://github.com/pdepend/pdepend/tree/2.15.1"
+                "source": "https://github.com/pdepend/pdepend/tree/master"
             },
             "funding": [
                 {
@@ -4003,7 +4005,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-28T12:00:56+00:00"
+            "time": "2023-11-04T14:57:59+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -4202,16 +4204,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.40",
+            "version": "1.10.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "93c84b5bf7669920d823631e39904d69b9c7dc5d"
+                "reference": "c6174523c2a69231df55bdc65b61655e72876d76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/93c84b5bf7669920d823631e39904d69b9c7dc5d",
-                "reference": "93c84b5bf7669920d823631e39904d69b9c7dc5d",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c6174523c2a69231df55bdc65b61655e72876d76",
+                "reference": "c6174523c2a69231df55bdc65b61655e72876d76",
                 "shasum": ""
             },
             "require": {
@@ -4260,7 +4262,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-10-30T14:48:31+00:00"
+            "time": "2023-11-05T12:57:57+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -7659,9 +7661,15 @@
     "aliases": [
         {
             "package": "phpgt/database",
-            "version": "dev-318-semicolon",
+            "version": "9999999-dev",
             "alias": "v1.5.0",
             "alias_normalized": "1.5.0.0"
+        },
+        {
+            "package": "phpgt/domtemplate",
+            "version": "9999999-dev",
+            "alias": "v3.3.0",
+            "alias_normalized": "3.3.0.0"
         }
     ],
     "minimum-stability": "stable",
@@ -7669,6 +7677,7 @@
         "superhyperinstantfuturetime/spotify-api": 20,
         "phpgt/webengine": 20,
         "phpgt/database": 20,
+        "phpgt/domtemplate": 20,
         "authwave/php-client": 20,
         "pdepend/pdepend": 20
     },

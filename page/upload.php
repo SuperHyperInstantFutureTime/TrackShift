@@ -1,14 +1,14 @@
 <?php
 use Gt\Database\Database;
-use Gt\Dom\HTMLDocument;
-use Gt\DomTemplate\DocumentBinder;
 use Gt\Http\Response;
 use Gt\Input\Input;
-use SHIFT\Spotify\SpotifyClient;
+use Gt\Logger\Log;
+use SHIFT\Trackshift\Artist\ArtistRepository;
 use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Auth\UserRepository;
-use SHIFT\Trackshift\Egg\UploadMessageList;
-use SHIFT\Trackshift\Upload\UploadManager;
+use SHIFT\Trackshift\Product\ProductRepository;
+use SHIFT\Trackshift\Upload\UploadRepository;
+use SHIFT\Trackshift\Usage\UsageRepository;
 
 function go(Response $response):void {
 	$response->redirect("/account/uploads/");
@@ -19,22 +19,34 @@ function do_upload(
 	Response $response,
 	UserRepository $userRepository,
 	User $user,
-	UploadManager $uploadManager,
+	UploadRepository $uploadRepository,
+	UsageRepository $usageRepository,
+	ArtistRepository $artistRepository,
+	ProductRepository $productRepository,
 	Database $database,
 ):void {
 	$database->executeSql("begin transaction");
 	$database->executeSql("PRAGMA foreign_keys = 0");
 
 	$userRepository->persistUser($user);
-	$uploadList = $uploadManager->upload($user, ...$input->getMultipleFile("upload"));
+	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
 
 	foreach($uploadList as $upload) {
-		$uploadManager->processUploadIntoUsages($upload);
-		$uploadManager->processUsages($upload);
+		$usageList = $usageRepository->createUsagesFromUpload($upload);
+		$uploadRepository->setProcessed($upload);
+		$processedNum = $usageRepository->process(
+			$user,
+			$usageList,
+			$upload,
+			$artistRepository,
+			$productRepository,
+		);
+		$usageCount = count($usageList);
+		Log::debug("Created $usageCount usages & processed $processedNum from $upload->filePath");
 	}
 
-	$database->executeSql("PRAGMA foreign_keys = 1");
 	$database->executeSql("end transaction");
+	$database->executeSql("PRAGMA foreign_keys = 1");
 
 	if($advanceTo = $input->getString("advance")) {
 		$response->redirect($advanceTo);
@@ -42,19 +54,4 @@ function do_upload(
 	else {
 		$response->reload();
 	}
-}
-
-function do_delete(Input $input, Response $response, User $user, UploadManager $uploadManager):void {
-	$uploadManager->deleteById($user, $input->getString("filename"));
-	$response->reload();
-}
-
-function do_clear(User $user, UploadManager $uploadManager, Response $response):void {
-	$uploadManager->clearUserFiles($user);
-	$response->reload();
-}
-
-function do_extend(User $user, UploadManager $uploadManager, Response $response):void {
-	$uploadManager->extendExpiry($user);
-	$response->reload();
 }

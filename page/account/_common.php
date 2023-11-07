@@ -1,14 +1,11 @@
 <?php
-use DateTime;
 use Gt\Dom\HTMLDocument;
 use Gt\Http\Uri;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Upload\UploadManager;
 
-function go(HTMLDocument $document, Uri $uri, ?User $user, UploadManager $uploadManager):void {
+function go(HTMLDocument $document, Uri $uri):void {
 	foreach($document->querySelectorAll("account-tabs a") as $tabLink) {
 		$tabUri = new Uri($tabLink->href);
-		if($tabUri->getPath() === $uri->getPath()) {
+		if(str_starts_with($uri->getPath(), $tabUri->getPath())) {
 			$tabLink->closest("li")->classList->add("selected");
 		}
 	}

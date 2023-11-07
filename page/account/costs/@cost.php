@@ -1,6 +1,6 @@
 <?php
 use Gt\Dom\HTMLDocument;
-use Gt\DomTemplate\DocumentBinder;
+use Gt\DomTemplate\Binder;
 use Gt\Http\Response;
 use Gt\Http\Uri;
 use Gt\Input\Input;
@@ -15,7 +15,7 @@ use SHIFT\Trackshift\Royalty\Money;
 
 function go(
 	HTMLDocument $document,
-	DocumentBinder $binder,
+	Binder $binder,
 	DynamicPath $dynamicPath,
 	Input $input,
 	ArtistRepository $artistRepository,
@@ -48,7 +48,7 @@ function go(
 		$binder->bindKeyValue("artist", $artistId);
 
 		$binder->bindList(
-			$productRepository->getForArtist($artistId),
+			$productRepository->getForArtist($artistId, $user),
 			$document->querySelector("select[name=product]"),
 		);
 

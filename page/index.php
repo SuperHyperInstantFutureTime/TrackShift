@@ -1,19 +1,17 @@
 <?php
-use Gt\Dom\HTMLDocument;
-use Gt\DomTemplate\DocumentBinder;
 use Gt\Http\Response;
 use Gt\Input\Input;
 use Gt\Session\Session;
 use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Upload\UploadManager;
+use SHIFT\Trackshift\Upload\UploadRepository;
 
 function go(
 	Input $input,
 	Response $response,
-	UploadManager $uploadManager,
+	UploadRepository $uploadRepository,
 	?User $user,
 ):void {
-	if(!empty($uploadManager->getUploadsForUser($user))) {
+	if(!empty($uploadRepository->getUploadsForUser($user))) {
 		if(!$input->contains("homepage")) {
 			$response->redirect("/account/");
 		}

@@ -1,8 +1,10 @@
 insert into Artist (
 	id,
-	name
+	name,
+	userId
 )
 values (
 	:id,
-	:name
+	:name,
+	:userId
 )
