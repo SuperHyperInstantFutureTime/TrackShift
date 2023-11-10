@@ -20,14 +20,14 @@ readonly class SplitRepository extends Repository {
 	}
 
 	/** @return array<Split> */
-	public function getAll(User $user, bool $withRemainder = false):array {
+	public function getAll(User $user, ?string $remainderName = null):array {
 		$splitList = [];
 
 		$resultSet = $this->db->fetchAll("getAll", $user->id);
 		foreach($resultSet as $row) {
 			array_push(
 				$splitList,
-				$this->rowToSplit($row, withRemainderSplitPercentage: $withRemainder),
+				$this->rowToSplit($row, remainderName: $remainderName),
 			);
 		}
 
@@ -35,7 +35,7 @@ readonly class SplitRepository extends Repository {
 	}
 
 	/** @return array<SplitPercentage> */
-	public function getSplitPercentageList(User $user, string $splitId, bool $withRemainderSplitPercentage = false):array {
+	public function getSplitPercentageList(User $user, string $splitId, ?string $remainderName = null):array {
 		$resultSet = $this->db->fetchAll("getSplitPercentageList", $splitId, $user->id);
 
 		$splitPercentageList = [];
@@ -46,8 +46,8 @@ readonly class SplitRepository extends Repository {
 			);
 		}
 
-		if($withRemainderSplitPercentage) {
-			array_push($splitPercentageList, new RemainderSplitPercentage($splitPercentageList));
+		if($remainderName) {
+			array_push($splitPercentageList, new RemainderSplitPercentage($splitPercentageList, $remainderName));
 		}
 		return $splitPercentageList;
 	}
@@ -94,7 +94,7 @@ readonly class SplitRepository extends Repository {
 		$this->db->delete("delete", $splitId, $user->id);
 	}
 
-	private function rowToSplit(?Row $row, ?User $user = null, bool $withRemainderSplitPercentage = false):?Split {
+	private function rowToSplit(?Row $row, ?User $user = null, ?string $remainderName = null):?Split {
 		if(!$row) {
 			return null;
 		}
@@ -103,7 +103,7 @@ readonly class SplitRepository extends Repository {
 		$user = $user ?? $this->userRepository->getById($row->getString("userId"));
 		$product = $this->productRepository->getById($row->getString("productId"));
 
-		$splitPercentageList = $this->getSplitPercentageList($user, $id, $withRemainderSplitPercentage);
+		$splitPercentageList = $this->getSplitPercentageList($user, $id, $remainderName);
 
 		return new Split(
 			$id,
