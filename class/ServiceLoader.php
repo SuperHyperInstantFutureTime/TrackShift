@@ -1,7 +1,9 @@
 <?php
 namespace SHIFT\Trackshift;
 
+use Authwave\Authenticator;
 use Gt\Database\Database;
+use Gt\Http\Uri;
 use Gt\Session\Session;
 use Gt\WebEngine\Middleware\DefaultServiceLoader;
 use SHIFT\Spotify\SpotifyClient;
@@ -13,8 +15,13 @@ use SHIFT\Trackshift\Content\ContentRepository;
 use SHIFT\Trackshift\Cost\CostRepository;
 use SHIFT\Trackshift\Product\ProductRepository;
 use SHIFT\Trackshift\Split\SplitRepository;
-use SHIFT\Trackshift\Upload\UploadManager;
+use SHIFT\Trackshift\Upload\UploadRepository;
+use SHIFT\Trackshift\Usage\UsageRepository;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ServiceLoader extends DefaultServiceLoader {
 	public function loadAuditRepo():AuditRepository {
 		$database = $this->container->get(Database::class);
@@ -28,14 +35,18 @@ class ServiceLoader extends DefaultServiceLoader {
 		return new ContentRepository("data/web-content");
 	}
 
-	public function loadUploadManager():UploadManager {
+	public function loadUploadRepo():UploadRepository {
 		$db = $this->container->get(Database::class);
-		return new UploadManager(
+		return new UploadRepository(
 			$db->queryCollection("Upload"),
-			$db->queryCollection("Usage"),
-			$db->queryCollection("Artist"),
-			$db->queryCollection("Product"),
 			$this->container->get(AuditRepository::class),
+		);
+	}
+
+	public function loadUsageRepo():UsageRepository {
+		$db = $this->container->get(Database::class);
+		return new UsageRepository(
+			$db->queryCollection("Usage"),
 		);
 	}
 
@@ -73,6 +84,7 @@ class ServiceLoader extends DefaultServiceLoader {
 			$user = $userRepo->createNewUser();
 		}
 
+		$userRepo->persistUser($user);
 		return $user;
 	}
 
@@ -99,6 +111,19 @@ class ServiceLoader extends DefaultServiceLoader {
 			$database->queryCollection("Split"),
 			$this->container->get(UserRepository::class),
 			$this->container->get(ProductRepository::class),
+		);
+	}
+
+	public function loadAuthenticator():Authenticator {
+		$config = $this->config->getSection("authwave");
+		$session = $this->container->get(Session::class);
+		$uri = $this->container->get(Uri::class);
+
+		return new Authenticator(
+			$config->getString("key"),
+			$uri,
+			$config->getString("host"),
+			$session->getStore(UserRepository::SESSION_AUTHENTICATOR_STORE_KEY, true),
 		);
 	}
 }

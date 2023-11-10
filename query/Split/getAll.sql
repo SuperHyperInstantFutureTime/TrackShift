@@ -1,6 +1,6 @@
 select
 	Split.id,
-	userId,
+	Split.userId,
 	productId
 
 from
@@ -17,7 +17,7 @@ on
 	Artist.id = Product.artistId
 
 where
-	userId = ?
+	Split.userId = ?
 
 order by
 	Artist.name, Product.title

@@ -17,6 +17,27 @@ readonly class ProductRepository extends Repository {
 		parent::__construct($db);
 	}
 
+	public function create(Product...$productsToCreate):int {
+		$count = 0;
+		foreach($productsToCreate as $product) {
+			$count += $this->db->insert("create", [
+				"id" => $product->id,
+				"artistId" => $product->artist->id,
+				"title" => $product->title,
+			]);
+		}
+
+		return $count;
+	}
+
+	public function find(string $productTitle, Artist $artist):?Product {
+		return $this->rowToProduct($this->db->fetch("getProductByTitleAndArtist", [
+			"title" => $productTitle,
+			"artistId" => $artist->id,
+		]), $artist);
+	}
+
+
 	/** @return array<ProductEarning> */
 	public function getProductEarnings(User $user):array {
 		$earningList = [];
@@ -67,8 +88,8 @@ readonly class ProductRepository extends Repository {
 	}
 
 	/** @return array<Product> */
-	public function getForArtist(string|Artist $artist):array {
-		$artist = is_string($artist) ? $this->artistRepository->getById($artist) : $artist;
+	public function getForArtist(string|Artist $artist, User $user):array {
+		$artist = is_string($artist) ? $this->artistRepository->getById($artist, $user) : $artist;
 
 		$artistArray = [];
 		foreach($this->db->fetchAll("getAllByArtistId", $artist->id) as $row) {

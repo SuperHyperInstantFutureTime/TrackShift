@@ -44,3 +44,20 @@ Feature: App should list out and remove uploaded files
 		Then I should see 2 rows in the table
 		When I press "Delete prs-simple-3-songs"
 		Then I should see 1 rows in the table
+
+	Scenario: Delete all data and start again
+		Given I am on the homepage
+		When I attach the file "bandcamp-simple-multiple-artist.csv" to "upload[]"
+		And I press "Upload"
+		When I go to "/account/uploads/"
+		Then I should see 1 rows in the table
+		When I press "Delete all data"
+		Then I should be on the homepage
+
+		When I attach the file "bandcamp-simple-3-songs.csv" to "upload[]"
+		And I press "Upload"
+		And I go to "/account/uploads/"
+		Then I should see 1 rows in the table
+		When I go to "/account/products/"
+		Then I should see 3 rows in the table
+

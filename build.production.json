@@ -1,0 +1,13 @@
+{
+	"script/**/*.es6": {
+		"require": {
+			"node": "*",
+			"babel": "*",
+			"webpack": "*"
+		},
+		"execute": {
+			"command": "webpack",
+			"arguments": ["--entry","./script/script.es6", "--output-path", "./www", "--output-filename", "script.js", "--mode", "production"]
+		}
+	}
+}

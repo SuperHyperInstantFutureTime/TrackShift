@@ -2,15 +2,10 @@
 namespace SHIFT\Trackshift\Upload;
 
 use DateTime;
-use DateTimeInterface;
 use DateTimeZone;
 use Generator;
 use Gt\DomTemplate\BindGetter;
-use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Auth\User;
 use SplFileObject;
-use SHIFT\Trackshift\Artist\Artist;
-use SHIFT\Trackshift\Artist\ArtistIdentifier;
 use SHIFT\Trackshift\Royalty\Money;
 
 abstract class Upload {

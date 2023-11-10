@@ -1,12 +1,12 @@
 <?php
-use Gt\DomTemplate\DocumentBinder;
+use Gt\DomTemplate\Binder;
 use Gt\Http\Response;
 use Gt\Input\Input;
 use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Cost\CostRepository;
 
-function go(DocumentBinder $documentBinder, CostRepository $costRepository, User $user):void {
-	$documentBinder->bindList(
+function go(Binder $binder, CostRepository $costRepository, User $user):void {
+	$binder->bindList(
 		$costRepository->getAll($user)
 	);
 }

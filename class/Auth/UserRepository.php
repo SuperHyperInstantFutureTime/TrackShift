@@ -1,6 +1,7 @@
 <?php
 namespace SHIFT\Trackshift\Auth;
 
+use Authwave\User as AuthwaveUser;
 use DateTime;
 use DateTimeInterface;
 use Gt\Database\Query\QueryCollection;
@@ -10,14 +11,21 @@ use Gt\Ulid\Ulid;
 use SHIFT\Trackshift\Repository\Repository;
 
 readonly class UserRepository extends Repository {
-	const SESSION_STORE_KEY = "trackshift-auth-store";
-	const SESSION_USER = "user";
+	const SESSION_STORE_KEY = "trackshift-user-store";
+	const SESSION_AUTHENTICATOR_STORE_KEY = "trackshift-authwave-store";
+	const SESSION_USER = "trackshift-user";
 
 	public function __construct(
 		QueryCollection $db,
 		private SessionStore $session,
 	) {
 		parent::__construct($db);
+	}
+
+	public function findByAuthwaveId(string $id):?User {
+		return $this->rowToUser(
+			$this->db->fetch("getByAuthwaveId", $id)
+		);
 	}
 
 	public function getLoggedInUser():?User {
@@ -37,6 +45,10 @@ readonly class UserRepository extends Repository {
 
 	public function persistUser(User $user):void {
 		$this->session->set(self::SESSION_USER, $user);
+	}
+
+	public function forget():void {
+		$this->session->remove(self::SESSION_USER);
 	}
 
 	public function setNotificationCheckTime(User $user, DateTime $when = null):void {
@@ -62,6 +74,12 @@ readonly class UserRepository extends Repository {
 		return new User($row->getString("id"));
 	}
 
+	public function associateAuthwave(User $user, AuthwaveUser $authwaveUser):void {
+		$this->db->update("associateAuthwave", [
+			"userId" => $user->id,
+			"authwaveId" => $authwaveUser->id,
+		]);
+	}
 
 
 }

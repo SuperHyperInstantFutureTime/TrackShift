@@ -1,10 +1,10 @@
 <?php
-use Gt\DomTemplate\DocumentBinder;
+use Gt\DomTemplate\Binder;
 use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Product\ProductRepository;
 
 function go(
-	DocumentBinder $binder,
+	Binder $binder,
 	ProductRepository $productRepository,
 	User $user,
 ):void {
