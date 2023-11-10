@@ -66,6 +66,32 @@ readonly class UserRepository extends Repository {
 		return $this->db->fetchDateTime("getLastNotificationCheckTime", $user->id);
 	}
 
+	public function getUserSettings(User $user):Settings {
+		$settings = new Settings();
+
+		foreach($this->db->fetchAll("getSettings", $user->id) as $row) {
+			$settings->set(
+				$row->getString("key"),
+				$row->getString("value"),
+			);
+		}
+
+		return $settings;
+	}
+
+	public function setUserSettings(User $user, Settings $settings):void {
+		$this->db->delete("removeUserSettings", $user->id);
+
+		foreach($settings->getKvp() as $key => $value) {
+			$this->db->insert("setUserSetting", [
+				"userId" => $user->id,
+				"key" => $key,
+				"value" => $value,
+			]);
+		}
+	}
+
+
 	private function rowToUser(?Row $row):?User {
 		if(!$row) {
 			return null;
@@ -80,6 +106,4 @@ readonly class UserRepository extends Repository {
 			"authwaveId" => $authwaveUser->id,
 		]);
 	}
-
-
 }
