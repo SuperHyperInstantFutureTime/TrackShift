@@ -12,6 +12,7 @@ use SHIFT\Trackshift\Repository\Repository;
 use SHIFT\Trackshift\Royalty\Money;
 use SplFileObject;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 readonly class UploadRepository extends Repository {
 	const DIR_UPLOAD = "data/upload";
 

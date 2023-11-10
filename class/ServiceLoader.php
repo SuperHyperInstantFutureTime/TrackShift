@@ -18,6 +18,10 @@ use SHIFT\Trackshift\Split\SplitRepository;
 use SHIFT\Trackshift\Upload\UploadRepository;
 use SHIFT\Trackshift\Usage\UsageRepository;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ServiceLoader extends DefaultServiceLoader {
 	public function loadAuditRepo():AuditRepository {
 		$database = $this->container->get(Database::class);

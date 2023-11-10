@@ -13,6 +13,7 @@
 		<exclude name="BooleanArgumentFlag" />
 		<exclude name="ElseExpression" />
 		<exclude name="IfStatementAssignment" />
+		<exclude name="StaticAccess" />
 	</rule>
 
 	<rule ref="rulesets/controversial.xml">
@@ -34,6 +35,12 @@
 	<rule ref="rulesets/naming.xml/ShortVariable">
 		<properties>
 			<property name="exceptions" value="a,b,i,id,db,to" />
+		</properties>
+	</rule>
+
+	<rule ref="rulesets/cleancode.xml/StaticAccess">
+		<properties>
+			<property name="exceptions" value="Gt\Logger\Log" />
 		</properties>
 	</rule>
 </ruleset>
