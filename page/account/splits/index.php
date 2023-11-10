@@ -10,6 +10,6 @@ function go(
 	Settings $settings,
 	Binder $binder,
 ):void {
-	$splits = $splitRepository->getAll($user, $settings->get("account_name") ?? "You");
+	$splits = $splitRepository->getAll($user, $settings->get("account_name") ?: "You");
 	$binder->bindList($splits);
 }

@@ -68,7 +68,7 @@ function go(
 			$percentageList = $splitRepository->getSplitPercentageList($user, $id);
 		}
 		array_push($percentageList, new EmptySplitPercentage($productId));
-		array_push($percentageList, new RemainderSplitPercentage($percentageList, $settings->get("account_name") ?? "You"));
+		array_push($percentageList, new RemainderSplitPercentage($percentageList, $settings->get("account_name") ?: "You"));
 
 		$binder->bindList(
 			$percentageList,
