@@ -9,6 +9,7 @@ use Gt\Routing\Path\DynamicPath;
 use Gt\Ulid\Ulid;
 use SHIFT\Trackshift\Artist\ArtistRepository;
 use SHIFT\Trackshift\Audit\AuditRepository;
+use SHIFT\Trackshift\Auth\Settings;
 use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Product\ProductRepository;
 use SHIFT\Trackshift\Split\EmptySplitPercentage;
@@ -24,6 +25,7 @@ function go(
 	ArtistRepository $artistRepository,
 	ProductRepository $productRepository,
 	SplitRepository $splitRepository,
+	Settings $settings,
 	User $user,
 ):void {
 	$artistId = $input->getString("artist");
@@ -66,7 +68,7 @@ function go(
 			$percentageList = $splitRepository->getSplitPercentageList($user, $id);
 		}
 		array_push($percentageList, new EmptySplitPercentage($productId));
-		array_push($percentageList, new RemainderSplitPercentage($percentageList));
+		array_push($percentageList, new RemainderSplitPercentage($percentageList, $settings->get("account_name") ?? "You"));
 
 		$binder->bindList(
 			$percentageList,

@@ -1,0 +1,8 @@
+user-settings {
+	@extend %o-container;
+
+	form {
+		@extend %d-form-fields;
+		margin-top: 4rem;
+	}
+}

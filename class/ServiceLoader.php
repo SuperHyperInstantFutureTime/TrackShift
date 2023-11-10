@@ -9,6 +9,7 @@ use Gt\WebEngine\Middleware\DefaultServiceLoader;
 use SHIFT\Spotify\SpotifyClient;
 use SHIFT\Trackshift\Artist\ArtistRepository;
 use SHIFT\Trackshift\Audit\AuditRepository;
+use SHIFT\Trackshift\Auth\Settings;
 use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Auth\UserRepository;
 use SHIFT\Trackshift\Content\ContentRepository;
@@ -125,5 +126,11 @@ class ServiceLoader extends DefaultServiceLoader {
 			$config->getString("host"),
 			$session->getStore(UserRepository::SESSION_AUTHENTICATOR_STORE_KEY, true),
 		);
+	}
+
+	public function loadSettings():Settings {
+		$userRepo = $this->container->get(UserRepository::class);
+		$user = $this->container->get(User::class);
+		return $userRepo->getUserSettings($user);
 	}
 }
