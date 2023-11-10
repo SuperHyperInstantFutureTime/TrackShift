@@ -40,6 +40,8 @@
 @import "component/cost-table";
 @import "component/product-table";
 @import "component/upload-table";
+@import "component/split-editor";
+@import "component/splits-list";
 
 @import "page/index";
 @import "page/_common";
@@ -55,6 +57,10 @@
 .fade-away {
 	opacity: 0;
 	transition: 1s;
+}
+
+.auto-submit { // when a form auto-submits, like the artist submit button in the modal cost editor
+	display: none;
 }
 
 body {

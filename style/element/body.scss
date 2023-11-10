@@ -4,6 +4,7 @@ body {
 	background-color: var(--pal-page-bg);
 	color: var(--pal-body);
 	font-family: var(--font-family-main);
+	overflow-x: hidden;
 
 	&.modal {
 		global-header, global-footer, account-tabs {

@@ -2,6 +2,7 @@ account-tabs {
 	@extend %o-container;
 	display: block;
 	margin-top: 4rem;
+	overflow-x: scroll;
 
 	ul {
 		list-style-type: none;

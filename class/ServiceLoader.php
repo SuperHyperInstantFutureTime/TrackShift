@@ -12,6 +12,7 @@ use SHIFT\Trackshift\Auth\UserRepository;
 use SHIFT\Trackshift\Content\ContentRepository;
 use SHIFT\Trackshift\Cost\CostRepository;
 use SHIFT\Trackshift\Product\ProductRepository;
+use SHIFT\Trackshift\Split\SplitRepository;
 use SHIFT\Trackshift\Upload\UploadManager;
 
 class ServiceLoader extends DefaultServiceLoader {
@@ -19,6 +20,7 @@ class ServiceLoader extends DefaultServiceLoader {
 		$database = $this->container->get(Database::class);
 		return new AuditRepository(
 			$database->queryCollection("Audit"),
+			$this->container->get(UserRepository::class),
 		);
 	}
 
@@ -87,6 +89,16 @@ class ServiceLoader extends DefaultServiceLoader {
 			$db->queryCollection("Cost"),
 			$this->container->get(ProductRepository::class),
 			$this->container->get(AuditRepository::class),
+		);
+	}
+
+	public function loadSplitRepository():SplitRepository {
+		$database = $this->container->get(Database::class);
+
+		return new SplitRepository(
+			$database->queryCollection("Split"),
+			$this->container->get(UserRepository::class),
+			$this->container->get(ProductRepository::class),
 		);
 	}
 }

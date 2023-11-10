@@ -6,7 +6,7 @@ use SHIFT\Trackshift\Auth\User;
 use SHIFT\Trackshift\Repository\Repository;
 
 readonly class ArtistRepository extends Repository {
-	/** return array<Artist> */
+	/** @return array<Artist> */
 	public function getAll(User $user):array {
 		$artistArray = [];
 

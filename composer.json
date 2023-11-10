@@ -6,7 +6,8 @@
 		"php": ">=8.2",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
-		"phpgt/database": "dev-dynamic-sets as v1.5.0",
+		"phpgt/database": "dev-318-semicolon as v1.4.0",
+		"phpgt/domtemplate": "dev-iterator-aggregate as v3.3.0",
 		"league/commonmark": "^2.4"
 	},
 	"require-dev": {

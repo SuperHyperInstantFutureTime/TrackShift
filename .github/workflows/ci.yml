@@ -155,7 +155,29 @@ jobs:
           path: class/
           standard: phpcs.xml
 
-#  dev-deploy:
+#  behat:
+#    runs-on: ubuntu-latest
+#    needs: [ composer ]
+#    strategy:
+#      matrix:
+#        php: [ 8.2 ]
+#
+#    steps:
+#      - uses: actions/download-artifact@v3
+#        with:
+#          name: build-artifact
+#          path: /tmp/github-actions
+#
+#      - name: Extract build archive
+#        run: tar -xvf /tmp/github-actions/build.tar ./
+#
+#      - name: Behat
+#        uses: php-actions/behat@v1
+#        with:
+#          php_version: ${{ matrix.php }}
+
+
+  #  dev-deploy:
 #    runs-on: ubuntu-latest
 #    needs: [ composer, phpunit, phpstan, phpcs, phpmd ]
 #

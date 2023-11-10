@@ -2,7 +2,6 @@
 namespace SHIFT\Trackshift\BehatContext;
 
 use Behat\Gherkin\Node\TableNode;
-use Behat\MinkExtension\Context\RawMinkContext;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 class UploadContext extends PageContext {

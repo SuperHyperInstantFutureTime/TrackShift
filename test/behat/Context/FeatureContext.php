@@ -85,10 +85,4 @@ class FeatureContext extends MinkContext {
 			}
 		}
 	}
-
-	/** @Then I dump the HTML */
-	public function iDumpTheHTML() {
-		echo $this->getSession()->getPage()->getHtml();
-		exit(1);
-	}
 }

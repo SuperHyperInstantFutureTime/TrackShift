@@ -28,14 +28,21 @@ class ServerContext implements Context {
 		string $serverAddress,
 		int $serverPort,
 	):void {
-		$socket = @fsockopen(
-			"localhost",
-			$serverPort,
-			$errorCode,
-			$errorMessage,
-			1
-		);
-		if(!$socket) {
+		$socket = null;
+
+		while(!$socket) {
+			$socket = @fsockopen(
+				"localhost",
+				$serverPort,
+				$errorCode,
+				$errorMessage,
+				1
+			);
+
+			if($socket) {
+				break;
+			}
+
 			if(!is_dir("www")) {
 				mkdir("www");
 			}
@@ -43,6 +50,8 @@ class ServerContext implements Context {
 			self::$server = new Process("php", "-S", "$serverAddress:$serverPort", "-t", "www", "./vendor/phpgt/webengine/go.php");
 			self::$server->setExecCwd($path);
 			self::$server->exec();
+			sleep(1);
+			echo "Server started...", PHP_EOL;
 		}
 	}
 }

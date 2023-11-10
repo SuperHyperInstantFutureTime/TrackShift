@@ -31,7 +31,8 @@ readonly class AuditItem extends Entity {
 			"create" => "Created new $typeName ($descriptionOrId)",
 			"update" => "Updated $typeName ($descriptionOrId)",
 			"delete" => "Deleted $typeName ($descriptionOrId)",
-			default => "Something happened...",
+			"notification" => $descriptionOrId,
+			default => "Unhandled audit type ($this->type)",
 		};
 	}
 

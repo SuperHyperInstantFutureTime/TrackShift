@@ -9,6 +9,10 @@ product-table {
 		tbody {
 			tr {
 				td {
+					&:last-of-type {
+						font-weight: bold;
+					}
+
 					&.albumArt {
 						position: relative;
 						width: 7rem;

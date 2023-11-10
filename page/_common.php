@@ -3,7 +3,9 @@ use Gt\Database\Database;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 use Gt\DomTemplate\DocumentBinder;
+use SHIFT\Trackshift\Audit\AuditRepository;
 use SHIFT\Trackshift\Auth\User;
+use SHIFT\Trackshift\Auth\UserRepository;
 use SHIFT\Trackshift\Content\ContentRepository;
 use SHIFT\Trackshift\Egg\UploadMessageList;
 use SHIFT\Trackshift\Upload\UploadManager;
@@ -28,5 +30,11 @@ function go(
 
 	foreach($document->querySelectorAll("file-uploader") as $fileUploader) {
 		$binder->bindList(new UploadMessageList(3), $fileUploader);
+	}
+}
+
+function go_after(?User $user, AuditRepository $auditRepository, HTMLDocument $document):void {
+	if($user && $auditRepository->isNewNotification($user)) {
+		$document->querySelector("global-header .bell")->classList->add("notify");
 	}
 }

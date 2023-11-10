@@ -27,7 +27,7 @@ class BandcampUploadTest extends TestCase {
 		self::assertSame(6.22, $earning->value);
 	}
 
-	public function testGetXYZ_bindGetters():void {
+	public function testGetCreatedUploadedDate_bindGetters():void {
 		$filePath = "test/files/bandcamp-simple-3-songs.csv";
 		$sut = new BandcampUpload("test-id", $filePath);
 		$actualCreationTime = new DateTime("@" . filectime($filePath));
