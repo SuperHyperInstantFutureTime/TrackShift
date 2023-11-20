@@ -37,3 +37,7 @@ function go(
 
 	$response->redirect("/account/");
 }
+
+function do_cancel(Response $response):void {
+	$response->redirect("/");
+}
