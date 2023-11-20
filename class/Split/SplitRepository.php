@@ -27,7 +27,7 @@ readonly class SplitRepository extends Repository {
 		foreach($resultSet as $row) {
 			array_push(
 				$splitList,
-				$this->rowToSplit($row, remainderName: $remainderName),
+				$this->rowToSplit($row, $user, remainderName: $remainderName),
 			);
 		}
 

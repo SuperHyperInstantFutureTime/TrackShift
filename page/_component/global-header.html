@@ -12,6 +12,19 @@
 				<a href="/auth/login/" class="button">
 					<span>Log in</span>
 				</a>
+				<script>
+					let link = document.currentScript.previousElementSibling;
+					let debugString = new URLSearchParams(location.search).get("debug") || "";
+
+					if(debugString) {
+						link.addEventListener("click", e => {
+							if(e.ctrlKey && e.shiftKey) {
+								link.href += "?debug=" + debugString;
+							}
+						});
+
+					}
+				</script>
 			</li>
 			<li class="logout">
 				<a href="/auth/logout/" class="button">

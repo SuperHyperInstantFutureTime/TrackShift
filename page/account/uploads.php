@@ -8,10 +8,7 @@ use SHIFT\Trackshift\Auth\UserRepository;
 use SHIFT\Trackshift\Upload\UploadRepository;
 
 function go(Binder $binder, UploadRepository $uploadRepository, User $user, Response $response):void {
-	$uploadCount = $binder->bindList($uploadRepository->getUploadsForUser($user));
-	if($uploadCount === 0) {
-		$response->redirect("/");
-	}
+	$binder->bindList($uploadRepository->getUploadsForUser($user));
 }
 
 function do_delete(Input $input, UploadRepository $uploadRepository, User $user, Response $response):void {
