@@ -41,3 +41,7 @@ function go(
 function do_cancel(Response $response):void {
 	$response->redirect("/");
 }
+
+function do_logout(Response $response):void {
+	$response->redirect("/auth/logout/");
+}
