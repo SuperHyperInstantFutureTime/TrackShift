@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Authwave/php-client.git",
-                "reference": "7478bda54a8ff735cdab4b5991f828ee6a850e41"
+                "reference": "d3bf341521ed68fe6a14e03f9719a9b5ec1b9d02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Authwave/php-client/zipball/7478bda54a8ff735cdab4b5991f828ee6a850e41",
-                "reference": "7478bda54a8ff735cdab4b5991f828ee6a850e41",
+                "url": "https://api.github.com/repos/Authwave/php-client/zipball/d3bf341521ed68fe6a14e03f9719a9b5ec1b9d02",
+                "reference": "d3bf341521ed68fe6a14e03f9719a9b5ec1b9d02",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 "issues": "https://github.com/Authwave/php-client/issues",
                 "source": "https://github.com/Authwave/php-client/tree/2022"
             },
-            "time": "2023-11-20T18:06:33+00:00"
+            "time": "2023-11-20T21:21:18+00:00"
         },
         {
             "name": "composer/semver",
