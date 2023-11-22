@@ -3,6 +3,8 @@
 	"description": "",
 	"require": {
 		"php": ">=8.2",
+		"ext-iconv": "*",
+		"ext-mbstring": "*",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
 		"authwave/php-client": "2022.x-dev",

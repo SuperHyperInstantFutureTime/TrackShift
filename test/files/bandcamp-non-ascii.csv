@@ -1,0 +1,14 @@
+date,paid to,item type,item name,artist,currency,item price,quantity,discount code,sub total,transaction fee,fee type,item total,amount you received,bandcamp transaction id,paypal transaction id,net amount
+6/24/23 11:45am,me@example.com,track,BC 4,Pèrsona Dos,GBP,4.99,1,,4.99,0.5,paypal,4.99,4.49,,,4.2
+6/25/23 5:45pm,you@example.com,track,BC 1,Pèrsona Uno,GBP,7.99,1,,7.99,0.57,paypal,7.99,7.42,1234000001,3KJ69516S2466193S,6.22
+7/2/23 7:56am,you@example.com,track,BC 1,Pèrsona Uno,GBP,5,1,,5,0.47,paypal,5,4.53,1234000002,29966046F7946584H,3.78
+7/2/23 2:00pm,collected to cover your revenue share balance,track,BC 1,Pèrsona Uno,GBP,1,1,,1,0.5,,1,0,1234000003,<-- collected to cover your revenue share balance,0.85
+7/3/23 10:25am,you@example.com,track,BC 2,Pèrsona Uno,GBP,2,1,,2,0.27,paypal,2,1.73,1234000004,36F06739NU791841K,1.43
+7/4/23 10:00am,me@example.com,track,BC 4,Pèrsona Dos,GBP,3,1,,3,0.5,paypal,3,2.5,,,2.3
+7/5/23 12:51pm,you@example.com,track,BC 2,Pèrsona Uno,GBP,1,1,,1,0.24,paypal,1,0.76,1234000005,49H01364DL948121E,0.61
+7/7/23 7:25pm,Bandcamp,track,BC 2,Pèrsona Uno,GBP,0.4,1,,0.4,0.1,,0.4,0,1234000006,,0.34
+7/9/23 11:45am,me@example.com,track,BC 5,Pèrsona Dos,GBP,3.5,1,,3.5,0.5,paypal,3.5,3,,,2.78
+7/10/23 8:12am,you@example.com,track,BC 3,Pèrsona Uno,GBP,5,1,,5,0.37,paypal,5,4.63,1234000007,3AL22901JK7712703,3.88
+7/20/23 1:05pm,me@example.com,track,BC 4,Pèrsona Dos,GBP,2.99,1,,2.99,0.5,paypal,2.99,2.49,,,2.01
+1/1/24 3:12pm,Bandcamp,track,BC 3,Pèrsona Uno,GBP,0.78,1,,0.78,0.09,paypal,0.78,0,1234000008,,0.57
+1/2/24 4:00pm,me@example.com,track,BC 5,Pèrsona Dos,GBP,5.99,1,,5.99,0.5,paypal,5.99,5.49,,,4.99

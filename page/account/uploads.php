@@ -29,5 +29,5 @@ function do_clear(
 		$authenticator->logout();
 	}
 
-	$response->reload();
+	$response->redirect("/");
 }

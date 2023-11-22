@@ -13,6 +13,7 @@ class Settings {
 		return $this->kvp[$key] ?? null;
 	}
 
+	/** @return array<string, string> */
 	public function getKvp():array {
 		return $this->kvp;
 	}

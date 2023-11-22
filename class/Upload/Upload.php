@@ -9,7 +9,8 @@ use SplFileObject;
 use SHIFT\Trackshift\Royalty\Money;
 
 abstract class Upload {
-	protected SplFileObject $file;
+	/** @var resource */
+	protected $fileHandle;
 	public readonly string $filename;
 	public readonly string $basename;
 	public readonly int $size;
@@ -22,7 +23,7 @@ abstract class Upload {
 		public readonly string $filePath,
 		public readonly Money $totalEarnings = new Money(0),
 	) {
-		$this->file = new SplFileObject($this->filePath);
+		$this->fileHandle = fopen($this->filePath, "r");
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);
 		$this->basename = pathinfo($this->filePath, PATHINFO_BASENAME);
 		$this->size = filesize($this->filePath);
@@ -62,10 +63,12 @@ abstract class Upload {
 	public function generateDataRows():Generator {
 		$headerRow = null;
 
-		$this->file->rewind();
-		while(!$this->file->eof()) {
-			$row = $this->stripNullBytes($this->file->fgetcsv());
-			if(empty($row) || !$row[0]) {
+		while(!feof($this->fileHandle)) {
+			$line = fgets($this->fileHandle);
+			$line = $this->stripNullBytes($line);
+			$row = str_getcsv($line);
+
+			if(!$row[0]) {
 				continue;
 			}
 			if(!$headerRow) {
@@ -119,7 +122,7 @@ abstract class Upload {
 		}
 
 		foreach($input as $i => $value) {
-			$input[$i] = preg_replace(
+			$input[$i] = mb_ereg_replace(
 				'/[[:^print:]]/',
 				'',
 				$value
@@ -129,6 +132,7 @@ abstract class Upload {
 		if(is_string($data)) {
 			return $input[0];
 		}
+
 		return $input;
 	}
 }
