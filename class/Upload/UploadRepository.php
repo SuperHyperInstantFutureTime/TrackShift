@@ -59,6 +59,7 @@ readonly class UploadRepository extends Repository {
 				mkdir(dirname($targetPath), 0775, true);
 			}
 			$uploadedFile->moveTo($targetPath);
+			$this->ensureCorrectEncoding($targetPath);
 
 			$uploadType = $this->detectUploadType($targetPath);
 			/** @var Upload $upload */
@@ -201,5 +202,21 @@ readonly class UploadRepository extends Repository {
 		}
 
 		return $foundAllColumns;
+	}
+
+	private function ensureCorrectEncoding(string $filePath):void {
+		$content = file_get_contents($filePath);
+		$fileResult = system("file -bi '$filePath'");
+
+		if(str_contains($fileResult, "charset=utf-8")) {
+			return;
+		}
+
+		$fileResultParts = explode(";", $fileResult);
+		$encodingString = trim($fileResultParts[1]);
+		$encodingParts = explode("=", $encodingString);
+		$encoding = $encodingParts[1];
+		$content = mb_convert_encoding($content, "UTF-8", $encoding);
+		file_put_contents($filePath, $content);
 	}
 }

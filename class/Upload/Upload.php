@@ -66,8 +66,6 @@ abstract class Upload {
 		while(!feof($this->fileHandle)) {
 			$line = fgets($this->fileHandle);
 			$line = $this->stripNullBytes($line);
-			$lineEncoding = mb_detect_encoding($line, "auto");
-			$line = iconv($lineEncoding, "UTF-8//TRANSLIT", $line);
 			$row = str_getcsv($line);
 
 			if(empty($row) || !$row[0]) {
@@ -134,6 +132,7 @@ abstract class Upload {
 		if(is_string($data)) {
 			return $input[0];
 		}
+
 		return $input;
 	}
 }
