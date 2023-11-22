@@ -6,7 +6,8 @@
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
 		"authwave/php-client": "2022.x-dev",
-		"league/commonmark": "^2.4"
+		"league/commonmark": "^2.4",
+		"ext-iconv": "*"
 	},
 	"require-dev": {
 		"phpstan/phpstan": "^1.9",
