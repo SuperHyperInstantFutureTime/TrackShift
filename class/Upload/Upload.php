@@ -68,7 +68,7 @@ abstract class Upload {
 			$line = $this->stripNullBytes($line);
 			$row = str_getcsv($line);
 
-			if(empty($row) || !$row[0]) {
+			if(!$row[0]) {
 				continue;
 			}
 			if(!$headerRow) {
