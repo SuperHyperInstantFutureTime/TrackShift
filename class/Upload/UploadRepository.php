@@ -156,11 +156,11 @@ readonly class UploadRepository extends Repository {
 		$filePath = $uploadedFilePath;
 
 		$type = UnknownUpload::class;
-		$uploadedFileExtension = pathinfo($uploadedFilePath, PATHINFO_EXTENSION);
+//		$uploadedFileExtension = pathinfo($uploadedFilePath, PATHINFO_EXTENSION);
 
-		if($uploadedFileExtension === "zip") {
+//		if($uploadedFileExtension === "zip") {
 // TODO: Unzip the zip and look for known files, then change $filePath to the internal CSV file.
-		}
+//		}
 
 		if($this->isCsv($filePath)) {
 			if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_COLUMNS)) {
