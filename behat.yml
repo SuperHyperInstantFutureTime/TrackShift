@@ -10,14 +10,14 @@ default:
         - "%paths.base%/test/behat"
       contexts:
         - \Behat\MinkExtension\Context\MinkContext:
-        - \SHIFT\Trackshift\BehatContext\ServerContext:
-        - \SHIFT\Trackshift\BehatContext\AuthContext:
-        - \SHIFT\Trackshift\BehatContext\PageContext:
-        - \SHIFT\Trackshift\BehatContext\UploadContext:
-        - \SHIFT\Trackshift\BehatContext\ProductContext:
-        - \SHIFT\Trackshift\BehatContext\SplitContext:
-        - \SHIFT\Trackshift\BehatContext\NotificationContext:
-        - \SHIFT\Trackshift\BehatContext\DebugContext:
+        - \SHIFT\TrackShift\BehatContext\ServerContext:
+        - \SHIFT\TrackShift\BehatContext\AuthContext:
+        - \SHIFT\TrackShift\BehatContext\PageContext:
+        - \SHIFT\TrackShift\BehatContext\UploadContext:
+        - \SHIFT\TrackShift\BehatContext\ProductContext:
+        - \SHIFT\TrackShift\BehatContext\SplitContext:
+        - \SHIFT\TrackShift\BehatContext\NotificationContext:
+        - \SHIFT\TrackShift\BehatContext\DebugContext:
 
   extensions:
     Behat\MinkExtension:

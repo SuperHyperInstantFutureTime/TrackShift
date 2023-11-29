@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5ae968015d78bfe8a4b3a8f3a97edc88",
+    "content-hash": "95b09a591aa2214badc5e6072fa5e0b6",
     "packages": [
         {
             "name": "authwave/php-client",
@@ -1362,16 +1362,16 @@
         },
         {
             "name": "phpgt/dom",
-            "version": "v4.1.4",
+            "version": "dev-hotfix/class-map-document",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PhpGt/Dom.git",
-                "reference": "a71e91f18a2f17e7f7dd0db7dab01ceeccf24af6"
+                "url": "https://github.com/szymanek-event-it/Dom.git",
+                "reference": "9b40a9712880a7bebcb350052897fd6bc75538a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhpGt/Dom/zipball/a71e91f18a2f17e7f7dd0db7dab01ceeccf24af6",
-                "reference": "a71e91f18a2f17e7f7dd0db7dab01ceeccf24af6",
+                "url": "https://api.github.com/repos/szymanek-event-it/Dom/zipball/9b40a9712880a7bebcb350052897fd6bc75538a3",
+                "reference": "9b40a9712880a7bebcb350052897fd6bc75538a3",
                 "shasum": ""
             },
             "require": {
@@ -1386,7 +1386,7 @@
             "require-dev": {
                 "phpmd/phpmd": "^2.13",
                 "phpstan/phpstan": "^1.9",
-                "phpunit/phpunit": "^10.0",
+                "phpunit/phpunit": "^10.4",
                 "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
@@ -1395,15 +1395,19 @@
                     "Gt\\Dom\\": "./src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Gt\\Dom\\Test\\": "./test/phpunit"
+                }
+            },
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
                     "name": "Greg Bowler",
-                    "email": "greg.bowler@g105b.com",
                     "homepage": "https://www.g105b.com",
+                    "email": "greg.bowler@g105b.com",
                     "role": "Developer"
                 },
                 {
@@ -1449,16 +1453,15 @@
             ],
             "description": "The modern DOM API for PHP projects.",
             "support": {
-                "issues": "https://github.com/PhpGt/Dom/issues",
-                "source": "https://github.com/PhpGt/Dom/tree/v4.1.4"
+                "source": "https://github.com/szymanek-event-it/Dom/tree/hotfix/class-map-document"
             },
             "funding": [
                 {
-                    "url": "https://github.com/sponsors/PhpGt",
-                    "type": "github"
+                    "type": "github",
+                    "url": "https://github.com/sponsors/PhpGt"
                 }
             ],
-            "time": "2023-07-25T11:59:45+00:00"
+            "time": "2023-11-29T11:11:06+00:00"
         },
         {
             "name": "phpgt/domtemplate",
@@ -7665,11 +7668,19 @@
             "time": "2023-11-20T00:12:19+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "phpgt/dom",
+            "version": "dev-hotfix/class-map-document",
+            "alias": "v4.1.5",
+            "alias_normalized": "4.1.5.0"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "superhyperinstantfuturetime/spotify-api": 20,
         "phpgt/webengine": 20,
+        "phpgt/dom": 20,
         "authwave/php-client": 20,
         "pdepend/pdepend": 20
     },

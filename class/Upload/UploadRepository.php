@@ -3,7 +3,6 @@ namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
 use Gt\Database\Query\QueryCollection;
-use Gt\Database\Result\Row;
 use Gt\Input\InputData\Datum\FileUpload;
 use Gt\Ulid\Ulid;
 use SHIFT\TrackShift\Audit\AuditRepository;
@@ -173,8 +172,8 @@ readonly class UploadRepository extends Repository {
 			elseif($this->hasCsvColumns($filePath, ...CargoDigitalUpload::KNOWN_COLUMNS)) {
 				$type = CargoDigitalUpload::class;
 			}
-			elseif($this->hasCsvColumns($filePath, ...TunecoreUpload::KNOWN_COLUMNS)) {
-				$type = TunecoreUpload::class;
+			elseif($this->hasCsvColumns($filePath, ...TuneCoreUpload::KNOWN_COLUMNS)) {
+				$type = TuneCoreUpload::class;
 			}
 		}
 		elseif($this->isTsv($filePath)) {
@@ -222,7 +221,7 @@ readonly class UploadRepository extends Repository {
 	 * @return array<string, string>
 	 */
 	private function getCsvLine($fh, string $separator = ","):array {
-		$line = fgetcsv($fh, $separator);
+		$line = fgetcsv($fh, separator: $separator);
 		foreach($line as $i => $column) {
 			$line[$i] = preg_replace(
 				'/[[:^print:]]/',
