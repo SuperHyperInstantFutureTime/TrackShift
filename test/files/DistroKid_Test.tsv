@@ -1,0 +1,5 @@
+Reporting Date	Sale Month	Store	Artist	Title	ISRC	UPC	Quantity	Team Percentage	Song/Album	Country of Sale	Songwriter Royalties Withheld	Earnings (USD)
+2023-02-02	2021-04	Napster	Artist 1	Song 1	AAAAA1234567	111111111111	1	100	Song	US	0	0.00789993
+2023-02-08	2022-05	Apple Music	Artist 2	Song 10	BBBBB1234567	222222222222	1	100	Song	US	0	0.00031410
+2023-02-08	2022-06	Deezer	Artist 3	Song 100	CCCCC1234567	333333333333	1	30	Song	US	0	0.00048066
+2023-02-08	2022-07	YouTube (Ads)	Artist 2	Song 10	BBBBB8910111	222222222222	2	100	Song	US	0	0.00061710
