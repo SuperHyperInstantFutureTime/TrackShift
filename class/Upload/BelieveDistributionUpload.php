@@ -1,11 +1,11 @@
 <?php
-namespace SHIFT\Trackshift\Upload;
+namespace SHIFT\TrackShift\Upload;
 
-use SHIFT\Trackshift\Royalty\Money;
-use SHIFT\Trackshift\Usage\Usage;
+use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Usage\Usage;
 
 class BelieveDistributionUpload extends Upload {
-	const KNOWN_CSV_COLUMNS = ["Release Catalog nb", "Reporting month", "Client Payment Currency"];
+	const KNOWN_COLUMNS = ["Release Catalog nb", "Reporting month", "Client Payment Currency"];
 
 	public function extractArtistName(array $row):string {
 		return $row["Artist Name"];

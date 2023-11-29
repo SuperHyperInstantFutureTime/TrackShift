@@ -2,8 +2,8 @@
 use Gt\Http\Response;
 use Gt\Input\Input;
 use Gt\Session\Session;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Upload\UploadRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Upload\UploadRepository;
 
 function go(
 	Input $input,

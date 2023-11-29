@@ -1,7 +1,7 @@
 <?php
-namespace SHIFT\Trackshift\Upload;
+namespace SHIFT\TrackShift\Upload;
 
-use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\TrackShift\Royalty\Money;
 
 class UnknownUpload extends Upload {
 	protected function processUsages():void {}

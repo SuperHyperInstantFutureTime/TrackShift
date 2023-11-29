@@ -1,5 +1,5 @@
 <?php
-namespace SHIFT\Trackshift\BehatContext;
+namespace SHIFT\TrackShift\BehatContext;
 
 use Behat\Mink\Element\NodeElement;
 use PHPUnit\Framework\Assert as PHPUnit;

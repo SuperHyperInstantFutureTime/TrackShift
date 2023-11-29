@@ -1,11 +1,11 @@
 <?php
-namespace SHIFT\Trackshift\Split;
+namespace SHIFT\TrackShift\Split;
 
 use ArrayIterator;
 use IteratorAggregate;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Product\Product;
-use SHIFT\Trackshift\Repository\Entity;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Product\Product;
+use SHIFT\TrackShift\Repository\Entity;
 use Traversable;
 
 /** @implements IteratorAggregate<SplitPercentage> */

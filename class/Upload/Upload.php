@@ -1,12 +1,12 @@
 <?php
-namespace SHIFT\Trackshift\Upload;
+namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
 use DateTimeZone;
 use Generator;
 use Gt\DomTemplate\BindGetter;
 use SplFileObject;
-use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\TrackShift\Royalty\Money;
 
 abstract class Upload {
 	/** @var resource */
@@ -17,12 +17,16 @@ abstract class Upload {
 	public readonly string $sizeString;
 	public readonly string $type;
 	public readonly DateTime $createdAt;
+	protected string $dataRowCsvSeparator = ",";
 
 	public function __construct(
 		public readonly string $id,
 		public readonly string $filePath,
 		public readonly Money $totalEarnings = new Money(0),
 	) {
+		if(!is_file($this->filePath)) {
+			throw new UploadFileNotFoundException($this->filePath);
+		}
 		$this->fileHandle = fopen($this->filePath, "r");
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);
 		$this->basename = pathinfo($this->filePath, PATHINFO_BASENAME);
@@ -45,8 +49,10 @@ abstract class Upload {
 			default => str_replace("Upload", "", substr($className, strrpos($className, "\\") + 1)),
 			PRSStatementUpload::class => "PRS",
 			BandcampUpload::class => "Bandcamp",
-			CargoUpload::class => "Cargo",
-			TunecoreUpload::class => "Tunecore",
+			CargoDigitalUpload::class => "Cargo Digital",
+			CargoPhysicalUpload::class => "Cargo Physical",
+			TuneCoreUpload::class => "TuneCore",
+			DistroKidUpload::class => "DistroKid",
 		};
 	}
 
@@ -59,14 +65,18 @@ abstract class Upload {
 	/** @param array<string, string> $row */
 	abstract public function extractEarning(array $row):Money;
 
-	/** @return Generator<array<string, string>> */
+	/**
+	 * This function is the default behaviour for all Upload types - it Generates a set of key-value-pairs for each
+	 * row in the file - the default behaviour is working with CSV data, but other types might use other formats.
+	 * @return Generator<array<string, string>>
+	 */
 	public function generateDataRows():Generator {
 		$headerRow = null;
 
 		while(!feof($this->fileHandle)) {
 			$line = fgets($this->fileHandle);
 			$line = $this->stripNullBytes($line);
-			$row = str_getcsv($line);
+			$row = str_getcsv($line, $this->dataRowCsvSeparator);
 
 			if(!$row[0]) {
 				continue;

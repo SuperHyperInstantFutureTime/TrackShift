@@ -1,5 +1,5 @@
 <?php
-namespace SHIFT\Trackshift\Auth;
+namespace SHIFT\TrackShift\Auth;
 
 use Authwave\User as AuthwaveUser;
 use DateTime;
@@ -8,7 +8,7 @@ use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\Row;
 use Gt\Session\SessionStore;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Repository\Repository;
+use SHIFT\TrackShift\Repository\Repository;
 
 readonly class UserRepository extends Repository {
 	const SESSION_STORE_KEY = "trackshift-user-store";

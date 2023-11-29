@@ -1,10 +1,10 @@
 <?php
-namespace SHIFT\Trackshift\Product;
+namespace SHIFT\TrackShift\Product;
 
 use Gt\DomTemplate\BindGetter;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Repository\Entity;
-use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Repository\Entity;
+use SHIFT\TrackShift\Royalty\Money;
 
 readonly class ProductEarning extends Entity {
 	public function __construct(

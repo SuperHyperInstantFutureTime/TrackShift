@@ -1,15 +1,15 @@
 <?php
-namespace SHIFT\Trackshift\Upload;
+namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
 use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\Row;
 use Gt\Input\InputData\Datum\FileUpload;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Audit\AuditRepository;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Repository\Repository;
-use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\TrackShift\Audit\AuditRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Repository\Repository;
+use SHIFT\TrackShift\Royalty\Money;
 use SplFileObject;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
@@ -153,21 +153,33 @@ readonly class UploadRepository extends Repository {
 	}
 
 	/** @return class-string */
-	private function detectUploadType(mixed $filePath):string {
+	private function detectUploadType(mixed $uploadedFilePath):string {
+		$filePath = $uploadedFilePath;
+
 		$type = UnknownUpload::class;
+		$uploadedFileExtension = pathinfo($uploadedFilePath, PATHINFO_EXTENSION);
+
+		if($uploadedFileExtension === "zip") {
+// TODO: Unzip the zip and look for known files, then change $filePath to the internal CSV file.
+		}
 
 		if($this->isCsv($filePath)) {
-			if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_CSV_COLUMNS)) {
+			if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_COLUMNS)) {
 				$type = PRSStatementUpload::class;
 			}
-			elseif($this->hasCsvColumns($filePath, ...BandcampUpload::KNOWN_CSV_COLUMNS)) {
+			elseif($this->hasCsvColumns($filePath, ...BandcampUpload::KNOWN_COLUMNS)) {
 				$type = BandcampUpload::class;
 			}
-			elseif($this->hasCsvColumns($filePath, ...CargoUpload::KNOWN_CSV_COLUMNS)) {
-				$type = CargoUpload::class;
+			elseif($this->hasCsvColumns($filePath, ...CargoDigitalUpload::KNOWN_COLUMNS)) {
+				$type = CargoDigitalUpload::class;
 			}
-			elseif($this->hasCsvColumns($filePath, ...TunecoreUpload::KNOWN_CSV_COLUMNS)) {
+			elseif($this->hasCsvColumns($filePath, ...TunecoreUpload::KNOWN_COLUMNS)) {
 				$type = TunecoreUpload::class;
+			}
+		}
+		elseif($this->isTsv($filePath)) {
+			if($this->hasTsvColumns($filePath, ...DistroKidUpload::KNOWN_COLUMNS)) {
+				$type = DistroKidUpload::class;
 			}
 		}
 
@@ -180,29 +192,62 @@ readonly class UploadRepository extends Repository {
 		return (bool)$firstLine;
 	}
 
+	private function isTsv(string $filePath):bool {
+		$file = new SplFileObject($filePath);
+		$firstLine = $file->fgetcsv("\t");
+		return (bool)$firstLine;
+	}
+
 	private function hasCsvColumns(
 		string $filePath,
 		string...$columnsToCheck,
 	):bool {
-		$file = new SplFileObject($filePath);
-		$firstLine = $file->fgetcsv();
-		foreach($firstLine as $i => $column) {
-			$firstLine[$i] = preg_replace(
+		$firstLine = $this->getCsvLine(fopen($filePath, "r"));
+		return $this->allColumnsExist($firstLine, $columnsToCheck);
+	}
+
+	private function hasTsvColumns(
+		string $filePath,
+		string...$columnsToCheck,
+	):bool {
+		$firstLine = $this->getCsvLine(
+			fopen($filePath, "r"),
+			"\t",
+		);
+		return $this->allColumnsExist($firstLine, $columnsToCheck);
+	}
+
+	/**
+	 * @param resource $fh
+	 * @return array<string, string>
+	 */
+	private function getCsvLine($fh, string $separator = ","):array {
+		$line = fgetcsv($fh, $separator);
+		foreach($line as $i => $column) {
+			$line[$i] = preg_replace(
 				'/[[:^print:]]/',
 				'',
 				$column
 			);
 		}
-		$foundAllColumns = true;
+		return $line;
+	}
 
+
+	/**
+	 * @param array<string, string> $row
+	 * @param array<string> $columnsToCheck
+	 */
+	private function allColumnsExist(array $row, array $columnsToCheck):bool {
 		foreach($columnsToCheck as $columnName) {
-			if(!in_array($columnName, $firstLine)) {
-				$foundAllColumns = false;
+			if(!in_array($columnName, $row)) {
+				return false;
 			}
 		}
 
-		return $foundAllColumns;
+		return true;
 	}
+
 
 	private function ensureCorrectEncoding(string $filePath):void {
 		$content = file_get_contents($filePath);

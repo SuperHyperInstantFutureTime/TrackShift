@@ -3,12 +3,12 @@ use Gt\Database\Database;
 use Gt\Http\Response;
 use Gt\Input\Input;
 use Gt\Logger\Log;
-use SHIFT\Trackshift\Artist\ArtistRepository;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Auth\UserRepository;
-use SHIFT\Trackshift\Product\ProductRepository;
-use SHIFT\Trackshift\Upload\UploadRepository;
-use SHIFT\Trackshift\Usage\UsageRepository;
+use SHIFT\TrackShift\Artist\ArtistRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Auth\UserRepository;
+use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Upload\UploadRepository;
+use SHIFT\TrackShift\Usage\UsageRepository;
 
 function go(Response $response):void {
 	$response->redirect("/account/uploads/");

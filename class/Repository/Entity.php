@@ -1,5 +1,5 @@
 <?php
-namespace SHIFT\Trackshift\Repository;
+namespace SHIFT\TrackShift\Repository;
 
 /**
  * @property string $id

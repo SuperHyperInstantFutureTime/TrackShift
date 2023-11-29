@@ -1,8 +1,8 @@
 <?php
-namespace SHIFT\Trackshift\Test\Upload;
+namespace SHIFT\TrackShift\Test\Upload;
 
 use PHPUnit\Framework\TestCase;
-use SHIFT\Trackshift\Upload\PRSStatementUpload;
+use SHIFT\TrackShift\Upload\PRSStatementUpload;
 
 class PRSStatementUploadTest extends TestCase {
 	public function testExtractArtistName():void {

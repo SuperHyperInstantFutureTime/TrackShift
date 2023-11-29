@@ -4,8 +4,8 @@ use Gt\Http\Response;
 use Gt\Http\Uri;
 use Gt\Input\Input;
 use Gt\Logger\Log;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Auth\UserRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Auth\UserRepository;
 
 function go(
 	Input $input,

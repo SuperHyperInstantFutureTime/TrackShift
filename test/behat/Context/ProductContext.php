@@ -1,5 +1,5 @@
 <?php
-namespace SHIFT\Trackshift\BehatContext;
+namespace SHIFT\TrackShift\BehatContext;
 
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Mink\Element\NodeElement;

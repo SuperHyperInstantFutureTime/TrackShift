@@ -1,5 +1,5 @@
 <?php
-namespace SHIFT\Trackshift\Auth;
+namespace SHIFT\TrackShift\Auth;
 
 class Settings {
 	/** @var array<string, string> */

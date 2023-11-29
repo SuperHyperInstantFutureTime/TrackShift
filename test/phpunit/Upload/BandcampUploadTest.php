@@ -1,9 +1,9 @@
 <?php
-namespace SHIFT\Trackshift\Test\Upload;
+namespace SHIFT\TrackShift\Test\Upload;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use SHIFT\Trackshift\Upload\BandcampUpload;
+use SHIFT\TrackShift\Upload\BandcampUpload;
 
 class BandcampUploadTest extends TestCase {
 	public function testExtractArtistName():void {

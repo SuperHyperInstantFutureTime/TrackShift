@@ -1,13 +1,13 @@
 <?php
-namespace SHIFT\Trackshift\Audit;
+namespace SHIFT\TrackShift\Audit;
 
 use DateTime;
 use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\Row;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Auth\UserRepository;
-use SHIFT\Trackshift\Repository\Repository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Auth\UserRepository;
+use SHIFT\TrackShift\Repository\Repository;
 
 readonly class AuditRepository extends Repository {
 	public function __construct(

@@ -3,9 +3,9 @@ use Authwave\Authenticator;
 use Gt\DomTemplate\Binder;
 use Gt\Http\Response;
 use Gt\Input\Input;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Auth\UserRepository;
-use SHIFT\Trackshift\Upload\UploadRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Auth\UserRepository;
+use SHIFT\TrackShift\Upload\UploadRepository;
 
 function go(Binder $binder, UploadRepository $uploadRepository, User $user, Response $response):void {
 	$binder->bindList($uploadRepository->getUploadsForUser($user));

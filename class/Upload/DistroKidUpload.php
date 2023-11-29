@@ -1,21 +1,24 @@
 <?php
 namespace SHIFT\TrackShift\Upload;
 
+use Generator;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\Usage;
 
-class BandcampUpload extends Upload {
-	const KNOWN_COLUMNS = ["item type", "item name", "artist", "bandcamp transaction id"];
+class DistroKidUpload extends Upload {
+	const KNOWN_COLUMNS = ["Reporting Date", "Sale Month", "Store", "Artist", "Title"];
+
+	protected string $dataRowCsvSeparator = "\t";
 
 	public function extractArtistName(array $row):string {
-		return $row["artist"];
+		return $row["Artist"];
 	}
 
 	public function extractProductTitle(array $row):string {
-		return $row["item name"];
+		return $row["Title"];
 	}
 
 	public function extractEarning(array $row):Money {
-		return new Money((float)$row["net amount"]);
+		return new Money((float)$row["Earnings (USD)"]);
 	}
 }

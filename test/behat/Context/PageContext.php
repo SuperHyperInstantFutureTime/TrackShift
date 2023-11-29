@@ -1,5 +1,5 @@
 <?php
-namespace SHIFT\Trackshift\BehatContext;
+namespace SHIFT\TrackShift\BehatContext;
 
 use Behat\Mink\Element\DocumentElement;
 use Behat\MinkExtension\Context\RawMinkContext;

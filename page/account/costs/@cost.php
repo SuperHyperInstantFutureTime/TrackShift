@@ -6,12 +6,12 @@ use Gt\Http\Uri;
 use Gt\Input\Input;
 use Gt\Routing\Path\DynamicPath;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Artist\ArtistRepository;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Cost\Cost;
-use SHIFT\Trackshift\Cost\CostRepository;
-use SHIFT\Trackshift\Product\ProductRepository;
-use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\TrackShift\Artist\ArtistRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Cost\Cost;
+use SHIFT\TrackShift\Cost\CostRepository;
+use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Royalty\Money;
 
 function go(
 	HTMLDocument $document,

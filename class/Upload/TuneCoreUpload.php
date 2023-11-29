@@ -1,18 +1,18 @@
 <?php
-namespace SHIFT\Trackshift\Upload;
+namespace SHIFT\TrackShift\Upload;
 
-use SHIFT\Trackshift\Royalty\Money;
-use SHIFT\Trackshift\Usage\Usage;
+use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Usage\Usage;
 
-class TunecoreUpload extends Upload {
-	const KNOWN_CSV_COLUMNS = ["TC Song ID", "Optional ISRC", "Optional UPC"];
+class TuneCoreUpload extends Upload {
+	const KNOWN_COLUMNS = ["TC Song ID", "Optional ISRC", "Optional UPC"];
 
 	public function extractArtistName(array $row):string {
 		return $row["Artist"];
 	}
 
 	public function extractProductTitle(array $row):string {
-		return $row["Release Title"];
+		return $row["Song Title"];
 	}
 
 	public function extractEarning(array $row):Money {

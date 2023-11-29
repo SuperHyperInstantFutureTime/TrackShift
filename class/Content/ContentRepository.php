@@ -1,5 +1,5 @@
 <?php
-namespace SHIFT\Trackshift\Content;
+namespace SHIFT\TrackShift\Content;
 
 use Gt\Dom\Element;
 use Gt\Dom\NodeList;

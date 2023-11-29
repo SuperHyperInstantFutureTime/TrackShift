@@ -1,5 +1,5 @@
 <?php
-namespace SHIFT\Trackshift;
+namespace SHIFT\TrackShift;
 
 use Authwave\Authenticator;
 use Gt\Database\Database;
@@ -7,17 +7,17 @@ use Gt\Http\Uri;
 use Gt\Session\Session;
 use Gt\WebEngine\Middleware\DefaultServiceLoader;
 use SHIFT\Spotify\SpotifyClient;
-use SHIFT\Trackshift\Artist\ArtistRepository;
-use SHIFT\Trackshift\Audit\AuditRepository;
-use SHIFT\Trackshift\Auth\Settings;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Auth\UserRepository;
-use SHIFT\Trackshift\Content\ContentRepository;
-use SHIFT\Trackshift\Cost\CostRepository;
-use SHIFT\Trackshift\Product\ProductRepository;
-use SHIFT\Trackshift\Split\SplitRepository;
-use SHIFT\Trackshift\Upload\UploadRepository;
-use SHIFT\Trackshift\Usage\UsageRepository;
+use SHIFT\TrackShift\Artist\ArtistRepository;
+use SHIFT\TrackShift\Audit\AuditRepository;
+use SHIFT\TrackShift\Auth\Settings;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Auth\UserRepository;
+use SHIFT\TrackShift\Content\ContentRepository;
+use SHIFT\TrackShift\Cost\CostRepository;
+use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Split\SplitRepository;
+use SHIFT\TrackShift\Upload\UploadRepository;
+use SHIFT\TrackShift\Usage\UsageRepository;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)

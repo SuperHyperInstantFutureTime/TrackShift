@@ -1,8 +1,8 @@
 <?php
-namespace SHIFT\Trackshift\Split;
+namespace SHIFT\TrackShift\Split;
 
-use SHIFT\Trackshift\Repository\Entity;
-use SHIFT\Trackshift\Split\EmptySplitPercentage;
+use SHIFT\TrackShift\Repository\Entity;
+use SHIFT\TrackShift\Split\EmptySplitPercentage;
 
 readonly class RemainderSplitPercentage extends Entity {
 	public float $percentage;

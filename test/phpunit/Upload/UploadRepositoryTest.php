@@ -1,12 +1,12 @@
 <?php
-namespace SHIFT\Trackshift\Test\Upload;
+namespace SHIFT\TrackShift\Test\Upload;
 
 use Gt\Database\Query\QueryCollection;
 use Gt\Session\SessionStore;
 use PHPUnit\Framework\TestCase;
-use SHIFT\Trackshift\Audit\AuditRepository;
-use SHIFT\Trackshift\Auth\UserRepository;
-use SHIFT\Trackshift\Upload\UploadRepository;
+use SHIFT\TrackShift\Audit\AuditRepository;
+use SHIFT\TrackShift\Auth\UserRepository;
+use SHIFT\TrackShift\Upload\UploadRepository;
 
 class UploadRepositoryTest extends TestCase {
 	const TMP_BASEDIR = "/tmp/trackshift-phpunit";

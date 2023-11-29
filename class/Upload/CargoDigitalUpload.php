@@ -1,11 +1,11 @@
 <?php
-namespace SHIFT\Trackshift\Upload;
+namespace SHIFT\TrackShift\Upload;
 
-use SHIFT\Trackshift\Royalty\Money;
-use SHIFT\Trackshift\Usage\Usage;
+use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Usage\Usage;
 
-class CargoUpload extends Upload {
-	const KNOWN_CSV_COLUMNS = ["Royalty ID", "Asset ISRC", "Reported Royalty"];
+class CargoDigitalUpload extends Upload {
+	const KNOWN_COLUMNS = ["Royalty ID", "Asset ISRC", "Reported Royalty"];
 
 	public function extractArtistName(array $row):string {
 		return $row["Asset Artist"];

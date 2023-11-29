@@ -1,11 +1,11 @@
 <?php
-namespace SHIFT\Trackshift\Audit;
+namespace SHIFT\TrackShift\Audit;
 
 use DateTime;
 use Gt\DomTemplate\BindGetter;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Repository\Entity;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Repository\Entity;
 
 readonly class AuditItem extends Entity {
 	public function __construct(

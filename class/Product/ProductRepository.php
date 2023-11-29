@@ -1,13 +1,13 @@
 <?php
-namespace SHIFT\Trackshift\Product;
+namespace SHIFT\TrackShift\Product;
 
 use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\Row;
-use SHIFT\Trackshift\Artist\Artist;
-use SHIFT\Trackshift\Artist\ArtistRepository;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Repository\Repository;
-use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\TrackShift\Artist\Artist;
+use SHIFT\TrackShift\Artist\ArtistRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Repository\Repository;
+use SHIFT\TrackShift\Royalty\Money;
 
 readonly class ProductRepository extends Repository {
 	public function __construct(

@@ -1,15 +1,15 @@
 <?php
-namespace SHIFT\Trackshift\Usage;
+namespace SHIFT\TrackShift\Usage;
 
 use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Artist\Artist;
-use SHIFT\Trackshift\Artist\ArtistRepository;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Product\Product;
-use SHIFT\Trackshift\Product\ProductRepository;
-use SHIFT\Trackshift\Repository\Repository;
-use SHIFT\Trackshift\Upload\Upload;
+use SHIFT\TrackShift\Artist\Artist;
+use SHIFT\TrackShift\Artist\ArtistRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Product\Product;
+use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Repository\Repository;
+use SHIFT\TrackShift\Upload\Upload;
 
 readonly class UsageRepository extends Repository {
 	/** @return array<Usage> */

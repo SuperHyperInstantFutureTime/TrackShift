@@ -2,11 +2,11 @@
 use Authwave\Authenticator;
 use Gt\Dom\HTMLDocument;
 use Gt\DomTemplate\Binder;
-use SHIFT\Trackshift\Audit\AuditRepository;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Content\ContentRepository;
-use SHIFT\Trackshift\Egg\UploadMessageList;
-use SHIFT\Trackshift\Upload\UploadRepository;
+use SHIFT\TrackShift\Audit\AuditRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Content\ContentRepository;
+use SHIFT\TrackShift\Egg\UploadMessageList;
+use SHIFT\TrackShift\Upload\UploadRepository;
 
 function go(
 	ContentRepository $contentRepo,
