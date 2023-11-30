@@ -18,4 +18,9 @@ class CargoDigitalUpload extends Upload {
 	public function extractEarning(array $row):Money {
 		return new Money((float)$row["Reported Royalty"]);
 	}
+
+	public function openFile() {
+		$glob = UploadRepository::MATCHING_FILE_LIST[CargoDigitalUpload::class];
+
+	}
 }

@@ -10,6 +10,7 @@ use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
 use SplFileObject;
+use ZipArchive;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 readonly class UploadRepository extends Repository {
@@ -156,11 +157,12 @@ readonly class UploadRepository extends Repository {
 		$filePath = $uploadedFilePath;
 
 		$type = UnknownUpload::class;
-//		$uploadedFileExtension = pathinfo($uploadedFilePath, PATHINFO_EXTENSION);
+		$uploadedFileExtension = pathinfo($uploadedFilePath, PATHINFO_EXTENSION);
 
-//		if($uploadedFileExtension === "zip") {
+		if($uploadedFileExtension === "zip") {
 // TODO: Unzip the zip and look for known files, then change $filePath to the internal CSV file.
-//		}
+			$filePath = new ZipFileFinder($uploadedFilePath);
+		}
 
 		if($this->isCsv($filePath)) {
 			if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_COLUMNS)) {
@@ -252,7 +254,8 @@ readonly class UploadRepository extends Repository {
 		$content = file_get_contents($filePath);
 		$fileResult = system("file -bi '$filePath'");
 
-		if(str_contains($fileResult, "charset=utf-8")) {
+		if(str_contains($fileResult, "charset=utf-8")
+		|| str_contains($fileResult, "charset=binary")) {
 			return;
 		}
 
@@ -263,4 +266,5 @@ readonly class UploadRepository extends Repository {
 		$content = mb_convert_encoding($content, "UTF-8", $encoding);
 		file_put_contents($filePath, $content);
 	}
+
 }

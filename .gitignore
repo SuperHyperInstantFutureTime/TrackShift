@@ -8,3 +8,5 @@
 access-token.dat
 asset/font/.DS_Store
 asset/.DS_Store
+/test/phpunit/_coverage/
+.phpunit*.cache

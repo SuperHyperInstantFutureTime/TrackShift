@@ -27,7 +27,6 @@ abstract class Upload {
 		if(!is_file($this->filePath)) {
 			throw new UploadFileNotFoundException($this->filePath);
 		}
-		$this->fileHandle = fopen($this->filePath, "r");
 		$this->filename = pathinfo($this->filePath, PATHINFO_FILENAME);
 		$this->basename = pathinfo($this->filePath, PATHINFO_BASENAME);
 		$this->size = filesize($this->filePath);
@@ -54,6 +53,8 @@ abstract class Upload {
 			TuneCoreUpload::class => "TuneCore",
 			DistroKidUpload::class => "DistroKid",
 		};
+
+		$this->fileHandle = $this->openFile();
 	}
 
 	/** @param array<string, string> $row */
@@ -64,6 +65,11 @@ abstract class Upload {
 
 	/** @param array<string, string> $row */
 	abstract public function extractEarning(array $row):Money;
+
+	/** @return resource */
+	public function openFile() {
+		return fopen($this->filePath, "r");
+	}
 
 	/**
 	 * This function is the default behaviour for all Upload types - it Generates a set of key-value-pairs for each

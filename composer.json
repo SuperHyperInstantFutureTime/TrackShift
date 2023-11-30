@@ -10,6 +10,7 @@
 		"php": ">=8.2",
 		"ext-iconv": "*",
 		"ext-mbstring": "*",
+		"ext-zip": "*",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
 		"phpgt/dom": "dev-hotfix/class-map-document as v4.1.5",
