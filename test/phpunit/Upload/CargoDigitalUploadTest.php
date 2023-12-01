@@ -25,4 +25,11 @@ class CargoDigitalUploadTest extends TestCase {
 		$earning = $sut->extractEarning($dataRows[0]);
 		self::assertSame(0.00139510587933175, $earning->value);
 	}
+
+	public function testExtractArtistName_zip():void {
+		$sut = new CargoDigitalUpload("test-id", "test/files/Cargo_Digital_Test.zip");
+		$dataRows = iterator_to_array($sut->generateDataRows());
+		$artistName = $sut->extractArtistName($dataRows[0]);
+		self::assertSame("Artist 1", $artistName);
+	}
 }

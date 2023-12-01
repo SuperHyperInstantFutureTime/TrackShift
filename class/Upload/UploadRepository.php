@@ -153,7 +153,7 @@ readonly class UploadRepository extends Repository {
 	}
 
 	/** @return class-string */
-	private function detectUploadType(mixed $uploadedFilePath):string {
+	public function detectUploadType(mixed $uploadedFilePath):string {
 		$filePath = $uploadedFilePath;
 
 		$type = UnknownUpload::class;
@@ -164,7 +164,10 @@ readonly class UploadRepository extends Repository {
 			$filePath = new ZipFileFinder($uploadedFilePath);
 		}
 
-		if($this->isCsv($filePath)) {
+		if($uploadedFileExtension === "xlsx") {
+			$type = CargoPhysicalUpload::class;
+		}
+		elseif($this->isCsv($filePath)) {
 			if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_COLUMNS)) {
 				$type = PRSStatementUpload::class;
 			}
@@ -182,6 +185,9 @@ readonly class UploadRepository extends Repository {
 			if($this->hasTsvColumns($filePath, ...DistroKidUpload::KNOWN_COLUMNS)) {
 				$type = DistroKidUpload::class;
 			}
+			elseif($this->hasTsvColumns($filePath, ...CdBabyUpload::KNOWN_COLUMNS)) {
+				$type = CdBabyUpload::class;
+			}
 		}
 
 		return $type;
@@ -189,14 +195,26 @@ readonly class UploadRepository extends Repository {
 
 	private function isCsv(string $filePath):bool {
 		$file = new SplFileObject($filePath);
-		$firstLine = $file->fgetcsv();
-		return (bool)$firstLine;
+		$firstLine = $file->fgets();
+		$csvData = str_getcsv($firstLine);
+
+		if(!$csvData || count($csvData) <= 1) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private function isTsv(string $filePath):bool {
 		$file = new SplFileObject($filePath);
-		$firstLine = $file->fgetcsv("\t");
-		return (bool)$firstLine;
+		$firstLine = $file->fgets();
+		$csvData = str_getcsv($firstLine, "\t");
+
+		if(!$csvData || count($csvData) <= 1) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private function hasCsvColumns(

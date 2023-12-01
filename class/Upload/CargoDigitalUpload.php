@@ -20,7 +20,10 @@ class CargoDigitalUpload extends Upload {
 	}
 
 	public function openFile() {
-		$glob = UploadRepository::MATCHING_FILE_LIST[CargoDigitalUpload::class];
+		if(pathinfo($this->filePath, PATHINFO_EXTENSION) === "zip") {
+			$this->filePath = new ZipFileFinder($this->filePath);
+		}
 
+		return parent::openFile();
 	}
 }

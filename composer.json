@@ -1,11 +1,6 @@
 {
 	"name": "shift/trackshift",
 	"description": "",
-	"repositories": [{
-		"type": "vcs",
-		"url": "https://github.com/szymanek-event-it/Dom"
-	}
-	],
 	"require": {
 		"php": ">=8.2",
 		"ext-iconv": "*",
@@ -13,8 +8,9 @@
 		"ext-zip": "*",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
-		"phpgt/dom": "dev-hotfix/class-map-document as v4.1.5",
+		"phpgt/dom": "4.1.5",
 		"authwave/php-client": "2022.x-dev",
+		"openspout/openspout": "v4.22.0",
 		"league/commonmark": "^2.4"
 	},
 	"require-dev": {

@@ -21,7 +21,7 @@ abstract class Upload {
 
 	public function __construct(
 		public readonly string $id,
-		public readonly string $filePath,
+		public string $filePath,
 		public readonly Money $totalEarnings = new Money(0),
 	) {
 		if(!is_file($this->filePath)) {
@@ -52,6 +52,7 @@ abstract class Upload {
 			CargoPhysicalUpload::class => "Cargo Physical",
 			TuneCoreUpload::class => "TuneCore",
 			DistroKidUpload::class => "DistroKid",
+			CdBabyUpload::class => "CD Baby",
 		};
 
 		$this->fileHandle = $this->openFile();

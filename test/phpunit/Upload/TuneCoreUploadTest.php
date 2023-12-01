@@ -23,6 +23,6 @@ class TuneCoreUploadTest extends TestCase {
 		$sut = new TuneCoreUpload("test-id", "test/files/Tunecore_Test.csv");
 		$dataRows = iterator_to_array($sut->generateDataRows());
 		$earning = $sut->extractEarning($dataRows[0]);
-		self::assertSame(0.000271, $earning->value);
+		self::assertSame(0.0271, $earning->value);
 	}
 }
