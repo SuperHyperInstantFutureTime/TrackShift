@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63e332f7acf85248426517434684b4da",
+    "content-hash": "9f8eb6b05f24d75376191c72d9b37ae5",
     "packages": [
         {
             "name": "authwave/php-client",
@@ -1455,16 +1455,16 @@
         },
         {
             "name": "phpgt/dom",
-            "version": "v4.1.5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PhpGt/Dom.git",
-                "reference": "7b62fb3a8bf508d0fa8a204d563d936c78524fd9"
+                "reference": "e8cfb37b690c59d6a0478587dd9be531cbd6d2c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhpGt/Dom/zipball/7b62fb3a8bf508d0fa8a204d563d936c78524fd9",
-                "reference": "7b62fb3a8bf508d0fa8a204d563d936c78524fd9",
+                "url": "https://api.github.com/repos/PhpGt/Dom/zipball/e8cfb37b690c59d6a0478587dd9be531cbd6d2c8",
+                "reference": "e8cfb37b690c59d6a0478587dd9be531cbd6d2c8",
                 "shasum": ""
             },
             "require": {
@@ -1482,6 +1482,7 @@
                 "phpunit/phpunit": "^10.4",
                 "squizlabs/php_codesniffer": "^3.7"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1540,10 +1541,10 @@
                     "role": "Developer"
                 }
             ],
-            "description": "The modern DOM API for PHP projects.",
+            "description": "Modern DOM API.",
             "support": {
                 "issues": "https://github.com/PhpGt/Dom/issues",
-                "source": "https://github.com/PhpGt/Dom/tree/v4.1.5"
+                "source": "https://github.com/PhpGt/Dom/tree/master"
             },
             "funding": [
                 {
@@ -1551,7 +1552,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-30T09:06:07+00:00"
+            "time": "2023-12-06T09:03:15+00:00"
         },
         {
             "name": "phpgt/domtemplate",
@@ -4682,16 +4683,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.0",
+            "version": "10.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "80cab181aebc2efac422940443e28db556137637"
+                "reference": "5aedff46afba98dddecaa12349ec044d9103d4fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/80cab181aebc2efac422940443e28db556137637",
-                "reference": "80cab181aebc2efac422940443e28db556137637",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5aedff46afba98dddecaa12349ec044d9103d4fe",
+                "reference": "5aedff46afba98dddecaa12349ec044d9103d4fe",
                 "shasum": ""
             },
             "require": {
@@ -4763,7 +4764,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.0"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.2"
             },
             "funding": [
                 {
@@ -4779,7 +4780,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-01T06:12:50+00:00"
+            "time": "2023-12-05T14:54:33+00:00"
         },
         {
             "name": "psr/log",
@@ -5948,16 +5949,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v6.4.0",
+            "version": "v6.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "cd9864b47c367450e14ab32f78fdbf98c44c26b6"
+                "reference": "a550a7c99daeedef3f9d23fb82e3531525ff11fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/cd9864b47c367450e14ab32f78fdbf98c44c26b6",
-                "reference": "cd9864b47c367450e14ab32f78fdbf98c44c26b6",
+                "url": "https://api.github.com/repos/symfony/console/zipball/a550a7c99daeedef3f9d23fb82e3531525ff11fd",
+                "reference": "a550a7c99daeedef3f9d23fb82e3531525ff11fd",
                 "shasum": ""
             },
             "require": {
@@ -6022,7 +6023,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v6.4.0"
+                "source": "https://github.com/symfony/console/tree/v6.4.1"
             },
             "funding": [
                 {
@@ -6038,7 +6039,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-20T16:41:16+00:00"
+            "time": "2023-11-30T10:54:28+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -6107,16 +6108,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v6.4.0",
+            "version": "v6.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "5dc8ad5f2bbba7046f5947682bf7d868ce80d4e8"
+                "reference": "f88ff6428afbeb17cc648c8003bd608534750baf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/5dc8ad5f2bbba7046f5947682bf7d868ce80d4e8",
-                "reference": "5dc8ad5f2bbba7046f5947682bf7d868ce80d4e8",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/f88ff6428afbeb17cc648c8003bd608534750baf",
+                "reference": "f88ff6428afbeb17cc648c8003bd608534750baf",
                 "shasum": ""
             },
             "require": {
@@ -6168,7 +6169,7 @@
             "description": "Allows you to standardize and centralize the way objects are constructed in your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dependency-injection/tree/v6.4.0"
+                "source": "https://github.com/symfony/dependency-injection/tree/v6.4.1"
             },
             "funding": [
                 {
@@ -6184,7 +6185,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-10-31T08:40:20+00:00"
+            "time": "2023-12-01T14:56:37+00:00"
         },
         {
             "name": "symfony/dom-crawler",
@@ -7563,16 +7564,16 @@
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v7.0.0",
+            "version": "v7.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "d97726e8d254a2d5512b2b4ba204735d84e7167d"
+                "reference": "a3d7c877414fcd59ab7075ecdc3b8f9c00f7bcc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/d97726e8d254a2d5512b2b4ba204735d84e7167d",
-                "reference": "d97726e8d254a2d5512b2b4ba204735d84e7167d",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/a3d7c877414fcd59ab7075ecdc3b8f9c00f7bcc3",
+                "reference": "a3d7c877414fcd59ab7075ecdc3b8f9c00f7bcc3",
                 "shasum": ""
             },
             "require": {
@@ -7617,7 +7618,7 @@
                 "serialize"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-exporter/tree/v7.0.0"
+                "source": "https://github.com/symfony/var-exporter/tree/v7.0.1"
             },
             "funding": [
                 {
@@ -7633,7 +7634,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-29T08:40:23+00:00"
+            "time": "2023-11-30T11:38:21+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -7758,11 +7759,19 @@
             "time": "2023-11-20T00:12:19+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "phpgt/dom",
+            "version": "9999999-dev",
+            "alias": "v4.1.6",
+            "alias_normalized": "4.1.6.0"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "superhyperinstantfuturetime/spotify-api": 20,
         "phpgt/webengine": 20,
+        "phpgt/dom": 20,
         "authwave/php-client": 20,
         "pdepend/pdepend": 20
     },

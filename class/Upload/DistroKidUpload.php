@@ -1,9 +1,7 @@
 <?php
 namespace SHIFT\TrackShift\Upload;
 
-use Generator;
 use SHIFT\TrackShift\Royalty\Money;
-use SHIFT\TrackShift\Usage\Usage;
 
 class DistroKidUpload extends Upload {
 	const KNOWN_COLUMNS = ["Reporting Date", "Sale Month", "Store", "Artist", "Title"];

@@ -60,6 +60,8 @@ readonly class UploadRepository extends Repository {
 			}
 			$uploadedFile->moveTo($targetPath);
 			$this->ensureCorrectEncoding($targetPath);
+			$this->ensureUnixLineEnding($targetPath);
+			$this->ensureSeparatorMatchesExtension($targetPath);
 
 			$uploadType = $this->detectUploadType($targetPath);
 			/** @var Upload $upload */
@@ -269,7 +271,10 @@ readonly class UploadRepository extends Repository {
 
 
 	private function ensureCorrectEncoding(string $filePath):void {
-		$content = file_get_contents($filePath);
+		if(pathinfo($filePath, PATHINFO_EXTENSION) === "zip") {
+			return;
+		}
+
 		$fileResult = system("file -bi '$filePath'");
 
 		if(str_contains($fileResult, "charset=utf-8")
@@ -281,8 +286,72 @@ readonly class UploadRepository extends Repository {
 		$encodingString = trim($fileResultParts[1]);
 		$encodingParts = explode("=", $encodingString);
 		$encoding = $encodingParts[1];
+		$content = file_get_contents($filePath);
 		$content = mb_convert_encoding($content, "UTF-8", $encoding);
 		file_put_contents($filePath, $content);
 	}
 
+	private function ensureSeparatorMatchesExtension(string $filePath):void {
+		$extension = pathinfo($filePath, PATHINFO_EXTENSION);
+		$extensionSeparators = [
+			"csv" => ",",
+			"tsv" => "\t",
+		];
+		if(!in_array($extension, array_keys($extensionSeparators))) {
+			return;
+		}
+
+		$separatorIn = $extensionSeparators[$extension];
+		$separatorOut = $extensionSeparators[$extension];
+
+		if($extension === "csv"
+		&& !$this->isCsv($filePath)
+		&& $this->isTsv($filePath)) {
+			$separatorIn = $extensionSeparators["tsv"];
+			$separatorOut = $extensionSeparators["csv"];
+		}
+		elseif($extension === "tsv"
+		&& !$this->isTsv($filePath)
+		&& $this->isCsv($filePath)) {
+			$separatorIn = $extensionSeparators["csv"];
+			$separatorOut = $extensionSeparators["tsv"];
+		}
+		else {
+			return;
+		}
+
+		$fhIn = fopen($filePath, "r");
+		$fhOut = fopen("$filePath.fixed", "w");
+
+		while(!feof($fhIn)) {
+			$line = fgets($fhIn);
+			if(!$line) {
+				continue;
+			}
+			$row = str_getcsv($line, $separatorIn);
+			fputcsv($fhOut, $row, $separatorOut);
+		}
+
+		fclose($fhIn);
+		fclose($fhOut);
+		rename("$filePath.fixed", $filePath);
+	}
+
+	private function ensureUnixLineEnding(string $filePath):void {
+		$fhIn = fopen($filePath, "r");
+
+		$firstLine = fgets($fhIn, 2048);
+		if(!str_contains($firstLine, "\r")) {
+			// Everything's OK :)
+			return;
+		}
+		fclose($fhIn);
+
+		$contents = file_get_contents($filePath);
+		$contents = str_replace("\r\n", "\n", $contents);
+		$contents = str_replace("\r", "\n", $contents);
+
+		file_put_contents("$filePath.fixed", $contents);
+		rename("$filePath.fixed", $filePath);
+	}
 }
