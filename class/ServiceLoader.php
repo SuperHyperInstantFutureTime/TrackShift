@@ -3,6 +3,7 @@ namespace SHIFT\TrackShift;
 
 use Authwave\Authenticator;
 use Gt\Database\Database;
+use Gt\Fetch\Http;
 use Gt\Http\Uri;
 use Gt\Session\Session;
 use Gt\WebEngine\Middleware\DefaultServiceLoader;
@@ -48,6 +49,7 @@ class ServiceLoader extends DefaultServiceLoader {
 		$db = $this->container->get(Database::class);
 		return new UsageRepository(
 			$db->queryCollection("Usage"),
+			$this->container->get(SpotifyClient::class),
 		);
 	}
 

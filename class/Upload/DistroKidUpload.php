@@ -2,9 +2,38 @@
 namespace SHIFT\TrackShift\Upload;
 
 use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Usage\UsageRepository;
 
+/**
+ * DistroKid uploads have a few strange rules. We always want a product to
+ * relate to the sold album, but most of the usages within DistroKid are per
+ * track. This is OK, because there's a UPC field (which relates directly to
+ * an album), but more often than not, the UPC field is left empty.
+ *
+ * Good news though: if the track has no UPC, there will always be another
+ * record that does. Maybe the UPC is only written to the CSV for the first
+ * stream? Whatever the reason, this rule is always the case in the data I've
+ * analysed.
+ *
+ * So the rules are as follows:
+ * 1) If it's a usage of an album (in the "Song/Album" field), the data is
+ * already correct, but we keep reference of the UPC for when we need it later.
+ * 2) If it's a usage of a song, and we know the UPC, we name the product with
+ * a special syntax: __UPC__12345 - where 12345 is the UPC value.
+ * 3) If we don't know the UPC, we use the track title and name the product
+ * with a different special syntax: __UNKNOWN_UPC__abcdef - where abcdef is the
+ * track title.
+ *
+ * Then, the UsageRepositry::process() function will know to look for this
+ * special syntax, perform two additional steps:
+ *
+ * 1) If there is an __UNKNOWN_UPC__, it'll use the retained record of ISRC
+ * codes to look up the correct UPC and rename the product accordingly.
+ * 2) If there's a __UPC__, it'll use Spotify's API to look up the product by
+ * UPC.
+ */
 class DistroKidUpload extends Upload {
-	const KNOWN_COLUMNS = ["Reporting Date", "Sale Month", "Store", "Artist", "Title"];
+	const KNOWN_COLUMNS = ["Reporting Date", "Sale Month", "Store", "Artist", "Title", "ISRC", "UPC", "Song/Album"];
 
 	protected string $dataRowCsvSeparator = "\t";
 
@@ -13,7 +42,33 @@ class DistroKidUpload extends Upload {
 	}
 
 	public function extractProductTitle(array $row):string {
-		return $row["Title"];
+		$upc = trim($row["UPC"] ?? "");
+		$isrc = trim($row["ISRC"] ?? "");
+		$title = trim($row["Title"] ?? "");
+
+		if($isrc && $upc) {
+			$this->isrcUpcMap[$isrc] = $upc;
+		}
+
+		if($row["Song/Album"] === "Album") {
+			if($upc) {
+				$this->upcProductTitleMap[$upc] = $title;
+			}
+
+			return $title;
+		}
+
+		if(!$upc) {
+			if($isrc) {
+				$upc = $this->isrcUpcMap[$isrc] ?? null;
+			}
+		}
+
+		if($upc) {
+			return UsageRepository::UPC_SYNTAX . $upc;
+		}
+
+		return UsageRepository::UNKNOWN_UPC_SYNTAX . $isrc;
 	}
 
 	public function extractEarning(array $row):Money {

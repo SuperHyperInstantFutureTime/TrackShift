@@ -3,11 +3,17 @@ namespace SHIFT\TrackShift\Product;
 
 use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\Row;
+use Gt\Logger\Log;
+use SHIFT\Spotify\Entity\EntityType;
+use SHIFT\Spotify\Entity\FilterQuery;
+use SHIFT\Spotify\Entity\SearchFilter;
+use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\Artist;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Usage\UsageRepository;
 
 readonly class ProductRepository extends Repository {
 	public function __construct(
@@ -37,6 +43,52 @@ readonly class ProductRepository extends Repository {
 		]), $artist);
 	}
 
+	public function lookupMissingTitles(SpotifyClient $spotify):int {
+		set_time_limit(0);
+		$count = 0;
+
+		foreach($this->db->fetchAll("getAllMissingTitles") as $row) {
+			$product = $this->rowToProduct($row);
+			$upc = substr($product->title, strlen(UsageRepository::UPC_SYNTAX));
+
+			$cacheFile = "data/cache/upc/$upc.dat";
+			$album = null;
+			if(is_file($cacheFile)) {
+				Log::debug("Using cache for UPC: $upc");
+				$album = unserialize(file_get_contents($cacheFile));
+			}
+			else {
+				Log::debug("Looking up UPC: $upc");
+
+				$result = $spotify->search->query(
+					new FilterQuery(upc: $upc),
+					new SearchFilter(EntityType::album),
+				);
+				$albumSearch = $result->albums->items[0] ?? null;
+				if($albumId = $albumSearch?->id) {
+					Log::debug("Found ID: $albumId");
+					$album = $spotify->albums->get($albumId);
+				}
+				else {
+					Log::debug("Not found!");
+				}
+
+				if(!is_dir(dirname($cacheFile))) {
+					mkdir(dirname($cacheFile), recursive: true);
+				}
+				file_put_contents($cacheFile, serialize($album));
+			}
+
+			if($album) {
+				$count += $this->db->update("setProductTitle", [
+					"id" => $product->id,
+					"title" => $album->name,
+				]);
+			}
+		}
+
+		return $count;
+	}
 
 	/** @return array<ProductEarning> */
 	public function getProductEarnings(User $user):array {
@@ -101,7 +153,7 @@ readonly class ProductRepository extends Repository {
 		return $artistArray;
 	}
 
-	private function rowToProduct(?Row $row, ?Artist $artist):?Product {
+	private function rowToProduct(?Row $row, ?Artist $artist = null):?Product {
 		if(!$row) {
 			return null;
 		}

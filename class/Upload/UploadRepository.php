@@ -102,7 +102,9 @@ readonly class UploadRepository extends Repository {
 			unlink($filePath);
 		}
 
-		rmdir($userDir);
+		if(is_dir($userDir)) {
+			rmdir($userDir);
+		}
 	}
 
 	/** @return array<Upload> */

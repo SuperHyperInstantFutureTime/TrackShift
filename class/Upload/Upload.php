@@ -9,6 +9,11 @@ use SplFileObject;
 use SHIFT\TrackShift\Royalty\Money;
 
 abstract class Upload {
+	/** @var array<string, string> key = UPC; value = Product title */
+	public array $upcProductTitleMap = [];
+	/** @var array<string, string> key = ISRC; value = UPC */
+	public array $isrcUpcMap = [];
+
 	/** @var resource */
 	protected $fileHandle;
 	public readonly string $filename;

@@ -1,8 +1,10 @@
 <?php
 namespace SHIFT\TrackShift\Usage;
 
+use Gt\Database\Query\QueryCollection;
 use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
+use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\Artist;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
@@ -12,6 +14,16 @@ use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Upload\Upload;
 
 readonly class UsageRepository extends Repository {
+	const UPC_SYNTAX = "::UPC::";
+	const UNKNOWN_UPC_SYNTAX = "::UNKNOWN_UPC::";
+
+	public function __construct(
+		QueryCollection $db,
+		private SpotifyClient $spotify,
+	) {
+		parent::__construct($db);
+	}
+
 	/** @return array<Usage> */
 	public function createUsagesFromUpload(Upload $upload):array {
 		$usageList = [];
@@ -49,7 +61,6 @@ readonly class UsageRepository extends Repository {
 		$mapCombinedArtistNameProductTitleToProduct = [];
 
 		$artistList = [];
-//		$productList = [];
 
 		foreach($usageList as $usage) {
 			$artistName = $upload->extractArtistName($usage->row);
@@ -81,6 +92,31 @@ readonly class UsageRepository extends Repository {
 
 			$artistList[$artist->id] = $artist;
 			$mapArtistNameToId[$artistName] = $artist->id;
+		}
+
+/* At this point, there may be missing product titles, due to statement types
+such as DistroKid supplying track names instead. The product title may be
+encoded as a UPC code, in which case we can figure it out ourselves... */
+		foreach($importedProductTitleList as $i => $productTitle) {
+			if(str_starts_with($productTitle, "::")) {
+				preg_match("/(::UPC::(?P<UPC>.+)|::UNKNOWN_UPC::(?P<ISRC>.+))/", $productTitle, $matches);
+				$foundUpc = null;
+				if($isrc = $matches["ISRC"] ?? null) {
+					$foundUpc = $upload->isrcUpcMap[$isrc] ?? null;
+				}
+
+				if($upc = $matches["UPC"] ?: $foundUpc ?? null) {
+					if($foundTitle = $upload->upcProductTitleMap[$upc] ?? null) {
+						$importedProductTitleList[$i] = $foundTitle;
+						$importedCombinedArtistNameProductTitleList[$i] = $importedArtistNameList[$i] . "__" . $foundTitle;
+					}
+					else {
+						$foundTitle = self::UPC_SYNTAX . $upc;
+						$importedProductTitleList[$i] = $foundTitle;
+						$importedCombinedArtistNameProductTitleList[$i] = $importedArtistNameList[$i] . "__" . $foundTitle;
+					}
+				}
+			}
 		}
 
 		$importedUniqueCombinedArtistNameProductTitleList = array_unique($importedCombinedArtistNameProductTitleList);

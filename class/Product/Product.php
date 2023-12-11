@@ -9,7 +9,7 @@ readonly class Product extends Entity {
 	public function __construct(
 		public string $id,
 		public string $title,
-		public Artist $artist,
+		public ?Artist $artist,
 	) {}
 
 	#[BindGetter]

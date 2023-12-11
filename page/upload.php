@@ -3,6 +3,7 @@ use Gt\Database\Database;
 use Gt\Http\Response;
 use Gt\Input\Input;
 use Gt\Logger\Log;
+use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Auth\UserRepository;
@@ -23,8 +24,10 @@ function do_upload(
 	UsageRepository $usageRepository,
 	ArtistRepository $artistRepository,
 	ProductRepository $productRepository,
+	SpotifyClient $spotify,
 	Database $database,
 ):void {
+	set_time_limit(600);
 	$database->executeSql("begin transaction");
 	$database->executeSql("PRAGMA foreign_keys = 0");
 
@@ -47,6 +50,10 @@ function do_upload(
 
 	$database->executeSql("end transaction");
 	$database->executeSql("PRAGMA foreign_keys = 1");
+
+	Log::debug("Looking up missing titles...");
+	$missingTitleCount = $productRepository->lookupMissingTitles($spotify);
+	Log::debug("Looked up $missingTitleCount titles on Spotify");
 
 	if($advanceTo = $input->getString("advance")) {
 		$response->redirect($advanceTo);
