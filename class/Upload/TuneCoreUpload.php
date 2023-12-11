@@ -12,7 +12,7 @@ class TuneCoreUpload extends Upload {
 	}
 
 	public function extractProductTitle(array $row):string {
-		return $row["Song Title"];
+		return $row["Release Title"];
 	}
 
 	public function extractEarning(array $row):Money {
