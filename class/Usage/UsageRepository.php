@@ -19,7 +19,6 @@ readonly class UsageRepository extends Repository {
 
 	public function __construct(
 		QueryCollection $db,
-		private SpotifyClient $spotify,
 	) {
 		parent::__construct($db);
 	}

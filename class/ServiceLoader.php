@@ -49,7 +49,6 @@ class ServiceLoader extends DefaultServiceLoader {
 		$db = $this->container->get(Database::class);
 		return new UsageRepository(
 			$db->queryCollection("Usage"),
-			$this->container->get(SpotifyClient::class),
 		);
 	}
 

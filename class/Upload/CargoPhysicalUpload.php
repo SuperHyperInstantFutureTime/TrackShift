@@ -28,7 +28,7 @@ class CargoPhysicalUpload extends Upload {
 		$reader = new Reader();
 		$reader->open($this->filePath);
 		$sheet = $reader->getSheetIterator()->current();
-		foreach($sheet->getRowIterator() as $i => $excelRow) {
+		foreach($sheet->getRowIterator() as $excelRow) {
 			$row = $excelRow->toArray();
 			if(!$row[0]) {
 				continue;

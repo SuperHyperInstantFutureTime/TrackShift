@@ -202,7 +202,7 @@ readonly class UploadRepository extends Repository {
 		$firstLine = $file->fgets();
 		$csvData = str_getcsv($firstLine);
 
-		if(!$csvData || count($csvData) <= 1) {
+		if(count($csvData) <= 1) {
 			return false;
 		}
 
@@ -214,7 +214,7 @@ readonly class UploadRepository extends Repository {
 		$firstLine = $file->fgets();
 		$csvData = str_getcsv($firstLine, "\t");
 
-		if(!$csvData || count($csvData) <= 1) {
+		if(count($csvData) <= 1) {
 			return false;
 		}
 
