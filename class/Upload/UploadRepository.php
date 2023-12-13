@@ -59,6 +59,7 @@ readonly class UploadRepository extends Repository {
 				mkdir(dirname($targetPath), 0775, true);
 			}
 			$uploadedFile->moveTo($targetPath);
+
 			$this->ensureCorrectEncoding($targetPath);
 			$this->ensureUnixLineEnding($targetPath);
 			$this->ensureSeparatorMatchesExtension($targetPath);
@@ -273,7 +274,8 @@ readonly class UploadRepository extends Repository {
 
 
 	private function ensureCorrectEncoding(string $filePath):void {
-		if(pathinfo($filePath, PATHINFO_EXTENSION) === "zip") {
+		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
+		if($ext === "zip" || $ext === "xlsx") {
 			return;
 		}
 
@@ -294,25 +296,29 @@ readonly class UploadRepository extends Repository {
 	}
 
 	private function ensureSeparatorMatchesExtension(string $filePath):void {
-		$extension = pathinfo($filePath, PATHINFO_EXTENSION);
+		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
+		if($ext === "zip" || $ext === "xlsx") {
+			return;
+		}
+
 		$extensionSeparators = [
 			"csv" => ",",
 			"tsv" => "\t",
 		];
-		if(!in_array($extension, array_keys($extensionSeparators))) {
+		if(!in_array($ext, array_keys($extensionSeparators))) {
 			return;
 		}
 
-		$separatorIn = $extensionSeparators[$extension];
-		$separatorOut = $extensionSeparators[$extension];
+		$separatorIn = $extensionSeparators[$ext];
+		$separatorOut = $extensionSeparators[$ext];
 
-		if($extension === "csv"
+		if($ext === "csv"
 		&& !$this->isCsv($filePath)
 		&& $this->isTsv($filePath)) {
 			$separatorIn = $extensionSeparators["tsv"];
 			$separatorOut = $extensionSeparators["csv"];
 		}
-		elseif($extension === "tsv"
+		elseif($ext === "tsv"
 		&& !$this->isTsv($filePath)
 		&& $this->isCsv($filePath)) {
 			$separatorIn = $extensionSeparators["csv"];
@@ -340,6 +346,10 @@ readonly class UploadRepository extends Repository {
 	}
 
 	private function ensureUnixLineEnding(string $filePath):void {
+		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
+		if($ext === "zip" || $ext === "xlsx") {
+			return;
+		}
 		$fhIn = fopen($filePath, "r");
 
 		$firstLine = fgets($fhIn, 2048);
