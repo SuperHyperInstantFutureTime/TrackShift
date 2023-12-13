@@ -13,7 +13,7 @@ class CdBabyUpload extends Upload {
 	}
 
 	public function extractProductTitle(array $row): string {
-		return $row["Track Name"];
+		return $row["Album Name"];
 	}
 
 	public function extractEarning(array $row): Money {

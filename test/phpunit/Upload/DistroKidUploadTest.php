@@ -16,7 +16,7 @@ class DistroKidUploadTest extends TestCase {
 		$sut = new DistroKidUpload("test-id", "test/files/DistroKid_Test.tsv");
 		$dataRows = iterator_to_array($sut->generateDataRows());
 		$productTitle = $sut->extractProductTitle($dataRows[0]);
-		self::assertSame("Song 1", $productTitle);
+		self::assertSame("::UPC::111111111111", $productTitle);
 	}
 
 	public function testExtractEarning():void {

@@ -16,7 +16,7 @@ class TuneCoreUploadTest extends TestCase {
 		$sut = new TuneCoreUpload("test-id", "test/files/Tunecore_Test.csv");
 		$dataRows = iterator_to_array($sut->generateDataRows());
 		$productTitle = $sut->extractProductTitle($dataRows[0]);
-		self::assertSame("Song 1", $productTitle);
+		self::assertSame("Album 1", $productTitle);
 	}
 
 	public function testExtractEarning():void {

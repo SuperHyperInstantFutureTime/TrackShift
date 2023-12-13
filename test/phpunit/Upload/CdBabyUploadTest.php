@@ -17,7 +17,7 @@ class CdBabyUploadTest extends TestCase {
 		$sut = new CdBabyUpload("test-id", "test/files/CdBaby_Test.txt");
 		$dataRows = iterator_to_array($sut->generateDataRows());
 		$productName = $sut->extractProductTitle($dataRows[0]);
-		self::assertSame("Track 1", $productName);
+		self::assertSame("Album 1", $productName);
 	}
 
 	public function testExtractEarning():void {
