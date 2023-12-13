@@ -10,10 +10,10 @@ Feature: App should handle DistroKid CSV files
 		When I go to "/account/uploads/"
 		Then I should see the following table data:
 			| File name | File Size | Source |
-			| DistroKid_Test.tsv | 550 B | DistroKid |
+			| DistroKid_Test.tsv | 546 B | DistroKid |
 		When I go to "/account/products/"
 		Then I should see the following table data:
 			| Artist | Title | Earnings |
-			| Artist 1 | Song 1 | £0.01 |
-			| Artist 2 | Song 10 | £0.00 |
-			| Artist 3 | Song 100 | £0.00 |
+			| Artist 1 | ::UPC::111111111111 | £0.01 |
+			| Artist 2 | ::UPC::222222222222 | £0.00 |
+			| Artist 3 | ::UPC::333333333333 | £0.00 |

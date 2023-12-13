@@ -10,11 +10,9 @@ Feature: App should handle TuneCore CSV files
 		When I go to "/account/uploads/"
 		Then I should see the following table data:
 			| File name | File Size | Source |
-			| Tunecore_Test.csv | 988 B | TuneCore |
+			| Tunecore_Test.csv | 983 B | TuneCore |
 		When I go to "/account/products/"
 		Then I should see the following table data:
 			| Artist | Title | Earnings |
-			| Artist 1 | Song 1 | £0.03 |
-			| Artist 2 | Song 100 | £0.03 |
-			| Artist 2 | Song 101 | £0.03 |
-			| Artist 2 | Song 102 | £0.05 |
+			| Artist 1 | Album 1 | £0.03 |
+			| Artist 2 | Album 100 | £0.11 |

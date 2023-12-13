@@ -10,9 +10,9 @@ Feature: App should handle CD Baby CSV files
 		When I go to "/account/uploads/"
 		Then I should see the following table data:
 			| File name | File Size | Source |
-			| CdBaby_Test.txt | 470 B | CD Baby |
+			| CdBaby_Test.txt | 475 B | CD Baby |
 		When I go to "/account/products/"
 		Then I should see the following table data:
 			| Artist | Title | Earnings |
-			| Artist 1 | Track 1 | £0.10 |
-			| Artist 1 | Track 2 | £0.06 |
+			| Artist 1 | Album 1 | £0.10 |
+			| Artist 1 | Album 2 | £0.06 |
