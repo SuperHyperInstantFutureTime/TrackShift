@@ -33,20 +33,25 @@ function do_upload(
 
 	$userRepository->persistUser($user);
 	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
-
 	foreach($uploadList as $upload) {
-		$usageList = $usageRepository->createUsagesFromUpload($upload);
-		$uploadRepository->setProcessed($upload);
-		$processedNum = $usageRepository->process(
-			$user,
-			$usageList,
-			$upload,
-			$artistRepository,
-			$productRepository,
-		);
-		$usageCount = count($usageList);
-		Log::debug("Created $usageCount usages & processed $processedNum from $upload->filePath");
+		$usageListTotal = $usageRepository->createUsagesFromUpload($upload);
+		$chunks = array_chunk($usageListTotal, 100);
+
+		foreach($chunks as $chunkIndex => $usageList) {
+			$uploadRepository->setProcessed($upload);
+			$processedNum = $usageRepository->process(
+				$user,
+				$usageList,
+				$upload,
+				$artistRepository,
+				$productRepository,
+			);
+			$usageCount = count($usageList);
+			Log::debug("Usages created: $usageCount. Processed: $processedNum. File: $upload->filePath (iteration $chunkIndex)");
+		}
 	}
+
+	Log::debug("All chunks are processed!");
 
 	$database->executeSql("end transaction");
 	$database->executeSql("PRAGMA foreign_keys = 1");

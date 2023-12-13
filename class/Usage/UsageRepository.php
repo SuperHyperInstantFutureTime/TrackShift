@@ -123,7 +123,11 @@ encoded as a UPC code, in which case we can figure it out ourselves... */
 		$toCreateProductList = [];
 		foreach($importedUniqueCombinedArtistNameProductTitleList as $combinedArtistProduct) {
 			[$artistName, $productTitle] = explode("__", $combinedArtistProduct);
-			$artistId = $mapArtistNameToId[$artistName];
+			$artistId = $mapArtistNameToId[$artistName] ?? null;
+			if(!$artistId) {
+				continue;
+			}
+
 			$artist = $artistList[$artistId];
 
 			$product = $productRepository->find($productTitle, $artist);
