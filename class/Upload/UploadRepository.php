@@ -291,6 +291,11 @@ readonly class UploadRepository extends Repository {
 		$encodingParts = explode("=", $encodingString);
 		$encoding = $encodingParts[1];
 		$content = file_get_contents($filePath);
+
+		if($encoding === "us-ascii") {
+			$encoding = "ISO-8859-1";
+		}
+
 		$content = mb_convert_encoding($content, "UTF-8", $encoding);
 		file_put_contents($filePath, $content);
 	}

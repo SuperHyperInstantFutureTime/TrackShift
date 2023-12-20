@@ -153,7 +153,11 @@ encoded as a UPC code, in which case we can figure it out ourselves... */
 			$artistName = $importedArtistNameList[$i];
 			$productTitle = $importedProductTitleList[$i];
 			$combinedArtistProduct = $artistName . "__" . $productTitle;
-			$product = $mapCombinedArtistNameProductTitleToProduct[$combinedArtistProduct];
+			$product = $mapCombinedArtistNameProductTitleToProduct[$combinedArtistProduct] ?? null;
+
+			if(!$product) {
+				continue;
+			}
 
 			$count += $this->db->insert("assignProductUsage", [
 				"id" => (string)(new Ulid("pu")),
