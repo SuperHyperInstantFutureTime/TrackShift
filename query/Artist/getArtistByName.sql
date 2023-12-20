@@ -7,7 +7,7 @@ from
 	Artist
 
 where
-	name = ?
+	name = ? collate nocase
 and
 	userId = ?
 
