@@ -47,9 +47,11 @@ readonly class ProductRepository extends Repository {
 		set_time_limit(0);
 		$count = 0;
 
+// Convert this to work with ISRCs too. If there's no UPC, look it up via the ISRC.
+
 		foreach($this->db->fetchAll("getAllMissingTitles") as $row) {
 			$product = $this->rowToProduct($row);
-			$upc = substr($product->title, strlen(UsageRepository::UPC_SYNTAX));
+			$upc = substr($product->title, strlen(UsageRepository::UNSORTED_UPC));
 
 			$cacheFile = "data/cache/upc/$upc.dat";
 			$album = null;
@@ -88,6 +90,13 @@ readonly class ProductRepository extends Repository {
 		}
 
 		return $count;
+	}
+
+	public function changeProductIsrcToUpc(string $isrc, string $upc):void {
+		$this->db->update("rename", [
+			"oldTitle" => UsageRepository::UNSORTED_ISRC . $isrc,
+			"newTitle" => UsageRepository::UNSORTED_UPC . $upc,
+		]);
 	}
 
 	/** @return array<ProductEarning> */
@@ -164,4 +173,5 @@ readonly class ProductRepository extends Repository {
 			$artist,
 		);
 	}
+
 }

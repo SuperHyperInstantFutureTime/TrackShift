@@ -6,4 +6,4 @@ select
 from
 	Product
 where
-	title like '::UPC::%'
+	title like '::UNSORTED_UPC::%'

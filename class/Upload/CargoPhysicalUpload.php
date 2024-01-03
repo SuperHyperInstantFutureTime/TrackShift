@@ -19,7 +19,7 @@ class CargoPhysicalUpload extends Upload {
 
 	public function extractEarning(array $row):Money {
 		$value = str_replace(["(", ")"], "", $row["Net after fee"]);
-		return new Money((float)filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT , FILTER_FLAG_ALLOW_FRACTION ));
+		return new Money((float)filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ));
 	}
 
 	public function generateDataRows():Generator {

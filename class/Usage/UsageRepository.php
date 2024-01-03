@@ -14,8 +14,8 @@ use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Upload\Upload;
 
 readonly class UsageRepository extends Repository {
-	const UPC_SYNTAX = "::UPC::";
-	const UNKNOWN_UPC_SYNTAX = "::UNKNOWN_UPC::";
+	const UNSORTED_UPC = "::UNSORTED_UPC::";
+	const UNSORTED_ISRC = "::UNSORTED_ISRC::";
 
 	public function __construct(
 		QueryCollection $db,

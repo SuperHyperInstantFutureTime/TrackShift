@@ -61,48 +61,13 @@ function do_upload(
 			Log::debug("Usages created: $usageCount. Processed: $processedNum. File: $upload->filePath (iteration $chunkIndex)");
 		}
 
-/* At this point, there may be missing product titles, due to statement types
-such as DistroKid supplying track names instead. The product title may be
-encoded as a ISRC/UPC code, in which case we can figure it out ourselves... */
-		$isrcProductsToChange = [];
-		foreach($artistProductTuple[1] as $i => $productTitle) {
-			if(!str_starts_with($productTitle, "::")) {
-				continue;
+		if($upload->isrcUpcMap) {
+			$database->executeSql("end transaction");
+			foreach($upload->isrcUpcMap as $isrc => $upc) {
+				$productRepository->changeProductIsrcToUpc($isrc, $upc);
 			}
-
-			if(!preg_match("/(::UNKNOWN_UPC::(?P<ISRC>.+))/", $productTitle, $matches)) {
-				continue;
-			}
-			$foundUpc = null;
-			if($isrc = $matches["ISRC"] ?? null) {
-				$foundUpc = $upload->isrcUpcMap[$isrc] ?? null;
-			}
-
-			if($foundUpc) {
-				$isrcProductsToChange
-			}
-
-			var_dump($productTitle, $foundUpc, $upload->upcProductTitleMap[$foundUpc]);die();
-
-			if($upc = $matches["UPC"] ?: $foundUpc ?? null) {
-				if($foundTitle = $upload->upcProductTitleMap[$upc] ?? null) {
-					$artistProductTuple[1][$i] = $foundTitle;
-//					$importedCombinedArtistNameProductTitleList[$i] = $artistProductTuple[0][$i] . "__" . $foundTitle;
-				}
-				else {
-					$foundTitle = UsageRepository::UPC_SYNTAX . $upc;
-					$artistProductTuple[1][$i] = $foundTitle;
-//					$importedCombinedArtistNameProductTitleList[$i] = $artistProductTuple[0][$i] . "__" . $foundTitle;
-				}
-			}
+			$database->executeSql("begin transaction");
 		}
-
-		$isrcDebug = "";
-		foreach($upload->isrcUpcMap as $isrc => $upc) {
-			$isrcDebug .= "$isrc\t$upc\n";
-		}
-		file_put_contents("isrcdump.txt", $isrcDebug);
-		exit;
 	}
 
 	Log::debug("All chunks are processed!");

@@ -19,18 +19,18 @@ use SHIFT\TrackShift\Usage\UsageRepository;
  * 1) If it's a usage of an album (in the "Song/Album" field), the data is
  * already correct, but we keep reference of the UPC for when we need it later.
  * 2) If it's a usage of a song, and we know the UPC, we name the product with
- * a special syntax: __UPC__12345 - where 12345 is the UPC value.
- * 3) If we don't know the UPC, we use the track title and name the product
- * with a different special syntax: __UNKNOWN_UPC__abcdef - where abcdef is the
- * track title.
+ * a special syntax: ::UNSORTED_UPC::12345 - where 12345 is the UPC value.
+ * 3) If we don't know the UPC, we use the track's code and name the product
+ * with a different special syntax: ::UNSORTED_ISRC::abcdef - where abcdef is
+ * the track's ISRC code.
  *
  * Then, the UsageRepositry::process() function will know to look for this
  * special syntax, perform two additional steps:
  *
- * 1) If there is an __UNKNOWN_UPC__, it'll use the retained record of ISRC
+ * 1) If there is an ::UNSORTED_UPC::, it'll use the retained record of ISRC
  * codes to look up the correct UPC and rename the product accordingly.
- * 2) If there's a __UPC__, it'll use Spotify's API to look up the product by
- * UPC.
+ * 2) If there's a ::UNSORTED_ISRC::, it'll use Spotify's API to look up the
+ * product by UPC.
  */
 class DistroKidUpload extends Upload {
 	const KNOWN_COLUMNS = ["Reporting Date", "Sale Month", "Store", "Artist", "Title", "ISRC", "UPC", "Song/Album"];
@@ -65,10 +65,10 @@ class DistroKidUpload extends Upload {
 		}
 
 		if($upc) {
-			return UsageRepository::UPC_SYNTAX . $upc;
+			return UsageRepository::UNSORTED_UPC . $upc;
 		}
 
-		return UsageRepository::UNKNOWN_UPC_SYNTAX . $isrc;
+		return UsageRepository::UNSORTED_ISRC . $isrc;
 	}
 
 	public function extractEarning(array $row):Money {
