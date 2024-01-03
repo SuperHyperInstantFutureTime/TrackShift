@@ -14,8 +14,8 @@ use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Upload\Upload;
 
 readonly class UsageRepository extends Repository {
-	const UPC_SYNTAX = "::UPC::";
-	const UNKNOWN_UPC_SYNTAX = "::UNKNOWN_UPC::";
+	const UNSORTED_UPC = "::UNSORTED_UPC::";
+	const UNSORTED_ISRC = "::UNSORTED_ISRC::";
 
 	public function __construct(
 		QueryCollection $db,
@@ -44,14 +44,17 @@ readonly class UsageRepository extends Repository {
 		return $usageList;
 	}
 
-	/** @param array<Usage> $usageList */
+	/**
+	 * @param array<Usage> $usageList
+	 * @return array<array<string>, array<string>> Index 0 $artistNameList, index 1 $productTitleList
+	 */
 	public function process(
 		User $user,
 		array $usageList,
 		Upload $upload,
 		ArtistRepository $artistRepository,
 		ProductRepository $productRepository,
-	):int {
+	):array {
 		$importedUsageIdList = [];
 		$importedArtistNameList = [];
 		$importedProductTitleList = [];
@@ -93,31 +96,6 @@ readonly class UsageRepository extends Repository {
 			$mapArtistNameToId[$artistName] = $artist->id;
 		}
 
-/* At this point, there may be missing product titles, due to statement types
-such as DistroKid supplying track names instead. The product title may be
-encoded as a UPC code, in which case we can figure it out ourselves... */
-		foreach($importedProductTitleList as $i => $productTitle) {
-			if(str_starts_with($productTitle, "::")) {
-				preg_match("/(::UPC::(?P<UPC>.+)|::UNKNOWN_UPC::(?P<ISRC>.+))/", $productTitle, $matches);
-				$foundUpc = null;
-				if($isrc = $matches["ISRC"] ?? null) {
-					$foundUpc = $upload->isrcUpcMap[$isrc] ?? null;
-				}
-
-				if($upc = $matches["UPC"] ?: $foundUpc ?? null) {
-					if($foundTitle = $upload->upcProductTitleMap[$upc] ?? null) {
-						$importedProductTitleList[$i] = $foundTitle;
-						$importedCombinedArtistNameProductTitleList[$i] = $importedArtistNameList[$i] . "__" . $foundTitle;
-					}
-					else {
-						$foundTitle = self::UPC_SYNTAX . $upc;
-						$importedProductTitleList[$i] = $foundTitle;
-						$importedCombinedArtistNameProductTitleList[$i] = $importedArtistNameList[$i] . "__" . $foundTitle;
-					}
-				}
-			}
-		}
-
 		$importedUniqueCombinedArtistNameProductTitleList = array_unique($importedCombinedArtistNameProductTitleList);
 		/** @var array<Product> $toCreateProductList */
 		$toCreateProductList = [];
@@ -148,7 +126,6 @@ encoded as a UPC code, in which case we can figure it out ourselves... */
 
 		Log::debug("Created $artistCount artists and $productCount products");
 
-		$count = 0;
 		foreach($importedEarningList as $i => $earning) {
 			$artistName = $importedArtistNameList[$i];
 			$productTitle = $importedProductTitleList[$i];
@@ -159,7 +136,7 @@ encoded as a UPC code, in which case we can figure it out ourselves... */
 				continue;
 			}
 
-			$count += $this->db->insert("assignProductUsage", [
+			$this->db->insert("assignProductUsage", [
 				"id" => (string)(new Ulid("pu")),
 				"usageId" => $importedUsageIdList[$i],
 				"productId" => $product->id,
@@ -167,6 +144,14 @@ encoded as a UPC code, in which case we can figure it out ourselves... */
 			]);
 		}
 
-		return $count;
+		return [$importedArtistNameList, $importedProductTitleList];
 	}
+
+	public function combineTuples(
+		array $tuple1,
+		array $tuple2,
+	):array {
+
+	}
+
 }

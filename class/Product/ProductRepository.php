@@ -49,7 +49,7 @@ readonly class ProductRepository extends Repository {
 
 		foreach($this->db->fetchAll("getAllMissingTitles") as $row) {
 			$product = $this->rowToProduct($row);
-			$upc = substr($product->title, strlen(UsageRepository::UPC_SYNTAX));
+			$upc = substr($product->title, strlen(UsageRepository::UNSORTED_UPC));
 
 			$cacheFile = "data/cache/upc/$upc.dat";
 			$album = null;
