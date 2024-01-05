@@ -44,7 +44,10 @@ readonly class UsageRepository extends Repository {
 		return $usageList;
 	}
 
-	/** @param array<Usage> $usageList */
+	/**
+	 * @param array<Usage> $usageList
+	 * @return array<array<string>> A tuple of artistName:productTitle
+	 */
 	public function process(
 		User $user,
 		array $usageList,
@@ -143,12 +146,4 @@ readonly class UsageRepository extends Repository {
 
 		return [$importedArtistNameList, $importedProductTitleList];
 	}
-
-	public function combineTuples(
-		array $tuple1,
-		array $tuple2,
-	):array {
-
-	}
-
 }
