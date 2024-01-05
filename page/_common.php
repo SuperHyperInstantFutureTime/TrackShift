@@ -33,6 +33,9 @@ function go(
 	foreach($document->querySelectorAll("file-uploader") as $fileUploader) {
 		$binder->bindList(new UploadMessageList(3), $fileUploader);
 	}
+
+	$timestamp = filemtime(".git/index");
+	$document->body->dataset->set("lastUpdate", date("Y-m-d", $timestamp));
 }
 
 function go_after(?User $user, AuditRepository $auditRepository, HTMLDocument $document):void {
