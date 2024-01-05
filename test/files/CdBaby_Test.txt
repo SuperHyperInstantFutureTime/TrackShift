@@ -1,0 +1,3 @@
+Report Date	Sales Date	Quantity	Price	Subtotal	Isrc	Barcode	CDBabySku	Album Name	Artist Name	Track Name	Partner Name	Transaction Type	Delivery Country
+10/15/2023 12:00:00 AM	7/31/2023 12:00:00 AM	1	0.09982699	0.0998269974	usx123000001	"880000000001"	artist1	Album 1	Artist 1	Example	Amazon Prime IN	Stream	IN
+10/15/2023 12:00:00 AM	7/31/2023 12:00:00 AM	1	0.05982699	0.0598269974	usx123000002	"880000000002"	artist1	Album 2	Artist 1	Another Example	Amazon Prime IN	Stream	IN

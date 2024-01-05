@@ -1,8 +1,8 @@
 <?php
 use Gt\DomTemplate\Binder;
-use SHIFT\Trackshift\Auth\Settings;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Split\SplitRepository;
+use SHIFT\TrackShift\Auth\Settings;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Split\SplitRepository;
 
 function go(
 	SplitRepository $splitRepository,

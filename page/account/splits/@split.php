@@ -7,15 +7,15 @@ use Gt\Http\Response;
 use Gt\Input\Input;
 use Gt\Routing\Path\DynamicPath;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Artist\ArtistRepository;
-use SHIFT\Trackshift\Audit\AuditRepository;
-use SHIFT\Trackshift\Auth\Settings;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Product\ProductRepository;
-use SHIFT\Trackshift\Split\EmptySplitPercentage;
-use SHIFT\Trackshift\Split\RemainderSplitPercentage;
-use SHIFT\Trackshift\Split\SplitPercentage;
-use SHIFT\Trackshift\Split\SplitRepository;
+use SHIFT\TrackShift\Artist\ArtistRepository;
+use SHIFT\TrackShift\Audit\AuditRepository;
+use SHIFT\TrackShift\Auth\Settings;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Split\EmptySplitPercentage;
+use SHIFT\TrackShift\Split\RemainderSplitPercentage;
+use SHIFT\TrackShift\Split\SplitPercentage;
+use SHIFT\TrackShift\Split\SplitRepository;
 
 function go(
 	HTMLDocument $document,

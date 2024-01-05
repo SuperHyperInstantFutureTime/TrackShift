@@ -2,8 +2,8 @@
 use Gt\DomTemplate\Binder;
 use Gt\Http\Response;
 use Gt\Input\Input;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Cost\CostRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Cost\CostRepository;
 
 function go(Binder $binder, CostRepository $costRepository, User $user):void {
 	$binder->bindList(

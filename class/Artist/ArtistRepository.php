@@ -1,9 +1,9 @@
 <?php
-namespace SHIFT\Trackshift\Artist;
+namespace SHIFT\TrackShift\Artist;
 
 use Gt\Database\Result\Row;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Repository\Repository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Repository\Repository;
 
 readonly class ArtistRepository extends Repository {
 	/** @return array<Artist> */

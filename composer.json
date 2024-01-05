@@ -5,9 +5,12 @@
 		"php": ">=8.2",
 		"ext-iconv": "*",
 		"ext-mbstring": "*",
+		"ext-zip": "*",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
+		"phpgt/dom": "dev-master as v4.1.6",
 		"authwave/php-client": "2022.x-dev",
+		"openspout/openspout": "v4.22.0",
 		"league/commonmark": "^2.4"
 	},
 	"require-dev": {
@@ -22,13 +25,13 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"SHIFT\\Trackshift\\": "./class"
+			"SHIFT\\TrackShift\\": "./class"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"SHIFT\\Trackshift\\Test\\": "./test/phpunit",
-			"SHIFT\\Trackshift\\BehatContext\\": "./test/behat/Context"
+			"SHIFT\\TrackShift\\Test\\": "./test/phpunit",
+			"SHIFT\\TrackShift\\BehatContext\\": "./test/behat/Context"
 		}
 	}
 }

@@ -1,15 +1,15 @@
 <?php
-namespace SHIFT\Trackshift\Product;
+namespace SHIFT\TrackShift\Product;
 
 use Gt\DomTemplate\BindGetter;
-use SHIFT\Trackshift\Artist\Artist;
-use SHIFT\Trackshift\Repository\Entity;
+use SHIFT\TrackShift\Artist\Artist;
+use SHIFT\TrackShift\Repository\Entity;
 
 readonly class Product extends Entity {
 	public function __construct(
 		public string $id,
 		public string $title,
-		public Artist $artist,
+		public ?Artist $artist,
 	) {}
 
 	#[BindGetter]

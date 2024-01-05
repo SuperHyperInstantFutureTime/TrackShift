@@ -7,7 +7,7 @@ from
 	Product
 
 where
-	title = :title
+	title = :title collate nocase
 and
 	artistId = :artistId
 

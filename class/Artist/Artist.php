@@ -1,5 +1,5 @@
 <?php
-namespace SHIFT\Trackshift\Artist;
+namespace SHIFT\TrackShift\Artist;
 
 class Artist {
 	public function __construct(

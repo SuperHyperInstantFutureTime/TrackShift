@@ -1,12 +1,12 @@
 <?php
-namespace SHIFT\Trackshift\Cost;
+namespace SHIFT\TrackShift\Cost;
 
 use DateTime;
 use Gt\DomTemplate\BindGetter;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Product\Product;
-use SHIFT\Trackshift\Repository\Entity;
-use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\TrackShift\Product\Product;
+use SHIFT\TrackShift\Repository\Entity;
+use SHIFT\TrackShift\Royalty\Money;
 
 readonly class Cost extends Entity {
 	public function __construct(

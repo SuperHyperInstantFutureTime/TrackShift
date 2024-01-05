@@ -1,8 +1,8 @@
 <?php
-namespace SHIFT\Trackshift\Split;
+namespace SHIFT\TrackShift\Split;
 
 use Gt\DomTemplate\Bind;
-use SHIFT\Trackshift\Repository\Entity;
+use SHIFT\TrackShift\Repository\Entity;
 
 readonly class EmptySplitPercentage extends Entity {
 	public function __construct(

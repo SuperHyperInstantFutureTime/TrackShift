@@ -1,5 +1,5 @@
 <?php
-namespace SHIFT\Trackshift\Egg;
+namespace SHIFT\TrackShift\Egg;
 use Iterator;
 
 /** @implements Iterator<string> */

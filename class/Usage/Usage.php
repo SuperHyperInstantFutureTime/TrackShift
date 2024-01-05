@@ -1,8 +1,8 @@
 <?php
-namespace SHIFT\Trackshift\Usage;
+namespace SHIFT\TrackShift\Usage;
 
-use SHIFT\Trackshift\Repository\Entity;
-use SHIFT\Trackshift\Upload\Upload;
+use SHIFT\TrackShift\Repository\Entity;
+use SHIFT\TrackShift\Upload\Upload;
 
 readonly class Usage extends Entity {
 	/** @param array<string, string> $row */

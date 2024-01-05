@@ -1,16 +1,16 @@
 <?php
-namespace SHIFT\Trackshift\Upload;
+namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
 use Gt\Database\Query\QueryCollection;
-use Gt\Database\Result\Row;
 use Gt\Input\InputData\Datum\FileUpload;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Audit\AuditRepository;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Repository\Repository;
-use SHIFT\Trackshift\Royalty\Money;
+use SHIFT\TrackShift\Audit\AuditRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Repository\Repository;
+use SHIFT\TrackShift\Royalty\Money;
 use SplFileObject;
+use ZipArchive;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 readonly class UploadRepository extends Repository {
@@ -59,7 +59,10 @@ readonly class UploadRepository extends Repository {
 				mkdir(dirname($targetPath), 0775, true);
 			}
 			$uploadedFile->moveTo($targetPath);
+
 			$this->ensureCorrectEncoding($targetPath);
+			$this->ensureUnixLineEnding($targetPath);
+			$this->ensureSeparatorMatchesExtension($targetPath);
 
 			$uploadType = $this->detectUploadType($targetPath);
 			/** @var Upload $upload */
@@ -100,7 +103,9 @@ readonly class UploadRepository extends Repository {
 			unlink($filePath);
 		}
 
-		rmdir($userDir);
+		if(is_dir($userDir)) {
+			rmdir($userDir);
+		}
 	}
 
 	/** @return array<Upload> */
@@ -153,21 +158,40 @@ readonly class UploadRepository extends Repository {
 	}
 
 	/** @return class-string */
-	private function detectUploadType(mixed $filePath):string {
-		$type = UnknownUpload::class;
+	public function detectUploadType(mixed $uploadedFilePath):string {
+		$filePath = $uploadedFilePath;
 
-		if($this->isCsv($filePath)) {
-			if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_CSV_COLUMNS)) {
+		$type = UnknownUpload::class;
+		$uploadedFileExtension = pathinfo($uploadedFilePath, PATHINFO_EXTENSION);
+
+		if($uploadedFileExtension === "zip") {
+// TODO: Unzip the zip and look for known files, then change $filePath to the internal CSV file.
+			$filePath = new ZipFileFinder($uploadedFilePath);
+		}
+
+		if($uploadedFileExtension === "xlsx") {
+			$type = CargoPhysicalUpload::class;
+		}
+		elseif($this->isCsv($filePath)) {
+			if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_COLUMNS)) {
 				$type = PRSStatementUpload::class;
 			}
-			elseif($this->hasCsvColumns($filePath, ...BandcampUpload::KNOWN_CSV_COLUMNS)) {
+			elseif($this->hasCsvColumns($filePath, ...BandcampUpload::KNOWN_COLUMNS)) {
 				$type = BandcampUpload::class;
 			}
-			elseif($this->hasCsvColumns($filePath, ...CargoUpload::KNOWN_CSV_COLUMNS)) {
-				$type = CargoUpload::class;
+			elseif($this->hasCsvColumns($filePath, ...CargoDigitalUpload::KNOWN_COLUMNS)) {
+				$type = CargoDigitalUpload::class;
 			}
-			elseif($this->hasCsvColumns($filePath, ...TunecoreUpload::KNOWN_CSV_COLUMNS)) {
-				$type = TunecoreUpload::class;
+			elseif($this->hasCsvColumns($filePath, ...TuneCoreUpload::KNOWN_COLUMNS)) {
+				$type = TuneCoreUpload::class;
+			}
+		}
+		elseif($this->isTsv($filePath)) {
+			if($this->hasTsvColumns($filePath, ...DistroKidUpload::KNOWN_COLUMNS)) {
+				$type = DistroKidUpload::class;
+			}
+			elseif($this->hasTsvColumns($filePath, ...CdBabyUpload::KNOWN_COLUMNS)) {
+				$type = CdBabyUpload::class;
 			}
 		}
 
@@ -176,39 +200,89 @@ readonly class UploadRepository extends Repository {
 
 	private function isCsv(string $filePath):bool {
 		$file = new SplFileObject($filePath);
-		$firstLine = $file->fgetcsv();
-		return (bool)$firstLine;
+		$firstLine = $file->fgets();
+		$csvData = str_getcsv($firstLine);
+
+		if(count($csvData) <= 1) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private function isTsv(string $filePath):bool {
+		$file = new SplFileObject($filePath);
+		$firstLine = $file->fgets();
+		$csvData = str_getcsv($firstLine, "\t");
+
+		if(count($csvData) <= 1) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private function hasCsvColumns(
 		string $filePath,
 		string...$columnsToCheck,
 	):bool {
-		$file = new SplFileObject($filePath);
-		$firstLine = $file->fgetcsv();
-		foreach($firstLine as $i => $column) {
-			$firstLine[$i] = preg_replace(
+		$firstLine = $this->getCsvLine(fopen($filePath, "r"));
+		return $this->allColumnsExist($firstLine, $columnsToCheck);
+	}
+
+	private function hasTsvColumns(
+		string $filePath,
+		string...$columnsToCheck,
+	):bool {
+		$firstLine = $this->getCsvLine(
+			fopen($filePath, "r"),
+			"\t",
+		);
+		return $this->allColumnsExist($firstLine, $columnsToCheck);
+	}
+
+	/**
+	 * @param resource $fh
+	 * @return array<string, string>
+	 */
+	private function getCsvLine($fh, string $separator = ","):array {
+		$line = fgetcsv($fh, separator: $separator);
+		foreach($line as $i => $column) {
+			$line[$i] = preg_replace(
 				'/[[:^print:]]/',
 				'',
 				$column
 			);
 		}
-		$foundAllColumns = true;
+		return $line;
+	}
 
+
+	/**
+	 * @param array<string, string> $row
+	 * @param array<string> $columnsToCheck
+	 */
+	private function allColumnsExist(array $row, array $columnsToCheck):bool {
 		foreach($columnsToCheck as $columnName) {
-			if(!in_array($columnName, $firstLine)) {
-				$foundAllColumns = false;
+			if(!in_array($columnName, $row)) {
+				return false;
 			}
 		}
 
-		return $foundAllColumns;
+		return true;
 	}
 
+
 	private function ensureCorrectEncoding(string $filePath):void {
-		$content = file_get_contents($filePath);
+		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
+		if($ext === "zip" || $ext === "xlsx") {
+			return;
+		}
+
 		$fileResult = system("file -bi '$filePath'");
 
-		if(str_contains($fileResult, "charset=utf-8")) {
+		if(str_contains($fileResult, "charset=utf-8")
+		|| str_contains($fileResult, "charset=binary")) {
 			return;
 		}
 
@@ -216,7 +290,85 @@ readonly class UploadRepository extends Repository {
 		$encodingString = trim($fileResultParts[1]);
 		$encodingParts = explode("=", $encodingString);
 		$encoding = $encodingParts[1];
+		$content = file_get_contents($filePath);
+
+		if($encoding === "us-ascii") {
+			$encoding = "ISO-8859-1";
+		}
+
 		$content = mb_convert_encoding($content, "UTF-8", $encoding);
 		file_put_contents($filePath, $content);
+	}
+
+	private function ensureSeparatorMatchesExtension(string $filePath):void {
+		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
+		if($ext === "zip" || $ext === "xlsx") {
+			return;
+		}
+
+		$extensionSeparators = [
+			"csv" => ",",
+			"tsv" => "\t",
+		];
+		if(!in_array($ext, array_keys($extensionSeparators))) {
+			return;
+		}
+
+		$separatorIn = $extensionSeparators[$ext];
+		$separatorOut = $extensionSeparators[$ext];
+
+		if($ext === "csv"
+		&& !$this->isCsv($filePath)
+		&& $this->isTsv($filePath)) {
+			$separatorIn = $extensionSeparators["tsv"];
+			$separatorOut = $extensionSeparators["csv"];
+		}
+		elseif($ext === "tsv"
+		&& !$this->isTsv($filePath)
+		&& $this->isCsv($filePath)) {
+			$separatorIn = $extensionSeparators["csv"];
+			$separatorOut = $extensionSeparators["tsv"];
+		}
+		else {
+			return;
+		}
+
+		$fhIn = fopen($filePath, "r");
+		$fhOut = fopen("$filePath.fixed", "w");
+
+		while(!feof($fhIn)) {
+			$line = fgets($fhIn);
+			if(!$line) {
+				continue;
+			}
+			$row = str_getcsv($line, $separatorIn);
+			fputcsv($fhOut, $row, $separatorOut);
+		}
+
+		fclose($fhIn);
+		fclose($fhOut);
+		rename("$filePath.fixed", $filePath);
+	}
+
+	private function ensureUnixLineEnding(string $filePath):void {
+		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
+		if($ext === "zip" || $ext === "xlsx") {
+			return;
+		}
+		$fhIn = fopen($filePath, "r");
+
+		$firstLine = fgets($fhIn, 2048);
+		if(!str_contains($firstLine, "\r")) {
+			// Everything's OK :)
+			return;
+		}
+		fclose($fhIn);
+
+		$contents = file_get_contents($filePath);
+		$contents = str_replace("\r\n", "\n", $contents);
+		$contents = str_replace("\r", "\n", $contents);
+
+		file_put_contents("$filePath.fixed", $contents);
+		rename("$filePath.fixed", $filePath);
 	}
 }

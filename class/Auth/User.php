@@ -1,7 +1,7 @@
 <?php
-namespace SHIFT\Trackshift\Auth;
+namespace SHIFT\TrackShift\Auth;
 
-use SHIFT\Trackshift\Repository\Entity;
+use SHIFT\TrackShift\Repository\Entity;
 
 readonly class User extends Entity {
 	public function __construct(

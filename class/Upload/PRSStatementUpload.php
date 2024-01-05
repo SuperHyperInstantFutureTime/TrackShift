@@ -1,11 +1,11 @@
 <?php
-namespace SHIFT\Trackshift\Upload;
+namespace SHIFT\TrackShift\Upload;
 
-use SHIFT\Trackshift\Royalty\Money;
-use SHIFT\Trackshift\Usage\Usage;
+use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Usage\Usage;
 
 class PRSStatementUpload extends Upload {
-	const KNOWN_CSV_COLUMNS = ["Record Number", "CAE Number", "Work Title", "Amount (performance revenue)", "IP1"];
+	const KNOWN_COLUMNS = ["Record Number", "CAE Number", "Work Title", "Amount (performance revenue)", "IP1"];
 
 	public function extractArtistName(array $row): string {
 		return $row["IP1"];

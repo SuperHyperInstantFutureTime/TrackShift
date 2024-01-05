@@ -2,9 +2,9 @@
 use Gt\Dom\HTMLDocument;
 use Gt\DomTemplate\Binder;
 use Gt\Input\Input;
-use SHIFT\Trackshift\Auth\Settings;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Auth\UserRepository;
+use SHIFT\TrackShift\Auth\Settings;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Auth\UserRepository;
 
 function go(HTMLDocument $document, Binder $binder, Settings $settings):void {
 	$kvp = $settings->getKvp();

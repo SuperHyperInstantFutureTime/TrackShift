@@ -1,12 +1,14 @@
 <?php
-namespace SHIFT\Trackshift\Test\Upload;
+namespace SHIFT\TrackShift\Test\Upload;
 
 use Gt\Database\Query\QueryCollection;
 use Gt\Session\SessionStore;
 use PHPUnit\Framework\TestCase;
-use SHIFT\Trackshift\Audit\AuditRepository;
-use SHIFT\Trackshift\Auth\UserRepository;
-use SHIFT\Trackshift\Upload\UploadRepository;
+use SHIFT\TrackShift\Audit\AuditRepository;
+use SHIFT\TrackShift\Auth\UserRepository;
+use SHIFT\TrackShift\Upload\CargoPhysicalUpload;
+use SHIFT\TrackShift\Upload\CdBabyUpload;
+use SHIFT\TrackShift\Upload\UploadRepository;
 
 class UploadRepositoryTest extends TestCase {
 	const TMP_BASEDIR = "/tmp/trackshift-phpunit";
@@ -63,5 +65,15 @@ class UploadRepositoryTest extends TestCase {
 		$sut = new UploadRepository($queryCollection, $auditRepository);
 		$numPurged = $sut->purgeOldFiles($baseTmpDir);
 		self::assertSame(6, $numPurged);
+	}
+
+	public function testDetectUploadType():void {
+		$userRepository = new UserRepository(self::createMock(QueryCollection::class), self::createMock(SessionStore::class));
+		$auditRepository = new AuditRepository(self::createMock(QueryCollection::class), $userRepository);
+
+		$queryCollection = self::createMock(QueryCollection::class);
+		$sut = new UploadRepository($queryCollection, $auditRepository);
+		self::assertSame(CdBabyUpload::class, $sut->detectUploadType("test/files/CdBaby_Test.txt"));
+		self::assertSame(CargoPhysicalUpload::class, $sut->detectUploadType("test/files/Cargo_Physical_Test.xlsx"));
 	}
 }

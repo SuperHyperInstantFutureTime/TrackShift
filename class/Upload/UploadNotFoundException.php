@@ -1,6 +1,6 @@
 <?php
-namespace SHIFT\Trackshift\Upload;
+namespace SHIFT\TrackShift\Upload;
 
-use SHIFT\Trackshift\TrackshiftException;
+use SHIFT\TrackShift\TrackShiftException;
 
-class UploadNotFoundException extends TrackshiftException {}
+class UploadNotFoundException extends TrackShiftException {}

@@ -2,11 +2,11 @@
 use Authwave\Authenticator;
 use Gt\Dom\HTMLDocument;
 use Gt\DomTemplate\Binder;
-use SHIFT\Trackshift\Audit\AuditRepository;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Content\ContentRepository;
-use SHIFT\Trackshift\Egg\UploadMessageList;
-use SHIFT\Trackshift\Upload\UploadRepository;
+use SHIFT\TrackShift\Audit\AuditRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Content\ContentRepository;
+use SHIFT\TrackShift\Egg\UploadMessageList;
+use SHIFT\TrackShift\Upload\UploadRepository;
 
 function go(
 	ContentRepository $contentRepo,
@@ -33,6 +33,9 @@ function go(
 	foreach($document->querySelectorAll("file-uploader") as $fileUploader) {
 		$binder->bindList(new UploadMessageList(3), $fileUploader);
 	}
+
+	$timestamp = filemtime(".git/index");
+	$document->body->dataset->set("lastUpdate", date("Y-m-d", $timestamp));
 }
 
 function go_after(?User $user, AuditRepository $auditRepository, HTMLDocument $document):void {

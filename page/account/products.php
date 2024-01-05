@@ -1,7 +1,7 @@
 <?php
 use Gt\DomTemplate\Binder;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Product\ProductRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Product\ProductRepository;
 
 function go(
 	Binder $binder,

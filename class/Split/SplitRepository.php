@@ -1,14 +1,14 @@
 <?php
-namespace SHIFT\Trackshift\Split;
+namespace SHIFT\TrackShift\Split;
 
 use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\Row;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Auth\UserRepository;
-use SHIFT\Trackshift\Product\Product;
-use SHIFT\Trackshift\Product\ProductRepository;
-use SHIFT\Trackshift\Repository\Repository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Auth\UserRepository;
+use SHIFT\TrackShift\Product\Product;
+use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Repository\Repository;
 
 readonly class SplitRepository extends Repository {
 	public function __construct(

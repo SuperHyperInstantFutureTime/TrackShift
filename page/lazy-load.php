@@ -7,7 +7,7 @@ use SHIFT\Spotify\Entity\FilterQuery;
 use SHIFT\Spotify\Entity\SearchFilter;
 use SHIFT\Spotify\Entity\Track;
 use SHIFT\Spotify\SpotifyClient;
-use SHIFT\Trackshift\Product\ProductRepository;
+use SHIFT\TrackShift\Product\ProductRepository;
 
 function go(Input $input, ProductRepository $productRepository, SpotifyClient $spotify):void {
 	$minimumImageSize = 80;

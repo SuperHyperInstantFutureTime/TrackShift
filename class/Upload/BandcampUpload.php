@@ -1,11 +1,13 @@
 <?php
-namespace SHIFT\Trackshift\Upload;
+namespace SHIFT\TrackShift\Upload;
 
-use SHIFT\Trackshift\Royalty\Money;
-use SHIFT\Trackshift\Usage\Usage;
+use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Usage\Usage;
 
 class BandcampUpload extends Upload {
-	const KNOWN_CSV_COLUMNS = ["item type", "item name", "artist", "bandcamp transaction id"];
+	const KNOWN_COLUMNS = ["item type", "item name", "artist", "bandcamp transaction id"];
+
+	protected string $dataRowCsvSeparator = ",";
 
 	public function extractArtistName(array $row):string {
 		return $row["artist"];

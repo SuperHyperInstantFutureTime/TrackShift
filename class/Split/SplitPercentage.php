@@ -1,7 +1,7 @@
 <?php
-namespace SHIFT\Trackshift\Split;
+namespace SHIFT\TrackShift\Split;
 
-use SHIFT\Trackshift\Repository\Entity;
+use SHIFT\TrackShift\Repository\Entity;
 
 readonly class SplitPercentage extends Entity {
 	public function __construct(

@@ -1,8 +1,8 @@
 <?php
-namespace SHIFT\Trackshift\Test\Upload;
+namespace SHIFT\TrackShift\Test\Upload;
 
 use PHPUnit\Framework\TestCase;
-use SHIFT\Trackshift\Upload\UnknownUpload;
+use SHIFT\TrackShift\Upload\UnknownUpload;
 
 class UnknownUploadTest extends TestCase {
 	public function testExtractArtistName():void {

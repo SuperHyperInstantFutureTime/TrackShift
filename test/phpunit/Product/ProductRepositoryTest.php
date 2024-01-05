@@ -1,12 +1,12 @@
 <?php
-namespace SHIFT\Trackshift\Test\Product;
+namespace SHIFT\TrackShift\Test\Product;
 use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\ResultSet;
 use Gt\Database\Result\Row;
 use PHPUnit\Framework\TestCase;
-use SHIFT\Trackshift\Artist\ArtistRepository;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Product\ProductRepository;
+use SHIFT\TrackShift\Artist\ArtistRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Product\ProductRepository;
 
 class ProductRepositoryTest extends TestCase {
 	public function testGetProductEarnings():void {

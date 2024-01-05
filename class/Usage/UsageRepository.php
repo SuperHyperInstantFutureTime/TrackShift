@@ -1,17 +1,28 @@
 <?php
-namespace SHIFT\Trackshift\Usage;
+namespace SHIFT\TrackShift\Usage;
 
+use Gt\Database\Query\QueryCollection;
 use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
-use SHIFT\Trackshift\Artist\Artist;
-use SHIFT\Trackshift\Artist\ArtistRepository;
-use SHIFT\Trackshift\Auth\User;
-use SHIFT\Trackshift\Product\Product;
-use SHIFT\Trackshift\Product\ProductRepository;
-use SHIFT\Trackshift\Repository\Repository;
-use SHIFT\Trackshift\Upload\Upload;
+use SHIFT\Spotify\SpotifyClient;
+use SHIFT\TrackShift\Artist\Artist;
+use SHIFT\TrackShift\Artist\ArtistRepository;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Product\Product;
+use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Repository\Repository;
+use SHIFT\TrackShift\Upload\Upload;
 
 readonly class UsageRepository extends Repository {
+	const UNSORTED_UPC = "::UNSORTED_UPC::";
+	const UNSORTED_ISRC = "::UNSORTED_ISRC::";
+
+	public function __construct(
+		QueryCollection $db,
+	) {
+		parent::__construct($db);
+	}
+
 	/** @return array<Usage> */
 	public function createUsagesFromUpload(Upload $upload):array {
 		$usageList = [];
@@ -33,14 +44,17 @@ readonly class UsageRepository extends Repository {
 		return $usageList;
 	}
 
-	/** @param array<Usage> $usageList */
+	/**
+	 * @param array<Usage> $usageList
+	 * @return array<array<string>> A tuple of artistName:productTitle
+	 */
 	public function process(
 		User $user,
 		array $usageList,
 		Upload $upload,
 		ArtistRepository $artistRepository,
 		ProductRepository $productRepository,
-	):int {
+	):array {
 		$importedUsageIdList = [];
 		$importedArtistNameList = [];
 		$importedProductTitleList = [];
@@ -49,7 +63,6 @@ readonly class UsageRepository extends Repository {
 		$mapCombinedArtistNameProductTitleToProduct = [];
 
 		$artistList = [];
-//		$productList = [];
 
 		foreach($usageList as $usage) {
 			$artistName = $upload->extractArtistName($usage->row);
@@ -88,7 +101,11 @@ readonly class UsageRepository extends Repository {
 		$toCreateProductList = [];
 		foreach($importedUniqueCombinedArtistNameProductTitleList as $combinedArtistProduct) {
 			[$artistName, $productTitle] = explode("__", $combinedArtistProduct);
-			$artistId = $mapArtistNameToId[$artistName];
+			$artistId = $mapArtistNameToId[$artistName] ?? null;
+			if(!$artistId) {
+				continue;
+			}
+
 			$artist = $artistList[$artistId];
 
 			$product = $productRepository->find($productTitle, $artist);
@@ -109,14 +126,17 @@ readonly class UsageRepository extends Repository {
 
 		Log::debug("Created $artistCount artists and $productCount products");
 
-		$count = 0;
 		foreach($importedEarningList as $i => $earning) {
 			$artistName = $importedArtistNameList[$i];
 			$productTitle = $importedProductTitleList[$i];
 			$combinedArtistProduct = $artistName . "__" . $productTitle;
-			$product = $mapCombinedArtistNameProductTitleToProduct[$combinedArtistProduct];
+			$product = $mapCombinedArtistNameProductTitleToProduct[$combinedArtistProduct] ?? null;
 
-			$count += $this->db->insert("assignProductUsage", [
+			if(!$product) {
+				continue;
+			}
+
+			$this->db->insert("assignProductUsage", [
 				"id" => (string)(new Ulid("pu")),
 				"usageId" => $importedUsageIdList[$i],
 				"productId" => $product->id,
@@ -124,6 +144,6 @@ readonly class UsageRepository extends Repository {
 			]);
 		}
 
-		return $count;
+		return [$importedArtistNameList, $importedProductTitleList];
 	}
 }
