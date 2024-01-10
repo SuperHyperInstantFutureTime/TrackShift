@@ -2,7 +2,9 @@ select
 	Product.id as productId,
 	artistId,
 	Artist.name as artistName,
+	Artist.nameNormalised as artistNameNormalised,
 	title,
+	titleNormalised,
 	round(sum(UsageOfProduct.earning), 2) as totalEarning,
 	coalesce(Cost.sumAmount, 0) as totalCost,
 	coalesce(SplitPercentage.sumPercentage, 0) as percentageOutgoing

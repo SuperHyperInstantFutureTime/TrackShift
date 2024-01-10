@@ -36,8 +36,9 @@ readonly class ProductRepository extends Repository {
 		return $count;
 	}
 
-	public function find(string $productTitle, Artist $artist):?Product {
-		return $this->rowToProduct($this->db->fetch("getProductByTitleAndArtist", [
+	public function find(string $productTitle, Artist $artist, bool $normalisedTitle = false):?Product {
+		$queryName = $normalisedTitle ? "getProductByTitleNormalisedAndArtist" : "getProductByTitleAndArtist";
+		return $this->rowToProduct($this->db->fetch($queryName, [
 			"title" => $productTitle,
 			"artistId" => $artist->id,
 		]), $artist);
@@ -104,8 +105,8 @@ readonly class ProductRepository extends Repository {
 		$earningList = [];
 
 		foreach($this->db->fetchAll("getEarnings", $user->id) as $row) {
-			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
-			$product = new Product($row->getString("productId"), $row->getString("title"), $artist);
+			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"), $row->getString("artistNameNormalised"));
+			$product = new Product($row->getString("productId"), $row->getString("title"), $artist, $row->getString("titleNormalised"));
 			$earning = new Money($row->getFloat("totalEarning"));
 			$cost = new Money();
 			if($costValue = $row->getFloat("totalCost")) {
@@ -145,6 +146,7 @@ readonly class ProductRepository extends Repository {
 			$row->getString("id"),
 			$row->getString("title"),
 			$artist,
+			$row->getString("titleNormalised"),
 		);
 	}
 

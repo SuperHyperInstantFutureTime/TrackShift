@@ -10,6 +10,7 @@ readonly class Product extends Entity {
 		public string $id,
 		public string $title,
 		public ?Artist $artist,
+		public ?string $titleNormalised,
 	) {}
 
 	#[BindGetter]

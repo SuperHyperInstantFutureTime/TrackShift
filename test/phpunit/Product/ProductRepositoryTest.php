@@ -17,6 +17,7 @@ class ProductRepositoryTest extends TestCase {
 				"title" => "Song A",
 				"artistId" => "ARTIST_A",
 				"artistName" => "Artist A",
+				"artistNameNormalised" => "artist_a",
 				"totalEarning" => 1000.00,
 				"totalCost" => 100.00,
 				"percentageOutgoing" => $examplePercentageRetained,
