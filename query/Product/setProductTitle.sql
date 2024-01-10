@@ -1,6 +1,7 @@
 update Product
 set
-	title = :title
+	title = :title,
+	titleNormalised = :titleNormalised
 
 where
 	id = :id

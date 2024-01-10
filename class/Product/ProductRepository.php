@@ -88,6 +88,7 @@ readonly class ProductRepository extends Repository {
 				$count += $this->db->update("setProductTitle", [
 					"id" => $product->id,
 					"title" => $album->name,
+					"titleNormalised" => new NormalisedString($album->name),
 				]);
 			}
 		}
@@ -155,14 +156,14 @@ readonly class ProductRepository extends Repository {
 	public function getForArtist(string|Artist $artist, User $user):array {
 		$artist = is_string($artist) ? $this->artistRepository->getById($artist, $user) : $artist;
 
-		$artistArray = [];
+		$productArray = [];
 		foreach($this->db->fetchAll("getAllByArtistId", $artist->id) as $row) {
 			array_push(
-				$artistArray,
+				$productArray,
 				$this->rowToProduct($row, $artist),
 			);
 		}
-		return $artistArray;
+		return $productArray;
 	}
 
 	private function rowToProduct(?Row $row, ?Artist $artist = null):?Product {
