@@ -3,6 +3,7 @@ namespace SHIFT\TrackShift\Artist;
 
 use Gt\Database\Result\Row;
 use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Repository\NormalisedString;
 use SHIFT\TrackShift\Repository\Repository;
 
 readonly class ArtistRepository extends Repository {
@@ -53,6 +54,7 @@ readonly class ArtistRepository extends Repository {
 				"id" => $artist->id,
 				"name" => $artist->name,
 				"userId" => $user->id,
+				"nameNormalised" => new NormalisedString($artist->name),
 			]);
 		}
 

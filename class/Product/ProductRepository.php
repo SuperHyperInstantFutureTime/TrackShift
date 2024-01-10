@@ -11,6 +11,7 @@ use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\Artist;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Repository\NormalisedString;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\UsageRepository;
@@ -30,6 +31,7 @@ readonly class ProductRepository extends Repository {
 				"id" => $product->id,
 				"artistId" => $product->artist->id,
 				"title" => $product->title,
+				"titleNormalised" => new NormalisedString($product->title),
 			]);
 		}
 
@@ -105,8 +107,8 @@ readonly class ProductRepository extends Repository {
 		$earningList = [];
 
 		foreach($this->db->fetchAll("getEarnings", $user->id) as $row) {
-			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"), $row->getString("artistNameNormalised"));
-			$product = new Product($row->getString("productId"), $row->getString("title"), $artist, $row->getString("titleNormalised"));
+			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
+			$product = new Product($row->getString("productId"), $row->getString("title"), $artist);
 			$earning = new Money($row->getFloat("totalEarning"));
 			$cost = new Money();
 			if($costValue = $row->getFloat("totalCost")) {
@@ -146,7 +148,6 @@ readonly class ProductRepository extends Repository {
 			$row->getString("id"),
 			$row->getString("title"),
 			$artist,
-			$row->getString("titleNormalised"),
 		);
 	}
 
