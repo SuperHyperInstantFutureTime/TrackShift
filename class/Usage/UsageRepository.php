@@ -119,7 +119,7 @@ readonly class UsageRepository extends Repository {
 			$artist = $artistList[$artistId];
 
 			$productTitle = $importedProductTitleList[$i];
-			$product = $productRepository->find($productTitleNormalised, $artist);
+			$product = $productRepository->find($productTitleNormalised, $artist, true);
 			if(!$product) {
 				$product = new Product(
 					new Ulid("product"),
