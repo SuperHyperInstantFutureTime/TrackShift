@@ -1,7 +1,8 @@
 select
 	Artist.id,
 	Artist.name,
-	Artist.userId
+	Artist.userId,
+	Artist.nameNormalised
 
 from
 	Artist

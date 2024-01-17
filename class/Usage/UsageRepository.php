@@ -10,18 +10,14 @@ use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Product\Product;
 use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Repository\NormalisedString;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Upload\Upload;
 
 readonly class UsageRepository extends Repository {
 	const UNSORTED_UPC = "::UNSORTED_UPC::";
 	const UNSORTED_ISRC = "::UNSORTED_ISRC::";
-
-	public function __construct(
-		QueryCollection $db,
-	) {
-		parent::__construct($db);
-	}
+	const SEPARATOR = "::::::";
 
 	/** @return array<Usage> */
 	public function createUsagesFromUpload(Upload $upload):array {
@@ -47,7 +43,9 @@ readonly class UsageRepository extends Repository {
 	/**
 	 * @param array<Usage> $usageList
 	 * @return array<array<string>> A tuple of artistName:productTitle
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
+	// phpcs:ignore
 	public function process(
 		User $user,
 		array $usageList,
@@ -57,8 +55,10 @@ readonly class UsageRepository extends Repository {
 	):array {
 		$importedUsageIdList = [];
 		$importedArtistNameList = [];
+		$importedArtistNameListNormalised = [];
 		$importedProductTitleList = [];
-		$importedCombinedArtistNameProductTitleList = [];
+		$importedProductTitleListNormalised = [];
+		$importedCombinedArtistNameProductTitleListNormalised = [];
 		$importedEarningList = [];
 		$mapCombinedArtistNameProductTitleToProduct = [];
 
@@ -66,24 +66,30 @@ readonly class UsageRepository extends Repository {
 
 		foreach($usageList as $usage) {
 			$artistName = $upload->extractArtistName($usage->row);
+			$artistNameNormalised = (string)(new NormalisedString($artistName));
 			$productTitle = $upload->extractProductTitle($usage->row);
+			$productTitleNormalised = (string)(new NormalisedString($productTitle));
 			$earning = $upload->extractEarning($usage->row);
 
 			array_push($importedUsageIdList, $usage->id);
 			array_push($importedArtistNameList, $artistName);
+			array_push($importedArtistNameListNormalised, $artistNameNormalised);
 			array_push($importedProductTitleList, $productTitle);
+			array_push($importedProductTitleListNormalised, $productTitleNormalised);
 			array_push($importedEarningList, $earning);
 
-			array_push($importedCombinedArtistNameProductTitleList, $artistName . "__" . $productTitle);
+			array_push($importedCombinedArtistNameProductTitleListNormalised, $artistNameNormalised . self::SEPARATOR . $productTitleNormalised);
 			$this->db->update("setProcessed", $usage->id);
 		}
 
 		$importedUniqueArtistNameList = array_unique($importedArtistNameList);
+		$importedUniqueArtistNameListNormalised = array_unique($importedArtistNameListNormalised);
 		/** @var array<Artist> $toCreateArtistList */
 		$toCreateArtistList = [];
-		$mapArtistNameToId = [];
-		foreach($importedUniqueArtistNameList as $artistName) {
-			$artist = $artistRepository->getByName($artistName, $user);
+		$mapArtistNameNormalisedToId = [];
+		foreach($importedUniqueArtistNameListNormalised as $i => $artistNameNormalised) {
+			$artistName = $importedUniqueArtistNameList[$i];
+			$artist = $artistRepository->getByNormalisedName($artistNameNormalised, $user);
 			if(!$artist) {
 				$artist = new Artist(
 					new Ulid("artist"),
@@ -93,22 +99,23 @@ readonly class UsageRepository extends Repository {
 			}
 
 			$artistList[$artist->id] = $artist;
-			$mapArtistNameToId[$artistName] = $artist->id;
+			$mapArtistNameNormalisedToId[$artistNameNormalised] = $artist->id;
 		}
 
-		$importedUniqueCombinedArtistNameProductTitleList = array_unique($importedCombinedArtistNameProductTitleList);
+		$importedUniqueCombinedArtistNameProductTitleListNormalised = array_unique($importedCombinedArtistNameProductTitleListNormalised);
 		/** @var array<Product> $toCreateProductList */
 		$toCreateProductList = [];
-		foreach($importedUniqueCombinedArtistNameProductTitleList as $combinedArtistProduct) {
-			[$artistName, $productTitle] = explode("__", $combinedArtistProduct);
-			$artistId = $mapArtistNameToId[$artistName] ?? null;
+		foreach($importedUniqueCombinedArtistNameProductTitleListNormalised as $i => $combinedArtistProductNormalised) {
+			[$artistNameNormalised, $productTitleNormalised] = explode(self::SEPARATOR, $combinedArtistProductNormalised);
+			$artistId = $mapArtistNameNormalisedToId[$artistNameNormalised] ?? null;
 			if(!$artistId) {
 				continue;
 			}
 
 			$artist = $artistList[$artistId];
 
-			$product = $productRepository->find($productTitle, $artist);
+			$productTitle = $importedProductTitleList[$i];
+			$product = $productRepository->find($productTitleNormalised, $artist, true);
 			if(!$product) {
 				$product = new Product(
 					new Ulid("product"),
@@ -118,7 +125,7 @@ readonly class UsageRepository extends Repository {
 				array_push($toCreateProductList, $product);
 			}
 //			$productList[$product->id] = $product;
-			$mapCombinedArtistNameProductTitleToProduct[$combinedArtistProduct] = $product;
+			$mapCombinedArtistNameProductTitleToProduct[$combinedArtistProductNormalised] = $product;
 		}
 
 		$artistCount = $artistRepository->create($user, ...$toCreateArtistList);
@@ -127,10 +134,10 @@ readonly class UsageRepository extends Repository {
 		Log::debug("Created $artistCount artists and $productCount products");
 
 		foreach($importedEarningList as $i => $earning) {
-			$artistName = $importedArtistNameList[$i];
-			$productTitle = $importedProductTitleList[$i];
-			$combinedArtistProduct = $artistName . "__" . $productTitle;
-			$product = $mapCombinedArtistNameProductTitleToProduct[$combinedArtistProduct] ?? null;
+			$artistNameNormalised = $importedArtistNameListNormalised[$i];
+			$productTitleNormalised = $importedProductTitleListNormalised[$i];
+			$combinedArtistProductNormalised = $artistNameNormalised . self::SEPARATOR . $productTitleNormalised;
+			$product = $mapCombinedArtistNameProductTitleToProduct[$combinedArtistProductNormalised] ?? null;
 
 			if(!$product) {
 				continue;

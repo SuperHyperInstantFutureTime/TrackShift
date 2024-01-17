@@ -3,6 +3,7 @@ namespace SHIFT\TrackShift\Artist;
 
 use Gt\Database\Result\Row;
 use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Repository\NormalisedString;
 use SHIFT\TrackShift\Repository\Repository;
 
 readonly class ArtistRepository extends Repository {
@@ -31,6 +32,10 @@ readonly class ArtistRepository extends Repository {
 		return $this->rowToArtist($this->db->fetch("getArtistByName", $artistName, $user->id));
 	}
 
+	public function getByNormalisedName(string $normalisedName, User $user):?Artist {
+		return $this->rowToArtist($this->db->fetch("getArtistByNormalisedName", $normalisedName, $user->id));
+	}
+
 	private function rowToArtist(?Row $row):?Artist {
 		if(!$row) {
 			return null;
@@ -49,9 +54,11 @@ readonly class ArtistRepository extends Repository {
 				"id" => $artist->id,
 				"name" => $artist->name,
 				"userId" => $user->id,
+				"nameNormalised" => new NormalisedString($artist->name),
 			]);
 		}
 
 		return $count;
 	}
+
 }

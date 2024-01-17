@@ -1,7 +1,8 @@
 select
 	id,
 	artistId,
-	title
+	title,
+	titleNormalised
 
 from
 	Product

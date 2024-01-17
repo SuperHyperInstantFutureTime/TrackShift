@@ -51,17 +51,11 @@ class DistroKidUpload extends Upload {
 		}
 
 		if($row["Song/Album"] === "Album") {
-			if($upc) {
-				$this->upcProductTitleMap[$upc] = $title;
-			}
-
-			return $title;
+			return $this->extractProductTitleForAlbum($upc, $title);
 		}
 
 		if(!$upc) {
-			if($isrc) {
-				$upc = $this->isrcUpcMap[$isrc] ?? null;
-			}
+			$upc = $this->getUpc($isrc, $upc);
 		}
 
 		if($upc) {
@@ -73,5 +67,30 @@ class DistroKidUpload extends Upload {
 
 	public function extractEarning(array $row):Money {
 		return new Money((float)$row["Earnings (USD)"]);
+	}
+
+	/**
+	 * @param string $upc
+	 * @param string $title
+	 * @return string
+	 */
+	protected function extractProductTitleForAlbum(string $upc, string $title):string {
+		if($upc) {
+			$this->upcProductTitleMap[$upc] = $title;
+		}
+
+		return $title;
+	}
+
+	/**
+	 * @param string $isrc
+	 * @param string|null $upc
+	 * @return string|null
+	 */
+	protected function getUpc(string $isrc, ?string $upc):?string {
+		if($isrc) {
+			$upc = $this->isrcUpcMap[$isrc] ?? null;
+		}
+		return $upc;
 	}
 }

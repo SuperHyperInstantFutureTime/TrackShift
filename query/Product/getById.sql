@@ -2,7 +2,9 @@ select
 	Product.id,
 	artistId,
 	title,
-	Artist.name as artistName
+	titleNormalised,
+	Artist.name as artistName,
+	Artist.nameNormalised as artistNameNormalised
 
 from
 	Product

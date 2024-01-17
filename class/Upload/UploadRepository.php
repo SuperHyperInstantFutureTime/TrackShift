@@ -12,7 +12,10 @@ use SHIFT\TrackShift\Royalty\Money;
 use SplFileObject;
 use ZipArchive;
 
-/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 readonly class UploadRepository extends Repository {
 	const DIR_UPLOAD = "data/upload";
 
@@ -173,26 +176,10 @@ readonly class UploadRepository extends Repository {
 			$type = CargoPhysicalUpload::class;
 		}
 		elseif($this->isCsv($filePath)) {
-			if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_COLUMNS)) {
-				$type = PRSStatementUpload::class;
-			}
-			elseif($this->hasCsvColumns($filePath, ...BandcampUpload::KNOWN_COLUMNS)) {
-				$type = BandcampUpload::class;
-			}
-			elseif($this->hasCsvColumns($filePath, ...CargoDigitalUpload::KNOWN_COLUMNS)) {
-				$type = CargoDigitalUpload::class;
-			}
-			elseif($this->hasCsvColumns($filePath, ...TuneCoreUpload::KNOWN_COLUMNS)) {
-				$type = TuneCoreUpload::class;
-			}
+			$type = $this->detectUploadTypeFromCsv($filePath);
 		}
 		elseif($this->isTsv($filePath)) {
-			if($this->hasTsvColumns($filePath, ...DistroKidUpload::KNOWN_COLUMNS)) {
-				$type = DistroKidUpload::class;
-			}
-			elseif($this->hasTsvColumns($filePath, ...CdBabyUpload::KNOWN_COLUMNS)) {
-				$type = CdBabyUpload::class;
-			}
+			$type = $this->detectUploadTypeFromTsv($filePath);
 		}
 
 		return $type;
@@ -302,51 +289,41 @@ readonly class UploadRepository extends Repository {
 
 	private function ensureSeparatorMatchesExtension(string $filePath):void {
 		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
-		if($ext === "zip" || $ext === "xlsx") {
-			return;
-		}
-
 		$extensionSeparators = [
 			"csv" => ",",
 			"tsv" => "\t",
 		];
-		if(!in_array($ext, array_keys($extensionSeparators))) {
+
+		if (!array_key_exists($ext, $extensionSeparators) || in_array($ext, ["zip", "xlsx"])) {
 			return;
 		}
 
-		$separatorIn = $extensionSeparators[$ext];
-		$separatorOut = $extensionSeparators[$ext];
+		$oppositeExt = $ext === "csv" ? "tsv" : "csv";
+		if ($this->checkFileTypeMismatch($ext, $oppositeExt, $filePath)) {
+			$this->convertFile($filePath, $extensionSeparators[$ext], $extensionSeparators[$oppositeExt]);
+		}
+	}
 
-		if($ext === "csv"
-		&& !$this->isCsv($filePath)
-		&& $this->isTsv($filePath)) {
-			$separatorIn = $extensionSeparators["tsv"];
-			$separatorOut = $extensionSeparators["csv"];
-		}
-		elseif($ext === "tsv"
-		&& !$this->isTsv($filePath)
-		&& $this->isCsv($filePath)) {
-			$separatorIn = $extensionSeparators["csv"];
-			$separatorOut = $extensionSeparators["tsv"];
-		}
-		else {
-			return;
-		}
+	private function checkFileTypeMismatch(string $ext, string $oppositeExt, string $filePath): bool {
+		$checkFunctions = ["csv" => "isCsv", "tsv" => "isTsv"];
+		return !$this->{$checkFunctions[$ext]}($filePath) && $this->{$checkFunctions[$oppositeExt]}($filePath);
+	}
 
+	private function convertFile(string $filePath, string $separatorIn, string $separatorOut): void {
 		$fhIn = fopen($filePath, "r");
 		$fhOut = fopen("$filePath.fixed", "w");
 
 		while(!feof($fhIn)) {
 			$line = fgets($fhIn);
-			if(!$line) {
-				continue;
+			if ($line) {
+				$row = str_getcsv($line, $separatorIn);
+				fputcsv($fhOut, $row, $separatorOut);
 			}
-			$row = str_getcsv($line, $separatorIn);
-			fputcsv($fhOut, $row, $separatorOut);
 		}
 
 		fclose($fhIn);
 		fclose($fhOut);
+
 		rename("$filePath.fixed", $filePath);
 	}
 
@@ -370,5 +347,33 @@ readonly class UploadRepository extends Repository {
 
 		file_put_contents("$filePath.fixed", $contents);
 		rename("$filePath.fixed", $filePath);
+	}
+
+	protected function detectUploadTypeFromCsv(mixed $filePath):string {
+		$type = UnknownUpload::class;
+		if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_COLUMNS)) {
+			$type = PRSStatementUpload::class;
+		}
+		elseif($this->hasCsvColumns($filePath, ...BandcampUpload::KNOWN_COLUMNS)) {
+			$type = BandcampUpload::class;
+		}
+		elseif($this->hasCsvColumns($filePath, ...CargoDigitalUpload::KNOWN_COLUMNS)) {
+			$type = CargoDigitalUpload::class;
+		}
+		elseif($this->hasCsvColumns($filePath, ...TuneCoreUpload::KNOWN_COLUMNS)) {
+			$type = TuneCoreUpload::class;
+		}
+		return $type;
+	}
+
+	protected function detectUploadTypeFromTsv(mixed $filePath):string {
+		$type = UnknownUpload::class;
+		if($this->hasTsvColumns($filePath, ...DistroKidUpload::KNOWN_COLUMNS)) {
+			$type = DistroKidUpload::class;
+		}
+		elseif($this->hasTsvColumns($filePath, ...CdBabyUpload::KNOWN_COLUMNS)) {
+			$type = CdBabyUpload::class;
+		}
+		return $type;
 	}
 }

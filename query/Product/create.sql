@@ -1,10 +1,12 @@
 insert into Product (
 	id,
 	artistId,
-	title
+	title,
+	titleNormalised
 )
 values (
 	:id,
 	:artistId,
-	:title
+	:title,
+	:titleNormalised
 )

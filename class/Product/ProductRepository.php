@@ -11,10 +11,12 @@ use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\Artist;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Repository\NormalisedString;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 readonly class ProductRepository extends Repository {
 	public function __construct(
 		QueryCollection $db,
@@ -30,14 +32,16 @@ readonly class ProductRepository extends Repository {
 				"id" => $product->id,
 				"artistId" => $product->artist->id,
 				"title" => $product->title,
+				"titleNormalised" => new NormalisedString($product->title),
 			]);
 		}
 
 		return $count;
 	}
 
-	public function find(string $productTitle, Artist $artist):?Product {
-		return $this->rowToProduct($this->db->fetch("getProductByTitleAndArtist", [
+	public function find(string $productTitle, Artist $artist, bool $normalisedTitle = false):?Product {
+		$queryName = $normalisedTitle ? "getProductByTitleNormalisedAndArtist" : "getProductByTitleAndArtist";
+		return $this->rowToProduct($this->db->fetch($queryName, [
 			"title" => $productTitle,
 			"artistId" => $artist->id,
 		]), $artist);
@@ -85,6 +89,7 @@ readonly class ProductRepository extends Repository {
 				$count += $this->db->update("setProductTitle", [
 					"id" => $product->id,
 					"title" => $album->name,
+					"titleNormalised" => new NormalisedString($album->name),
 				]);
 			}
 		}
@@ -152,14 +157,14 @@ readonly class ProductRepository extends Repository {
 	public function getForArtist(string|Artist $artist, User $user):array {
 		$artist = is_string($artist) ? $this->artistRepository->getById($artist, $user) : $artist;
 
-		$artistArray = [];
+		$productArray = [];
 		foreach($this->db->fetchAll("getAllByArtistId", $artist->id) as $row) {
 			array_push(
-				$artistArray,
+				$productArray,
 				$this->rowToProduct($row, $artist),
 			);
 		}
-		return $artistArray;
+		return $productArray;
 	}
 
 	private function rowToProduct(?Row $row, ?Artist $artist = null):?Product {
