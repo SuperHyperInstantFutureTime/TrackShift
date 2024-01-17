@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ 8.2 ]
+        php: [ 8.2, 8.3 ]
 
     steps:
       - uses: actions/checkout@v3
@@ -38,7 +38,7 @@ jobs:
     needs: [ composer ]
     strategy:
       matrix:
-        php: [ 8.2 ]
+        php: [ 8.2, 8.3 ]
 
     outputs:
       coverage: ${{ steps.store-coverage.outputs.coverage_text }}
@@ -91,7 +91,7 @@ jobs:
     needs: [ composer ]
     strategy:
       matrix:
-        php: [ 8.2 ]
+        php: [ 8.2, 8.3 ]
 
     steps:
       - uses: actions/download-artifact@v3
@@ -113,7 +113,7 @@ jobs:
     needs: [ composer ]
     strategy:
       matrix:
-        php: [ 8.2 ]
+        php: [ 8.2, 8.3 ]
 
     steps:
       - uses: actions/download-artifact@v3
@@ -138,7 +138,7 @@ jobs:
     needs: [ composer ]
     strategy:
       matrix:
-        php: [ 8.2 ]
+        php: [ 8.2, 8.3 ]
 
     steps:
       - uses: actions/download-artifact@v3
