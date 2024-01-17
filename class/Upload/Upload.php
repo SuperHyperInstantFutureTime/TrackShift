@@ -39,14 +39,7 @@ abstract class Upload {
 		$this->createdAt = new DateTime("@" . filectime($this->filePath));
 		$this->createdAt->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
-		$bytes = $this->size;
-		$units = ["B", "KB", "MB", "GB", "TB", "PB"];
-		for($i = 0; $bytes > 1024; $i++) {
-			$bytes /= 1024;
-		}
-		$this->sizeString = round($bytes, 1)
-			. " "
-			. $units[$i];
+		$this->sizeString = $this->calculateSizeString();
 
 		$className = get_class($this);
 		$this->type = match($className) {
@@ -156,5 +149,16 @@ abstract class Upload {
 		}
 
 		return $input;
+	}
+
+	protected function calculateSizeString():string {
+		$bytes = $this->size;
+		$units = ["B", "KB", "MB", "GB", "TB", "PB"];
+		for($i = 0; $bytes > 1024; $i++) {
+			$bytes /= 1024;
+		}
+		return round($bytes, 1)
+			. " "
+			. $units[$i];
 	}
 }

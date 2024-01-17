@@ -19,12 +19,6 @@ readonly class UsageRepository extends Repository {
 	const UNSORTED_ISRC = "::UNSORTED_ISRC::";
 	const SEPARATOR = "::::::";
 
-	public function __construct(
-		QueryCollection $db,
-	) {
-		parent::__construct($db);
-	}
-
 	/** @return array<Usage> */
 	public function createUsagesFromUpload(Upload $upload):array {
 		$usageList = [];
@@ -49,7 +43,9 @@ readonly class UsageRepository extends Repository {
 	/**
 	 * @param array<Usage> $usageList
 	 * @return array<array<string>> A tuple of artistName:productTitle
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
+	// phpcs:ignore
 	public function process(
 		User $user,
 		array $usageList,

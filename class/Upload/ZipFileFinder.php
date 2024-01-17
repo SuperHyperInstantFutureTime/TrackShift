@@ -18,10 +18,7 @@ class ZipFileFinder implements Stringable {
 
 	public function __toString():string {
 		$tmpDir = sys_get_temp_dir() . "/trackshift/upload/$this->filePath/";
-		if(is_dir($tmpDir)) {
-
-		}
-		else {
+		if(!is_dir($tmpDir)) {
 			mkdir($tmpDir, recursive: true);
 		}
 

@@ -16,6 +16,7 @@ use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 readonly class ProductRepository extends Repository {
 	public function __construct(
 		QueryCollection $db,
