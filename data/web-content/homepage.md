@@ -1,55 +1,56 @@
-<!-- what? -->
+# Simple, loveable admin tools for independent record labels and artists.
 
-# Simple, loveable admin tools for independent music and publishing people.
+## Try it now. No login required! &#8631;
 
-## We exist to get artists paid quicker, and to give time back to labels so they can release more amazing music.
-
-***
-<!-- why? -->
 <section>
 
-<!-- Music is a £20 billion global industry run on shared spreadsheets and antiquated systems that takes ages to pay artists (and not always correctly).  -->
+## We process sales data for record labels so they can work out artist royalties in seconds.
 
-Independent record labels with the most artist-friendly deals are struggling to process the masses of sales data they get every month or quarter. They want to pay their artists, but it's taking them ages to work it all out. 
+We’re adding new distributors and platforms all the time. 
 
-We're building an innovative sales and royalties processor to solve that. 
+Here’s what we currently support:
+<div class="pill-container">
+<span class="pill">Tunecore</span><span class="pill">Distrokid</span><span class="pill">CD Baby</span><span class="pill">Bandcamp</span><span class="pill">Cargo UK</span>
+</div>
+
+If you don't see yours, let us know and we'll make it happen.
+
+<a class="button button-red" href="mailto:biff@trackshift.app">Get in touch</a>
+
+</section>
+
+<section class="three-quarter-width">
+
+<!-- pricing -->
+
+## Pricing
+
+Super simple: free to use while unregistered versus monthly/annual fee to login, save your work, plus extended features coming soon.
 
 </section>
 
 <section>
 
-<!-- who? -->
+<!-- benefits -->
 
 {.float.right}
-![Trackshift team](/asset/img/editorial/homepage/about-us.png)
-
-## About Us
-
-TrackShift was founded by Greg Bowler and Richard 'Biff' Birkin in Derbyshire, UK.  
-
-Greg is a technologist, solving real world problems using software. His work ranges from logging and analysis dashboards for the renewable energy sector, to interfacing with event ticketing systems for attendeees with a disability.   
-
-Biff is a composer and digital strategist/user experience designer - the latter skills developed in startups that gave him the flexi-time needed to carry on being in bands and touring UK/Europe's DIY punk/hardcore scene.
-
-Our working ethic is inspired by that scene, paired with a software development mantra of Simple, Loveable and Complete feature development. 
-
-</section>
-
-<section>
-
-<!-- how? -->
-
-{.float.left}
 ![Spin your records, not your head](/asset/img/editorial/homepage/spin-your-records-LG-dark.png)
 
-## What We're Doing
+## Benefits
 
-We're working with a handful of small independent record labels, learning how they work and what their data looks like. 
+### Royalties
 
-TrackShift v1 will be launched for Record Labels early 2024 as part of an Innovate UK funded development sprint through 2023.
+<ul>
+<li>Calculate artist royalties in seconds</li>
+<li>Pay artists more frequently</li>
+<li>Share ongoing royalty reports with artists</li>
+</ul>
 
-Interested? Get in touch with <a href="mailto:biff@trackshift.app">biff@trackshift.app</a>
+### Business 
+
+<ul>
+<li>Profit/loss visibility per product and label-wide</li>
+<li>More time spent not doing spreadsheets</li>
+</ul>
 
 </section>
-
-<!-- etc. -->
