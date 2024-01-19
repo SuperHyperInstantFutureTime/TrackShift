@@ -1,3 +1,35 @@
 section {
-	
+    img {
+        border-radius:var(--theme-ui-border-radius);
+    }
+    .three-quarter-width {
+        max-width:75vw; 
+    }
+    .pill {
+        border:1px solid black;
+        padding:0.5rem 0.8rem;
+        border-radius: 50rem;
+        margin-right:1rem;
+        background-color: black;
+        color:white;
+        font-weight: bold;
+        font-family: var(--font-family-main);
+        font-size: var(--font-size-base);
+    }
+    .pill-container {
+        margin-top:2rem;
+        margin-bottom:2rem;
+        height:100%;
+    }
+    ul {
+        li {
+            font-family: var(--font-family-main);
+            font-size:var(--font-size-base);
+            line-height: var(--font-readable-line-height);
+        }
+        li::marker {
+            content: '⇒ ';
+            font-size: 1.2em;
+          }
+    }
 }
