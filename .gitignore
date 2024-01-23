@@ -1,6 +1,7 @@
 /.idea
 /vendor/
-/data/
+data/cache
+data/upload
 /ts.db
 /config.*.ini
 /www/
