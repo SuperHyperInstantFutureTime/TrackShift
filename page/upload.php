@@ -29,38 +29,28 @@ function do_upload(
 	Database $database,
 ):void {
 	set_time_limit(600);
+	$database->executeSql("PRAGMA foreign_keys = OFF");
 	$database->executeSql("begin transaction");
-	$database->executeSql("PRAGMA foreign_keys = 0");
 
-	$userRepository->persistUser($user);
 	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
 	foreach($uploadList as $upload) {
-		$usageListTotal = $usageRepository->createUsagesFromUpload($upload);
-		$chunks = array_chunk($usageListTotal, 100);
+				$usageList = $usageRepository->createUsagesFromUpload($upload);
+//		$usageListTotal = $usageRepository->createUsagesFromUpload($upload);
+//		$chunks = array_chunk($usageListTotal, 100);
 
 		$artistProductTuple = [];
 
-		foreach($chunks as $chunkIndex => $usageList) {
-			$uploadRepository->setProcessed($upload);
-			$chunkedArtistProductTuple = $usageRepository->process(
-				$user,
-				$usageList,
-				$upload,
-				$artistRepository,
-				$productRepository,
-			);
-			if($artistProductTuple) {
-				$artistProductTuple[0] = array_merge($artistProductTuple[0], $chunkedArtistProductTuple[0]);
-				$artistProductTuple[1] = array_merge($artistProductTuple[1], $chunkedArtistProductTuple[1]);
-			}
-			else {
-				$artistProductTuple = $chunkedArtistProductTuple;
-			}
+		$uploadRepository->setProcessed($upload);
+		$processedNum = $usageRepository->process(
+			$user,
+			$usageList,
+			$upload,
+			$artistRepository,
+			$productRepository,
+		);
 
-			$usageCount = count($usageList);
-			$processedNum = count($chunkedArtistProductTuple);
-			Log::debug("Usages created: $usageCount. Processed: $processedNum. File: $upload->filePath (iteration $chunkIndex)");
-		}
+		$usageCount = count($usageList);
+		Log::debug("Usages created: $usageCount. Processed: $processedNum. File: $upload->filePath");
 
 		if($upload->isrcUpcMap) {
 			$database->executeSql("end transaction");
@@ -73,16 +63,18 @@ function do_upload(
 		$uploadRepository->cacheUsage($upload);
 	}
 
-	Log::debug("All chunks are processed!");
+	Log::debug("All processed!");
 
 	$database->executeSql("end transaction");
-	$database->executeSql("PRAGMA foreign_keys = 1");
+	$database->executeSql("PRAGMA foreign_keys = ON");
 
 	Log::debug("Looking up missing titles...");
+	$database->executeSql("begin transaction");
 	$missingTitleCount = $productRepository->lookupMissingTitles($spotify);
 	Log::debug("Looked up $missingTitleCount titles on Spotify");
 
 	$productRepository->calculateUncachedEarnings();
+	$database->executeSql("end transaction");
 
 	if($advanceTo = $input->getString("advance")) {
 		$response->redirect($advanceTo);

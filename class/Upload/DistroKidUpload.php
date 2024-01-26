@@ -51,7 +51,7 @@ class DistroKidUpload extends Upload {
 		}
 
 		if($row["Song/Album"] === "Album") {
-			return $this->extractProductTitleForAlbum($upc, $title);
+			$this->upcProductTitleMap[$upc] = $title;
 		}
 
 		if(!$upc) {

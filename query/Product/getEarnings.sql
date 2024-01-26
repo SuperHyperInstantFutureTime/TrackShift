@@ -49,10 +49,10 @@ where
 	Product.uploadUserId = :userId
 
 group by
-	title
+	Product.id
 
 order by
-	Product.totalEarningCache desc
+	min(Product.totalEarningCache) desc
 
 limit :limit
 offset :offset

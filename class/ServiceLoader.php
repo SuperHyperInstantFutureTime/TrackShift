@@ -54,6 +54,7 @@ class ServiceLoader extends DefaultServiceLoader {
 
 	public function loadUserRepository():UserRepository {
 		$db = $this->container->get(Database::class);
+		$db->executeSql("PRAGMA foreign_keys = ON");
 		$session = $this->container->get(Session::class);
 
 		return new UserRepository(

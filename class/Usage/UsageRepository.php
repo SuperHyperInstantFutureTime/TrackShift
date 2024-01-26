@@ -1,6 +1,7 @@
 <?php
 namespace SHIFT\TrackShift\Usage;
 
+use Gt\Database\Database;
 use Gt\Database\Query\QueryCollection;
 use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
@@ -42,11 +43,71 @@ readonly class UsageRepository extends Repository {
 
 	/**
 	 * @param array<Usage> $usageList
-	 * @return array<array<string>> A tuple of artistName:productTitle
 	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
 	// phpcs:ignore
 	public function process(
+		User $user,
+		array $usageList,
+		Upload $upload,
+		ArtistRepository $artistRepository,
+		ProductRepository $productRepository,
+	):int {
+		$i = 0;
+
+		foreach($usageList as $usage) {
+			$upload->extractProductTitle($usage->row);
+		}
+
+		foreach($usageList as $i => $usage) {
+			$artistName = $upload->extractArtistName($usage->row);
+			$artistNameNormalised = (string)(new NormalisedString($artistName));
+			$productTitle = $upload->extractProductTitle($usage->row);
+			$productTitleNormalised = (string)(new NormalisedString($productTitle));
+			$earning = $upload->extractEarning($usage->row);
+
+			$artist = $artistRepository->getByNormalisedName($artistNameNormalised, $user);
+			if(!$artist) {
+				$artist = new Artist(
+					new Ulid("artist"),
+					$artistName,
+				);
+				$artistRepository->create($user, $artist);
+			}
+
+			$product = $productRepository->getByNormalisedTitleAndArtist(
+				$productTitleNormalised,
+				$artist,
+				$user,
+			);
+			if(!$product) {
+				$product = new Product(
+					new Ulid("product"),
+					$productTitle,
+					$artist,
+				);
+				$productRepository->create($user, $product);
+			}
+
+			$this->db->insert("assignProductUsage", [
+				"id" => (string)(new Ulid("pu")),
+				"usageId" => $usage->id,
+				"productId" => $product->id,
+				"earning" => $earning->value,
+			]);
+			$productRepository->clearEarningCache($product);
+		}
+
+		return $i + 1;
+	}
+
+	/**
+	 * @param array<Usage> $usageList
+	 * @return array<array<string>> A tuple of artistName:productTitle
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+	 */
+	// phpcs:ignore
+	public function process_old(
 		User $user,
 		array $usageList,
 		Upload $upload,
@@ -135,9 +196,12 @@ readonly class UsageRepository extends Repository {
 
 		foreach($importedEarningList as $i => $earning) {
 			$artistNameNormalised = $importedArtistNameListNormalised[$i];
+			$artistId = $mapArtistNameNormalisedToId[$artistNameNormalised] ?? null;
+			$artist = $artistList[$artistId];
 			$productTitleNormalised = $importedProductTitleListNormalised[$i];
-			$combinedArtistProductNormalised = $artistNameNormalised . self::SEPARATOR . $productTitleNormalised;
-			$product = $mapCombinedArtistNameProductTitleToProduct[$combinedArtistProductNormalised] ?? null;
+//			$combinedArtistProductNormalised = $artistNameNormalised . self::SEPARATOR . $productTitleNormalised;
+//			$product = $mapCombinedArtistNameProductTitleToProduct[$combinedArtistProductNormalised] ?? null;
+			$product = $productRepository->find($productTitleNormalised, $artist, true);
 
 			if(!$product) {
 				continue;

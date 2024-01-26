@@ -28,19 +28,21 @@ readonly class ProductRepository extends Repository {
 	public function create(User $user, Product...$productsToCreate):int {
 		$count = 0;
 		foreach($productsToCreate as $product) {
-			$count += $this->db->insert("create", [
+			$this->db->insert("create", [
 				"id" => $product->id,
 				"artistId" => $product->artist->id,
-				"title" => $product->getTitle(),
-				"titleNormalised" => new NormalisedString($product->getTitle()),
+				"title" => $product->title,
+				"titleNormalised" => new NormalisedString($product->title),
 				"uploadUserId" => $user->id,
 			]);
+			$count ++;
 		}
 
 		return $count;
 	}
 
 	public function find(string $productTitle, Artist $artist, bool $normalisedTitle = false):?Product {
+		$all = $this->db->fetchAll("getAll")->asArray();
 		$queryName = $normalisedTitle ? "getProductByTitleNormalisedAndArtist" : "getProductByTitleAndArtist";
 		return $this->rowToProduct($this->db->fetch($queryName, [
 			"title" => $productTitle,
@@ -182,10 +184,19 @@ readonly class ProductRepository extends Repository {
 		return $productArray;
 	}
 
+	public function getByNormalisedTitleAndArtist(string $productTitleNormalised, Artist $artist, User $user):?Product {
+		return $this->rowToProduct($this->db->fetch("getByNormalisedTitleAndArtist", [
+			"normalisedTitle" => $productTitleNormalised,
+			"artistId" => $artist->id,
+			"userId" => $user->id,
+		]), $artist);
+	}
+
+
 	public function calculateUncachedEarnings():void {
 		foreach($this->db->fetchAll("calculateUncachedEarnings") as $i => $row) {
 			$product = $this->rowToProduct($row);
-			echo "$i\t$product->title cached earning: " . $product->totalEarning->value . "\n";
+			Log::debug("$i\t" . $product->title ." cached earning: " . $product->totalEarning->value);
 			$this->db->update("storeCachedEarning", [
 				"productId" => $product->id,
 				"earning" => $product->totalEarning->value,
@@ -223,6 +234,15 @@ readonly class ProductRepository extends Repository {
 			$totalEarning,
 		);
 	}
+
+	public function getAll():array {
+		$all = [];
+		foreach($this->db->fetchAll("getAll") as $row) {
+			array_push($all, $this->rowToProduct($row));
+		}
+		return $all;
+	}
+
 
 
 }

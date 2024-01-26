@@ -3,6 +3,7 @@ namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
 use Gt\Database\Query\QueryCollection;
+use Gt\Database\Result\Row;
 use Gt\Input\InputData\Datum\FileUpload;
 use Gt\Ulid\Ulid;
 use SHIFT\TrackShift\Audit\AuditRepository;
@@ -141,6 +142,13 @@ readonly class UploadRepository extends Repository {
 		return $uploadList;
 	}
 
+	public function getById(string $id, User $user):?Upload {
+		return $this->rowToUpload($this->db->fetch("getById", [
+			"id" => $id,
+			"userId" => $user->id
+		]));
+	}
+
 	public function deleteByFileName(string $filePath):int {
 		if(is_file($filePath)) {
 			unlink($filePath);
@@ -149,10 +157,10 @@ readonly class UploadRepository extends Repository {
 		return $this->db->delete("deleteByFilePath", $filePath);
 	}
 
-
-	public function deleteById(User $user, string $id):int {
-		return $this->db->delete("delete", [
-			"id" => $id,
+	public function delete(Upload $upload, User $user):void {
+		unlink($upload->filePath);
+		$this->db->delete("delete", [
+			"id" => $upload->id,
 			"userId" => $user->id,
 		]);
 	}
@@ -226,6 +234,7 @@ readonly class UploadRepository extends Repository {
 		return $this->allColumnsExist($firstLine, $columnsToCheck);
 	}
 
+
 	private function hasTsvColumns(
 		string $filePath,
 		string...$columnsToCheck,
@@ -253,7 +262,6 @@ readonly class UploadRepository extends Repository {
 		}
 		return $line;
 	}
-
 
 	/**
 	 * @param array<string, string> $row
@@ -386,4 +394,21 @@ readonly class UploadRepository extends Repository {
 		return $type;
 	}
 
+	private function rowToUpload(?Row $row):?Upload {
+		if(!$row) {
+			return null;
+		}
+
+		$earnings = new Money();
+		if($earningsFloat = $row->getFloat("totalEarningCache")) {
+			$earnings = new Money($earningsFloat);
+		}
+
+		$type = $row->getString("type");
+		return new $type(
+			$row->getString("id"),
+			$row->getString("filePath"),
+			$earnings,
+		);
+	}
 }

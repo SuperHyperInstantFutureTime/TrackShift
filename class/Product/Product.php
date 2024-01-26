@@ -9,7 +9,7 @@ use SHIFT\TrackShift\Royalty\Money;
 readonly class Product extends Entity {
 	public function __construct(
 		public string $id,
-		private string $title,
+		public string $title,
 		public ?Artist $artist,
 		public ?Money $totalEarning = null,
 	) {}
@@ -36,9 +36,9 @@ readonly class Product extends Entity {
 	}
 
 	#[BindGetter]
-	public function getTitle():?string {
-		if(preg_match("/::UNSORTED_UPC::(\d+)/", $this->title, $matches)) {
-			return "Unknown Album (UPC $matches[1])";
+	public function getTitleFormatted():?string {
+		if(preg_match("/::UNSORTED_(\w+)::(\d+)/", $this->title, $matches)) {
+			return "Unknown Album ($matches[1] $matches[2])";
 		}
 
 		return $this->title;

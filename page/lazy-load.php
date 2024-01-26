@@ -22,6 +22,9 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 		exit;
 	}
 	if(is_file("$filePath.missing")) {
+		ob_clean();
+		header("Content-type: image/svg+xml");
+		echo file_get_contents("asset/img/product/ts_album_placeholder.svg");
 		exit;
 	}
 
@@ -82,7 +85,8 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 	}
 
 	touch("$filePath.missing");
-	header("Content-type: image/svg");
-	readfile("asset/img/product/ts_album_placeholder.svg");
+	ob_clean();
+	header("Content-type: image/svg+xml");
+	echo file_get_contents("asset/img/product/ts_album_placeholder.svg");
 	exit;
 }

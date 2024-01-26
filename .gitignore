@@ -1,7 +1,7 @@
 /.idea
 /vendor/
 /data/
-/ts.db
+/ts.db*
 /config.*.ini
 /www/
 .DS_Store
