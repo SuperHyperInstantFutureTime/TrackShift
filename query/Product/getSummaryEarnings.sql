@@ -1,11 +1,5 @@
 select
-	Product.id as productId,
-	artistId,
-	Artist.name as artistName,
-	Artist.nameNormalised as artistNameNormalised,
-	title,
-	titleNormalised,
-	Product.totalEarningCache
+	sum(Product.totalEarningCache)
 
 from
 	Product
@@ -47,12 +41,3 @@ on
 
 where
 	Product.uploadUserId = :userId
-
-group by
-	title
-
-order by
-	Product.totalEarningCache desc
-
-limit :limit
-offset :offset

@@ -21,7 +21,7 @@ readonly class ProductEarning extends Entity {
 	}
 
 	public function getProductTitle():string {
-		return $this->product->title;
+		return $this->product->getTitle();
 	}
 
 	#[BindGetter]

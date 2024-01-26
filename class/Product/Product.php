@@ -9,10 +9,17 @@ use SHIFT\TrackShift\Royalty\Money;
 readonly class Product extends Entity {
 	public function __construct(
 		public string $id,
-		public string $title,
+		private string $title,
 		public ?Artist $artist,
 		public ?Money $totalEarning = null,
 	) {}
+
+// TODO: Refactor usage of $product->title into $product->getTitle()
+	public function __get(string $name) {
+		if($name === "title") {
+			return $this->title;
+		}
+	}
 
 	#[BindGetter]
 	public function getArtUrl():?string {
@@ -21,6 +28,19 @@ readonly class Product extends Entity {
 			return "/$filePath";
 		}
 
-		return null;
+		if(is_file("$filePath.missing")) {
+			return null;
+		}
+
+		return "/lazy-load/?id=$this->id";
+	}
+
+	#[BindGetter]
+	public function getTitle():?string {
+		if(preg_match("/::UNSORTED_UPC::(\d+)/", $this->title, $matches)) {
+			return "Unknown Album (UPC $matches[1])";
+		}
+
+		return $this->title;
 	}
 }

@@ -82,5 +82,7 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 	}
 
 	touch("$filePath.missing");
+	header("Content-type: image/svg");
+	readfile("asset/img/product/ts_album_placeholder.svg");
 	exit;
 }

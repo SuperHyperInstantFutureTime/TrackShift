@@ -129,7 +129,7 @@ readonly class UsageRepository extends Repository {
 		}
 
 		$artistCount = $artistRepository->create($user, ...$toCreateArtistList);
-		$productCount = $productRepository->create(...$toCreateProductList);
+		$productCount = $productRepository->create($user, ...$toCreateProductList);
 
 		Log::debug("Created $artistCount artists and $productCount products");
 

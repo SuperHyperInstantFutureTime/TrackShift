@@ -11,6 +11,14 @@ class Money implements Stringable {
 	) {}
 
 	public function __toString():string {
+		if($this->value === 0.0) {
+			return "-";
+		}
+
+		if($this->value <= 0.02) {
+			return "< £0.01";
+		}
+
 		return "£" . number_format($this->value, 2);
 	}
 

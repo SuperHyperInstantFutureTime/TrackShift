@@ -2,11 +2,13 @@ insert into Product (
 	id,
 	artistId,
 	title,
-	titleNormalised
+	titleNormalised,
+	uploadUserId
 )
 values (
 	:id,
 	:artistId,
 	:title,
-	:titleNormalised
+	:titleNormalised,
+	:uploadUserId
 )

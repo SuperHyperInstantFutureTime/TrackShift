@@ -25,14 +25,15 @@ readonly class ProductRepository extends Repository {
 		parent::__construct($db);
 	}
 
-	public function create(Product...$productsToCreate):int {
+	public function create(User $user, Product...$productsToCreate):int {
 		$count = 0;
 		foreach($productsToCreate as $product) {
 			$count += $this->db->insert("create", [
 				"id" => $product->id,
 				"artistId" => $product->artist->id,
-				"title" => $product->title,
-				"titleNormalised" => new NormalisedString($product->title),
+				"title" => $product->getTitle(),
+				"titleNormalised" => new NormalisedString($product->getTitle()),
+				"uploadUserId" => $user->id,
 			]);
 		}
 
@@ -105,10 +106,15 @@ readonly class ProductRepository extends Repository {
 	}
 
 	/** @return array<ProductEarning> */
-	public function getProductEarnings(User $user):array {
+	public function getProductEarnings(User $user, int $count, int $offset):array {
 		$earningList = [];
 
-		foreach($this->db->fetchAll("getEarnings", $user->id) as $row) {
+		$resultSet = $this->db->fetchAll("getEarnings", [
+			"userId" => $user->id,
+			"limit" => $count,
+			"offset" => $offset,
+		]);
+		foreach($resultSet as $row) {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
 			$earning = new Money(0.00);
 			if($totalEarningFloat = $row->getFloat("totalEarningCache")) {
@@ -191,6 +197,15 @@ readonly class ProductRepository extends Repository {
 		$this->db->update("clearProductEarningCache", $product->id);
 	}
 
+	public function getSummary(User $user):ProductSummary {
+		$earnings = $this->db->fetchFloat("getSummaryEarnings", [
+			"userId" => $user->id,
+		]);
+		$costs = $this->db->fetchFloat("getSummaryCosts", [
+			"userId" => $user->id,
+		]);
+		return new ProductSummary($earnings ?? 0.0, $costs ?? 0.0);
+	}
 
 	private function rowToProduct(?Row $row, ?Artist $artist = null):?Product {
 		if(!$row) {

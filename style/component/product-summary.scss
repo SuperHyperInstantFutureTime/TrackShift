@@ -1,0 +1,7 @@
+product-summary {
+	@extend %d-data-table;
+
+	table {
+		max-width: 32rem;
+	}
+}
