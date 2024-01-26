@@ -79,6 +79,8 @@ function do_upload(
 	$missingTitleCount = $productRepository->lookupMissingTitles($spotify);
 	Log::debug("Looked up $missingTitleCount titles on Spotify");
 
+	$productRepository->calculateUncachedEarnings();
+
 	if($advanceTo = $input->getString("advance")) {
 		$response->redirect($advanceTo);
 	}

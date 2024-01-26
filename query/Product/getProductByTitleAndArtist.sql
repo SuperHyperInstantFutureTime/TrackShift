@@ -2,7 +2,8 @@ select
 	id,
 	artistId,
 	title,
-	titleNormalised
+	titleNormalised,
+	totalEarningCache
 
 from
 	Product

@@ -149,6 +149,7 @@ readonly class UsageRepository extends Repository {
 				"productId" => $product->id,
 				"earning" => $earning->value,
 			]);
+			$this->db->update("clearProductEarningCache", $product->id);
 		}
 
 		return [$importedArtistNameList, $importedProductTitleList];

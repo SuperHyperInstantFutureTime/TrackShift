@@ -3,7 +3,8 @@ select
 	userId,
 	filePath,
 	type,
-	usagesProcessed
+	usagesProcessed,
+	totalEarningCache
 
 from
 	Upload

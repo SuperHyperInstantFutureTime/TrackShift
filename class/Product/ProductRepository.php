@@ -110,8 +110,14 @@ readonly class ProductRepository extends Repository {
 
 		foreach($this->db->fetchAll("getEarnings", $user->id) as $row) {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
-			$product = new Product($row->getString("productId"), $row->getString("title"), $artist);
-			$earning = new Money($row->getFloat("totalEarning"));
+			$earning = new Money($row->getFloat("totalEarningCache"));
+			$product = new Product(
+				$row->getString("productId"),
+				$row->getString("title"),
+				$artist,
+				$earning,
+			);
+
 			$cost = new Money();
 			if($costValue = $row->getFloat("totalCost")) {
 				$cost = new Money($costValue);
@@ -167,6 +173,16 @@ readonly class ProductRepository extends Repository {
 		return $productArray;
 	}
 
+	public function calculateUncachedEarnings():void {
+		foreach($this->db->fetchAll("calculateUncachedEarnings") as $row) {
+			$product = $this->rowToProduct($row);
+			$this->db->update("storeCachedEarning", [
+				"productId" => $product->id,
+				"earning" => $product->totalEarning->value,
+			]);
+		}
+	}
+
 	private function rowToProduct(?Row $row, ?Artist $artist = null):?Product {
 		if(!$row) {
 			return null;
@@ -176,7 +192,9 @@ readonly class ProductRepository extends Repository {
 			$row->getString("id"),
 			$row->getString("title"),
 			$artist,
+			new Money($row->getFloat("totalEarningCache")),
 		);
 	}
+
 
 }
