@@ -9,6 +9,7 @@ use SHIFT\TrackShift\Audit\AuditRepository;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Usage\Usage;
 use SplFileObject;
 use ZipArchive;
 
@@ -126,7 +127,7 @@ readonly class UploadRepository extends Repository {
 			}
 
 			$earning = new Money(0);
-			if($earningValue = $row->getFloat("totalEarnings")) {
+			if($earningValue = $row->getFloat("totalEarningCache")) {
 				$earning = new Money($earningValue);
 			}
 
@@ -153,6 +154,14 @@ readonly class UploadRepository extends Repository {
 		return $this->db->delete("delete", [
 			"id" => $id,
 			"userId" => $user->id,
+		]);
+	}
+
+	public function cacheUsage(Upload $upload):void {
+		$earning = $this->db->fetchFloat("calculateTotalEarningForUpload", $upload->id);
+		$this->db->update("cacheEarning", [
+			"uploadId" => $upload->id,
+			"earning" => $earning,
 		]);
 	}
 
@@ -228,6 +237,7 @@ readonly class UploadRepository extends Repository {
 		return $this->allColumnsExist($firstLine, $columnsToCheck);
 	}
 
+
 	/**
 	 * @param resource $fh
 	 * @return array<string, string>
@@ -258,7 +268,6 @@ readonly class UploadRepository extends Repository {
 
 		return true;
 	}
-
 
 	private function ensureCorrectEncoding(string $filePath):void {
 		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
@@ -376,4 +385,5 @@ readonly class UploadRepository extends Repository {
 		}
 		return $type;
 	}
+
 }

@@ -110,7 +110,10 @@ readonly class ProductRepository extends Repository {
 
 		foreach($this->db->fetchAll("getEarnings", $user->id) as $row) {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
-			$earning = new Money($row->getFloat("totalEarningCache"));
+			$earning = new Money(0.00);
+			if($totalEarningFloat = $row->getFloat("totalEarningCache")) {
+				$earning = new Money($totalEarningFloat);
+			}
 			$product = new Product(
 				$row->getString("productId"),
 				$row->getString("title"),
@@ -174,8 +177,9 @@ readonly class ProductRepository extends Repository {
 	}
 
 	public function calculateUncachedEarnings():void {
-		foreach($this->db->fetchAll("calculateUncachedEarnings") as $row) {
+		foreach($this->db->fetchAll("calculateUncachedEarnings") as $i => $row) {
 			$product = $this->rowToProduct($row);
+			echo "$i\t$product->title cached earning: " . $product->totalEarning->value . "\n";
 			$this->db->update("storeCachedEarning", [
 				"productId" => $product->id,
 				"earning" => $product->totalEarning->value,
@@ -183,16 +187,25 @@ readonly class ProductRepository extends Repository {
 		}
 	}
 
+	public function clearEarningCache(mixed $product):void {
+		$this->db->update("clearProductEarningCache", $product->id);
+	}
+
+
 	private function rowToProduct(?Row $row, ?Artist $artist = null):?Product {
 		if(!$row) {
 			return null;
 		}
 
+		$totalEarning = new Money();
+		if($totalEarningFloat = $row->getFloat("totalEarningCache")) {
+			$totalEarning = new Money($totalEarningFloat);
+		}
 		return new Product(
 			$row->getString("id"),
 			$row->getString("title"),
 			$artist,
-			new Money($row->getFloat("totalEarningCache")),
+			$totalEarning,
 		);
 	}
 

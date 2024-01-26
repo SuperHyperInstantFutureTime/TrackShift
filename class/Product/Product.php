@@ -11,7 +11,7 @@ readonly class Product extends Entity {
 		public string $id,
 		public string $title,
 		public ?Artist $artist,
-		public ?Money $totalEarning,
+		public ?Money $totalEarning = null,
 	) {}
 
 	#[BindGetter]

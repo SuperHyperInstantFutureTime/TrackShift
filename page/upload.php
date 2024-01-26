@@ -8,6 +8,7 @@ use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Auth\UserRepository;
 use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Upload\UploadRepository;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
@@ -68,6 +69,8 @@ function do_upload(
 			}
 			$database->executeSql("begin transaction");
 		}
+
+		$uploadRepository->cacheUsage($upload);
 	}
 
 	Log::debug("All chunks are processed!");

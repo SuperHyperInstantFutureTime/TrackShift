@@ -2,7 +2,8 @@ select
 	Product.id,
 	artistId,
 	title,
-	titleNormalised,
+	titleNormalised
+	,
 	round(sum(UsageOfProduct.earning), 2) as totalEarningCache
 
 from
@@ -15,3 +16,6 @@ on
 
 where
 	totalEarningCache is null
+
+group by
+	Product.id

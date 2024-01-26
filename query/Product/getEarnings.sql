@@ -5,9 +5,7 @@ select
 	Artist.nameNormalised as artistNameNormalised,
 	title,
 	titleNormalised,
-	Product.totalEarningCache,
-	coalesce(Cost.sumAmount, 0) as totalCost,
-	coalesce(SplitPercentage.sumPercentage, 0) as percentageOutgoing
+	Product.totalEarningCache
 
 from
 	Product
