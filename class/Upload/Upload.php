@@ -2,10 +2,11 @@
 namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
 use Generator;
+use Gt\DomTemplate\Bind;
 use Gt\DomTemplate\BindGetter;
-use SplFileObject;
 use SHIFT\TrackShift\Royalty\Money;
 
 abstract class Upload {
@@ -28,6 +29,7 @@ abstract class Upload {
 		public readonly string $id,
 		public string $filePath,
 		public readonly Money $totalEarnings = new Money(0),
+		public ?DateTimeInterface $usagesProcessed = null,
 	) {
 		if(!is_file($this->filePath)) {
 			throw new UploadFileNotFoundException($this->filePath);
@@ -56,6 +58,11 @@ abstract class Upload {
 		$this->fileHandle = $this->openFile();
 	}
 
+	#[Bind("isProcessing")]
+	public function isProcessing():bool {
+		return is_null($this->usagesProcessed);
+	}
+
 	/** @param array<string, string> $row */
 	abstract public function extractArtistName(array $row):string;
 
@@ -64,6 +71,8 @@ abstract class Upload {
 
 	/** @param array<string, string> $row */
 	abstract public function extractEarning(array $row):Money;
+
+	public function loadUsageForInternalLookup(array $row):void {}
 
 	/** @return resource */
 	public function openFile() {
@@ -80,6 +89,7 @@ abstract class Upload {
 
 		while(!feof($this->fileHandle)) {
 			$line = fgets($this->fileHandle);
+			$line = $this->correctEncoding($line);
 			$line = $this->stripNullBytes($line);
 			$row = str_getcsv($line, $this->dataRowCsvSeparator);
 
@@ -123,32 +133,26 @@ abstract class Upload {
 		return $data;
 	}
 
-	/**
-	 * @param string|array<?string> $data
-	 * @return string|array<?string>
-	 */
-	protected function stripNullBytes(string|array $data):string|array {
-		if(empty($data) || is_null($data[0])) {
-			return $data;
+	private function correctEncoding(string $line):string {
+		$encoding = mb_detect_encoding($line, ['UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1'], true);
+		if($encoding !== "UTF-8") {
+			if (substr($line, 0, 2) === "\xFF\xFE") {
+				$line = substr($line, 2);
+			}
+			$line = mb_convert_encoding($line, "UTF-8", $encoding);
 		}
-		$input = $data;
-		if(!is_array($input)) {
-			$input = [$input];
-		}
+		return $line;
+//		return mb_ereg_replace('[[:^print:]]', "", $line);
+	}
 
-		foreach($input as $i => $value) {
-			$input[$i] = mb_ereg_replace(
-				'/[[:^print:]]/',
-				'',
-				$value
-			);
-		}
 
-		if(is_string($data)) {
-			return $input[0];
-		}
-
-		return $input;
+	protected function stripNullBytes(string $line):string {
+		return $line;
+		return mb_ereg_replace(
+			'[[:^print:]]',
+			'',
+			$line
+		);
 	}
 
 	protected function calculateSizeString():string {

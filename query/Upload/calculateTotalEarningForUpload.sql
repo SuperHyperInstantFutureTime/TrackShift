@@ -2,17 +2,17 @@ select
 	sum(earning)
 
 from
-	UsageOfProduct
+	`UsageOfProduct`
 
 inner join
-	Usage
+	`Usage`
 on
-	Usage.id = UsageOfProduct.usageId
+	`Usage`.id = `UsageOfProduct`.usageId
 
 inner join
-	Upload
+	`Upload`
 on
-	Upload.id = Usage.uploadId
+	`Upload`.id = `Usage`.uploadId
 
 where
-	Upload.id = ?
+	`Upload`.id = ?

@@ -1,7 +1,7 @@
 <?php
+use Gt\Http\Request;
 use Gt\Input\Input;
 use SHIFT\Spotify\Entity\Album;
-use SHIFT\Spotify\Entity\AlbumType;
 use SHIFT\Spotify\Entity\EntityType;
 use SHIFT\Spotify\Entity\FilterQuery;
 use SHIFT\Spotify\Entity\SearchFilter;
@@ -9,7 +9,8 @@ use SHIFT\Spotify\Entity\Track;
 use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Product\ProductRepository;
 
-function go(Input $input, ProductRepository $productRepository, SpotifyClient $spotify):void {
+function go(Input $input, ProductRepository $productRepository, SpotifyClient $spotify, Request $request):void {
+	$request->headers->contains("test");
 	$minimumImageSize = 80;
 	$product = $productRepository->getById($input->getString("id"));
 	$filePath = "data/cache/art/$product->id";

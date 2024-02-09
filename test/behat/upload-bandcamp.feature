@@ -9,8 +9,8 @@ Feature: App should handle Bandcamp CSV files
 		And I press "Upload"
 		When I go to "/account/uploads/"
 		Then I should see the following table data:
-			| File name | File Size | Source |
-			| bandcamp-simple-3-songs.csv | 1.1 KB | Bandcamp |
+			| File name | File Size | Source | Total earnings |
+			| bandcamp-simple-3-songs.csv | 1.1 KB | Bandcamp | £17.68 |
 
 	Scenario: Bandcamp files with non-ASCII characters
 		Given I am on the homepage

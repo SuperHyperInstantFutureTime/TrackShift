@@ -5,7 +5,9 @@ select
 	Artist.nameNormalised as artistNameNormalised,
 	title,
 	titleNormalised,
-	Product.totalEarningCache
+	Product.totalEarningCache,
+	J_Product_Cost.sumAmount as totalCost,
+	J_Product_SplitPercentage.sumPercentage as percentageOutgoing
 
 from
 	Product
@@ -19,9 +21,9 @@ left join
 			Cost
 		group by
 			productId
-	) cost
+	) J_Product_Cost
 on
-	Cost.productId = Product.id
+	J_Product_Cost.productId = Product.id
 
 left join
 	(
@@ -36,9 +38,9 @@ left join
 			Split.id = SplitPercentage.splitId
 		group by
 			Split.productId
-	) SplitPercentage
+	) J_Product_SplitPercentage
 on
-	SplitPercentage.productId = Product.id
+	J_Product_SplitPercentage.productId = Product.id
 
 inner join
 	Artist

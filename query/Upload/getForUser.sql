@@ -3,7 +3,8 @@ select
 	Upload.userId,
 	Upload.filePath,
 	Upload.type,
-	totalEarningCache
+	totalEarningCache,
+	usagesProcessed
 
 from
 	Upload

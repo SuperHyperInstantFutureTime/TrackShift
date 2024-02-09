@@ -1,7 +1,12 @@
-create table Usage
+create table `Usage`
 (
-	id text not null primary key,
-	uploadId text not null references Upload (id) on update cascade on delete cascade,
-	data text not null,
-	processed bool not null default false
+	id varchar(128) not null primary key,
+	uploadId varchar(128) not null,
+	data json not null,
+	processed datetime null,
+
+	foreign key (uploadId)
+		references Upload(id)
+		on delete cascade
+		on update cascade
 )

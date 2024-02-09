@@ -6,9 +6,7 @@ use Gt\Logger\Log;
 use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
-use SHIFT\TrackShift\Auth\UserRepository;
 use SHIFT\TrackShift\Product\ProductRepository;
-use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Upload\UploadRepository;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
@@ -17,30 +15,30 @@ function go(Response $response):void {
 }
 
 function do_upload(
-	Input $input,
-	Response $response,
-	UserRepository $userRepository,
-	User $user,
 	UploadRepository $uploadRepository,
 	UsageRepository $usageRepository,
 	ArtistRepository $artistRepository,
 	ProductRepository $productRepository,
 	SpotifyClient $spotify,
-	Database $database,
+	User $user,
+	Database $db,
+	Input $input,
+	Response $response,
 ):void {
+	$startTime = microtime(true);
 	set_time_limit(600);
-	$database->executeSql("PRAGMA foreign_keys = OFF");
-	$database->executeSql("begin transaction");
-
 	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
+	$time = number_format(microtime(true) - $startTime);
+	Log::debug("{$time}s - Created uploads");
+	$db->executeSql("START TRANSACTION");
+
 	foreach($uploadList as $upload) {
-				$usageList = $usageRepository->createUsagesFromUpload($upload);
-//		$usageListTotal = $usageRepository->createUsagesFromUpload($upload);
-//		$chunks = array_chunk($usageListTotal, 100);
+		$usageList = $usageRepository->createUsagesFromUpload($upload);
+		$time = number_format(microtime(true) - $startTime);
+		Log::debug("{$time}s - Created " . count($usageList) . " usages");
 
-		$artistProductTuple = [];
+		$uploadRepository->setProcessed($upload, $user);
 
-		$uploadRepository->setProcessed($upload);
 		$processedNum = $usageRepository->process(
 			$user,
 			$usageList,
@@ -50,31 +48,27 @@ function do_upload(
 		);
 
 		$usageCount = count($usageList);
-		Log::debug("Usages created: $usageCount. Processed: $processedNum. File: $upload->filePath");
+		$time = number_format(microtime(true) - $startTime);
+		Log::debug("{$time}s - Usages created: $usageCount. Processed: $processedNum. File: $upload->filePath");
 
 		if($upload->isrcUpcMap) {
-			$database->executeSql("end transaction");
 			foreach($upload->isrcUpcMap as $isrc => $upc) {
 				$productRepository->changeProductIsrcToUpc($isrc, $upc);
 			}
-			$database->executeSql("begin transaction");
 		}
 
 		$uploadRepository->cacheUsage($upload);
 	}
 
-	Log::debug("All processed!");
-
-	$database->executeSql("end transaction");
-	$database->executeSql("PRAGMA foreign_keys = ON");
+	Log::debug("COMMIT");
+	$db->executeSql("COMMIT");
 
 	Log::debug("Looking up missing titles...");
-	$database->executeSql("begin transaction");
-	$missingTitleCount = $productRepository->lookupMissingTitles($spotify);
+	$missingTitleCount = $productRepository->lookupMissingTitles($spotify, $artistRepository, $user);
 	Log::debug("Looked up $missingTitleCount titles on Spotify");
-
-	$productRepository->calculateUncachedEarnings();
-	$database->executeSql("end transaction");
+	$duplicateCount = $productRepository->deduplicate($user);
+	Log::debug("De-duplicated $duplicateCount products");
+	$productRepository->calculateUncachedEarnings($user);
 
 	if($advanceTo = $input->getString("advance")) {
 		$response->redirect($advanceTo);

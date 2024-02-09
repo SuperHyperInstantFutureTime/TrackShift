@@ -13,9 +13,9 @@ left join
 			Cost
 		group by
 			productId
-	) cost
+	) J_Product_Cost
 on
-	Cost.productId = Product.id
+	J_Product_Cost.productId = Product.id
 
 left join
 	(

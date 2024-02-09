@@ -1,8 +1,8 @@
 select
-	Artist.id,
-	Artist.name,
-	Artist.userId,
-	Artist.nameNormalised
+	id,
+	name,
+	userId,
+	nameNormalised
 
 from
 	Artist
@@ -11,4 +11,4 @@ where
 	userId = ?
 
 order by
-	Artist.name
+	name

@@ -13,6 +13,7 @@ use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Repository\NormalisedString;
 use SHIFT\TrackShift\Repository\Repository;
+use SHIFT\TrackShift\Repository\StringCleaner;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
@@ -31,7 +32,7 @@ readonly class ProductRepository extends Repository {
 			$this->db->insert("create", [
 				"id" => $product->id,
 				"artistId" => $product->artist->id,
-				"title" => $product->title,
+				"title" => new StringCleaner($product->title),
 				"titleNormalised" => new NormalisedString($product->title),
 				"uploadUserId" => $user->id,
 			]);
@@ -41,16 +42,16 @@ readonly class ProductRepository extends Repository {
 		return $count;
 	}
 
-	public function find(string $productTitle, Artist $artist, bool $normalisedTitle = false):?Product {
-		$all = $this->db->fetchAll("getAll")->asArray();
-		$queryName = $normalisedTitle ? "getProductByTitleNormalisedAndArtist" : "getProductByTitleAndArtist";
-		return $this->rowToProduct($this->db->fetch($queryName, [
-			"title" => $productTitle,
-			"artistId" => $artist->id,
-		]), $artist);
-	}
+//	public function find(string $productTitle, Artist $artist, bool $normalisedTitle = false):?Product {
+//		$all = $this->db->fetchAll("getAll", $user->id)->asArray();
+//		$queryName = $normalisedTitle ? "getProductByTitleNormalisedAndArtist" : "getProductByTitleAndArtist";
+//		return $this->rowToProduct($this->db->fetch($queryName, [
+//			"title" => $productTitle,
+//			"artistId" => $artist->id,
+//		]), $artist);
+//	}
 
-	public function lookupMissingTitles(SpotifyClient $spotify):int {
+	public function lookupMissingTitles(SpotifyClient $spotify, ArtistRepository $artistRepository, User $user):int {
 		set_time_limit(0);
 		$count = 0;
 
@@ -61,10 +62,10 @@ readonly class ProductRepository extends Repository {
 			$upc = substr($product->title, strlen(UsageRepository::UNSORTED_UPC));
 
 			$cacheFile = "data/cache/upc/$upc.dat";
-			$album = null;
+			$spotifyAlbum = null;
 			if(is_file($cacheFile)) {
 				Log::debug("Using cache for UPC: $upc");
-				$album = unserialize(file_get_contents($cacheFile));
+				$spotifyAlbum = unserialize(file_get_contents($cacheFile));
 			}
 			else {
 				Log::debug("Looking up UPC: $upc");
@@ -76,7 +77,7 @@ readonly class ProductRepository extends Repository {
 				$albumSearch = $result->albums->items[0] ?? null;
 				if($albumId = $albumSearch?->id) {
 					Log::debug("Found ID: $albumId");
-					$album = $spotify->albums->get($albumId);
+					$spotifyAlbum = $spotify->albums->get($albumId);
 				}
 				else {
 					Log::debug("Not found!");
@@ -85,14 +86,14 @@ readonly class ProductRepository extends Repository {
 				if(!is_dir(dirname($cacheFile))) {
 					mkdir(dirname($cacheFile), recursive: true);
 				}
-				file_put_contents($cacheFile, serialize($album));
+				file_put_contents($cacheFile, serialize($spotifyAlbum));
 			}
 
-			if($album) {
+			if($spotifyAlbum) {
 				$count += $this->db->update("setProductTitle", [
 					"id" => $product->id,
-					"title" => $album->name,
-					"titleNormalised" => new NormalisedString($album->name),
+					"title" => new StringCleaner($spotifyAlbum->name),
+					"titleNormalised" => new NormalisedString($spotifyAlbum->name),
 				]);
 			}
 		}
@@ -118,9 +119,12 @@ readonly class ProductRepository extends Repository {
 		]);
 		foreach($resultSet as $row) {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
-			$earning = new Money(0.00);
+			$earning = null;
 			if($totalEarningFloat = $row->getFloat("totalEarningCache")) {
 				$earning = new Money($totalEarningFloat);
+			}
+			if(!$earning) {
+				continue;
 			}
 			$product = new Product(
 				$row->getString("productId"),
@@ -193,8 +197,8 @@ readonly class ProductRepository extends Repository {
 	}
 
 
-	public function calculateUncachedEarnings():void {
-		foreach($this->db->fetchAll("calculateUncachedEarnings") as $i => $row) {
+	public function calculateUncachedEarnings(User $user):void {
+		foreach($this->db->fetchAll("calculateUncachedEarnings", $user->id) as $i => $row) {
 			$product = $this->rowToProduct($row);
 			Log::debug("$i\t" . $product->title ." cached earning: " . $product->totalEarning->value);
 			$this->db->update("storeCachedEarning", [
@@ -244,5 +248,55 @@ readonly class ProductRepository extends Repository {
 	}
 
 
+	public function deduplicate(User $user):int {
+		$count = 0;
+
+		$resultSet = $this->db->fetchAll("findDuplicated", $user->id);
+		$productSet = [];
+		$lastProduct = null;
+		foreach($resultSet as $row) {
+			$product = $this->rowToProduct($row);
+			if($product->title !== $lastProduct?->title) {
+				if($productSet) {
+					$count += call_user_func($this->combine(...), ...$productSet);
+					$productSet = [];
+				}
+			}
+
+			array_push($productSet, $product);
+			$lastProduct = $product;
+		}
+
+		if(count($productSet) > 1) {
+			$count += call_user_func($this->combine(...), ...$productSet);
+		}
+
+		return $count;
+	}
+
+	private function combine(Product $productToKeep, Product...$listOfProductsToDiscard):int {
+		$count = 0;
+
+		foreach($listOfProductsToDiscard as $productToDiscard) {
+			$this->db->update("cacheUsageOfProduct", [
+				"fromId" => $productToDiscard->id,
+				"toId" => $productToKeep->id,
+			]);
+			$count += $this->delete($productToDiscard);
+		}
+
+		$this->clearEarningCache($productToKeep);
+		return $count;
+	}
+
+	private function delete(Product...$productsToDelete):int {
+		$count = 0;
+
+		foreach($productsToDelete as $product) {
+			$count += $this->db->delete("delete", $product->id);
+		}
+
+		return $count;
+	}
 
 }

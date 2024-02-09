@@ -1,12 +1,9 @@
-/.idea
 /vendor/
-/data/
-/ts.db*
-/config.*.ini
-/www/
-.DS_Store
+/.idea/
+/style/.sass-cache style/
+/www
+*.phar
+config.*.ini
 access-token.dat
-asset/font/.DS_Store
-asset/.DS_Store
-/test/phpunit/_coverage/
-.phpunit*.cache
+/data/cache
+/data/upload

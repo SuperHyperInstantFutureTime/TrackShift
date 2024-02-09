@@ -1,6 +1,6 @@
 select
-	key,
-	value
+	`key`,
+	`value`
 
 from
 	Settings

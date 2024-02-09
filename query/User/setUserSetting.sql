@@ -1,7 +1,7 @@
 insert into Settings (
-	userId,
-	key,
-	value
+	`userId`,
+	`key`,
+	`value`
 )
 values (
 	:userId,

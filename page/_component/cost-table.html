@@ -1,37 +1,37 @@
 <div class="actions">
-	<a href="/account/costs/_new/" target="modal" class="button">Add cost</a>
+	<a href="/account/costs/_new/" class="button">Add cost</a>
 </div>
 <input type="text" id="costsTableSearchInput" onkeyup="myFunction()" placeholder="Search costs...">
 
 <table id="costsTable">
 	<thead>
-		<tr>
-			<th>Artist</th>
-			<th>Product</th>
-			<th>Cost</th>
-			<th>Description</th>
-			<th>Date Added</th>
-			<th class="centered">Edit</th>
-			<th class="centered">Delete</th>
-		</tr>
+	<tr>
+		<th>Artist</th>
+		<th>Product</th>
+		<th>Cost</th>
+		<th>Description</th>
+		<th>Date Added</th>
+		<th class="centered">Edit</th>
+		<th class="centered">Delete</th>
+	</tr>
 	</thead>
 	<tbody>
-		<tr data-list>
-			<td data-bind:text="product.artist.name">Artist Name</td>
-			<td data-bind:text="product.title">Product Title</td>
-			<td data-bind:text="amount">0.00</td>
-			<td data-bind:text="description">The description of the cost</td>
-			<td data-bind:text="addedOn">1st Jan 1970</td>
-			<td class="centered">
-				<a href="/account/costs/{{id}}" target="modal">Edit</a>
-			</td>
-			<td class="centered">
-				<form method="post">
-					<input type="hidden" name="id" data-bind:value="@name" />
-					<button name="do" value="delete" onclick="return confirm('Delete the cost of {{amount}} for {{product.title}} by {{product.artist.name}}?')">Delete</button>
-				</form>
-			</td>
-		</tr>
+	<tr data-list>
+		<td data-bind:text="product.artist.name">Artist Name</td>
+		<td data-bind:text="product.title">Product Title</td>
+		<td data-bind:text="amount">0.00</td>
+		<td data-bind:text="description">The description of the cost</td>
+		<td data-bind:text="addedOn">1st Jan 1970</td>
+		<td class="centered">
+			<a href="/account/costs/{{id}}/">Edit</a>
+		</td>
+		<td class="centered">
+			<form method="post">
+				<input type="hidden" name="id" data-bind:value="@name" />
+				<button name="do" value="delete" onclick="return confirm('Delete the cost of {{amount}} for {{product.title}} by {{product.artist.name}}?')">Delete</button>
+			</form>
+		</td>
+	</tr>
 	</tbody>
 </table>
 
@@ -39,24 +39,24 @@
 
 <script>
 	function myFunction() {
-	  // Declare variables
-	  var input, filter, table, tr, td, i, txtValue;
-	  input = document.getElementById("costsTableSearchInput");
-	  filter = input.value.toUpperCase();
-	  table = document.getElementById("costsTable");
-	  tr = table.getElementsByTagName("tr");
+		// Declare variables
+		var input, filter, table, tr, td, i, txtValue;
+		input = document.getElementById("costsTableSearchInput");
+		filter = input.value.toUpperCase();
+		table = document.getElementById("costsTable");
+		tr = table.getElementsByTagName("tr");
 
-	  // Loop through all table rows, and hide those who don't match the search query
-	  for (i = 0; i < tr.length; i++) {
-		td = tr[i].getElementsByTagName("td")[0];
-		if (td) {
-		  txtValue = td.textContent || td.innerText;
-		  if (txtValue.toUpperCase().indexOf(filter) > -1) {
-			tr[i].style.display = "";
-		  } else {
-			tr[i].style.display = "none";
-		  }
+		// Loop through all table rows, and hide those who don't match the search query
+		for (i = 0; i < tr.length; i++) {
+			td = tr[i].getElementsByTagName("td")[0];
+			if (td) {
+				txtValue = td.textContent || td.innerText;
+				if (txtValue.toUpperCase().indexOf(filter) > -1) {
+					tr[i].style.display = "";
+				} else {
+					tr[i].style.display = "none";
+				}
+			}
 		}
-	  }
 	}
 </script>

@@ -14,17 +14,17 @@ readonly class CostRepository extends Repository {
 	public function __construct(
 		QueryCollection $db,
 		private ProductRepository $productRepository,
-		private AuditRepository $auditRepository,
+//		private AuditRepository $auditRepository,
 	) {
 		parent::__construct($db);
 	}
 
 	public function create(Cost $cost, User $user):void {
-		$this->auditRepository->create(
-			$user,
-			$cost->id,
-			$cost->product->title . " " . $cost->description . " " . $cost->amount
-		);
+//		$this->auditRepository->create(
+//			$user,
+//			$cost->id,
+//			$cost->product->title . " " . $cost->description . " " . $cost->amount
+//		);
 		$this->db->insert("create", [
 			"id" => $cost->id,
 			"productId" => $cost->product->id,
@@ -37,12 +37,12 @@ readonly class CostRepository extends Repository {
 	public function update(Cost $cost, User $user):void {
 		$oldCost = $this->getById($cost->id);
 
-		$this->auditRepository->update(
-			$user,
-			$cost->id,
-			$oldCost,
-			$cost
-		);
+//		$this->auditRepository->update(
+//			$user,
+//			$cost->id,
+//			$oldCost,
+//			$cost
+//		);
 
 		$this->db->update("update", [
 			"id" => $cost->id,
@@ -56,11 +56,11 @@ readonly class CostRepository extends Repository {
 	public function delete(Cost|string $cost, User $user):void {
 		$cost = is_string($cost) ? $this->getById($cost) : $cost;
 
-		$this->auditRepository->delete(
-			$user,
-			$cost->id,
-			trim($cost->product->title . " " . $cost->description . " " . $cost->amount)
-		);
+//		$this->auditRepository->delete(
+//			$user,
+//			$cost->id,
+//			trim($cost->product->title . " " . $cost->description . " " . $cost->amount)
+//		);
 		$this->db->delete("delete", $cost->id);
 	}
 

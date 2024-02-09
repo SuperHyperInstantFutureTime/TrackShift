@@ -4,7 +4,7 @@ select
 	title,
 	titleNormalised
 	,
-	round(sum(UsageOfProduct.earning), 2) as totalEarningCache
+	sum(UsageOfProduct.earning) as totalEarningCache
 
 from
 	Product
@@ -14,8 +14,20 @@ inner join
 on
 	UsageOfProduct.productId = Product.id
 
+inner join
+	`Usage`
+on
+	UsageOfProduct.usageId = `Usage`.id
+
+inner join
+	Upload
+on
+	`Usage`.uploadId = Upload.id
+
 where
-	totalEarningCache is null
+	Product.totalEarningCache is null
+and
+	Upload.userId = ?
 
 group by
 	Product.id
