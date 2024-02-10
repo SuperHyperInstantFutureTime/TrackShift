@@ -6,3 +6,5 @@ set
 
 where
 	id = :id
+and
+	userId = :userId

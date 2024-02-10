@@ -38,6 +38,7 @@ class DistroKidUpload extends Upload {
 
 	protected string $dataRowCsvSeparator = "\t";
 
+	/** @param array<string, string> $row */
 	public function loadUsageForInternalLookup(array $row):void {
 		$upc = trim($row["UPC"] ?? "");
 		$isrc = trim($row["ISRC"] ?? "");

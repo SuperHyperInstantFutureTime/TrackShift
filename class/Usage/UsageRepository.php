@@ -1,102 +1,147 @@
 <?php
 namespace SHIFT\TrackShift\Usage;
 
-use Gt\Database\Database;
-use Gt\Database\Query\QueryCollection;
-use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
-use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\Artist;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Product\Product;
 use SHIFT\TrackShift\Product\ProductRepository;
-use SHIFT\TrackShift\Repository\NormalisedString;
 use SHIFT\TrackShift\Repository\Repository;
-use SHIFT\TrackShift\Repository\StringCleaner;
+use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Upload\Upload;
 
 readonly class UsageRepository extends Repository {
 	const UNSORTED_UPC = "::UNSORTED_UPC::";
 	const UNSORTED_ISRC = "::UNSORTED_ISRC::";
 
-	/** @return array<Usage> */
-	public function createUsagesFromUpload(Upload $upload):array {
-		$usageList = [];
-
-		foreach($upload->generateDataRows() as $dataRow) {
-			$usage = new Usage(
-				new Ulid("usage"),
-				$upload,
-				$dataRow,
-			);
-			array_push($usageList, $usage);
-			$this->db->insert("create", [
-				"id" => $usage->id,
-				"uploadId" => $upload->id,
-				"data" => json_encode($dataRow),
-			]);
-		}
-
-		return $usageList;
-	}
-
 	/**
-	 * @param array<Usage> $usageList
+	 * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+	 * @SuppressWarnings(PHPMD.NPathComplexity)
 	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
 	// phpcs:ignore
 	public function process(
 		User $user,
-		array $usageList,
 		Upload $upload,
 		ArtistRepository $artistRepository,
 		ProductRepository $productRepository,
 	):int {
-		$i = null;
+		$i = 0;
 
-		foreach($usageList as $usage) {
-			$upload->loadUsageForInternalLookup($usage->row);
+		$existingArtistList = $artistRepository->getAll($user);
+		$existingProductList = $productRepository->getAll($user);
+
+		$artistMap = array_reduce($existingArtistList, function(array $carry, Artist $artist):array {
+			$carry[$artist->id] = $artist->name;
+			return $carry;
+		}, []);
+		$combinedArtistNameProductTitleMap = array_reduce($existingProductList, function(array $carry, Product $product):array {
+			$carry[$product->id] = $product->artist->name . ":" . $product->title;
+			return $carry;
+		}, []);
+
+		$dbUsageFilePath = "/tmp/trackshift/usages-csv/$upload->id/usage.csv";
+		$dbUOPFilePath = "/tmp/trackshift/usages-csv/$upload->id/usage-of-product.csv";
+		if(!is_dir(dirname($dbUsageFilePath))) {
+			mkdir(dirname($dbUsageFilePath), recursive: true);
+		}
+		$fhUsages = fopen($dbUsageFilePath, "w");
+		$fhUOP = fopen($dbUOPFilePath, "w");
+
+		foreach($upload->generateDataRows() as $row) {
+			$upload->loadUsageForInternalLookup($row);
 		}
 
-		foreach($usageList as $i => $usage) {
-			$artistName = new StringCleaner($upload->extractArtistName($usage->row));
-			$productTitle = new StringCleaner($upload->extractProductTitle($usage->row));
-			$productTitleNormalised = (string)(new NormalisedString($productTitle));
-			$earning = $upload->extractEarning($usage->row);
+		$usageOfProductMap = [];
 
-			$artist = $artistRepository->getByName($artistName, $user);
-			if(!$artist) {
+		foreach($upload->generateDataRows() as $row) {
+			$artistName = $upload->extractArtistName($row);
+			$productTitle = $upload->extractProductTitle($row);
+			$earning = $upload->extractEarning($row);
+			$combinedArtistNameProductTitle = "$artistName:$productTitle";
+
+			if($existingArtistId = array_search($artistName, $artistMap)) {
+				$artistId = $existingArtistId;
 				$artist = new Artist(
-					new Ulid("artist"),
+					$artistId,
+					$artistName,
+				);
+			}
+			else {
+				$artistId = (string)(new Ulid("artist"));
+				$artist = new Artist(
+					$artistId,
 					$artistName,
 				);
 				$artistRepository->create($user, $artist);
+				$artistMap[$artistId] = $artistName;
 			}
 
-			$product = $productRepository->getByNormalisedTitleAndArtist(
-				$productTitleNormalised,
-				$artist,
-				$user,
-			);
-			if(!$product) {
+			if($existingProductId = array_search($combinedArtistNameProductTitle, $combinedArtistNameProductTitleMap)) {
+				$productId = $existingProductId;
 				$product = new Product(
-					new Ulid("product"),
+					$productId,
+					$productTitle,
+					$artist,
+				);
+			}
+			else {
+				$productId = (string)(new Ulid("product"));
+				$product = new Product(
+					$productId,
 					$productTitle,
 					$artist,
 				);
 				$productRepository->create($user, $product);
+				$productMap[(string)$productId] = $productTitle;
+				$combinedArtistNameProductTitleMap[(string)$productId] = $combinedArtistNameProductTitle;
 			}
 
-			$this->db->insert("assignProductUsage", [
-				"id" => (string)(new Ulid("pu")),
-				"usageId" => $usage->id,
-				"productId" => $product->id,
-				"earning" => $earning->value,
-			]);
-			$productRepository->clearEarningCache($product);
-		}
+			$usageId = (string)(new Ulid("usage"));
+			if(!isset($usageOfProductMap[$usageId])) {
+				$usageOfProductMap[$usageId] = [];
+			}
+			if(!isset($usageOfProductMap[$usageId][$productId])) {
+				$usageOfProductMap[$usageId][$productId] = new Money();
+			}
+			/** @var Money $currentEarning */
+			$currentEarning = $usageOfProductMap[$usageId][$productId];
+			$currentEarning = $currentEarning->withAddition($earning);
+			$usageOfProductMap[$usageId][$productId] = $currentEarning;
 
-		return is_null($i) ? 0 : $i + 1;
+			fputcsv($fhUsages, [
+				$usageId,
+				$upload->id,
+				json_encode($row),
+			]);
+			$i++;
+		}
+		fclose($fhUsages);
+
+		foreach($usageOfProductMap as $usageId => $productMap) {
+			/**
+			 * @var string $productId
+			 * @var Money $earning
+			 **/
+			foreach($productMap as $productId => $earning) {
+				fputcsv($fhUOP, [
+					(string)(new Ulid("product_usage")),
+					$usageId,
+					$productId,
+					$earning->value,
+				]);
+			}
+		}
+		fclose($fhUOP);
+
+		$this->db->insert("loadUsageFromFile", [
+			"infileName" => $dbUsageFilePath,
+		]);
+		$this->db->insert("loadUsageOfProductFromFile", [
+			"infileName" => $dbUOPFilePath,
+		]);
+
+		return $i;
 	}
 }

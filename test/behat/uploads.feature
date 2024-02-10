@@ -21,7 +21,7 @@ Feature: App should list out and remove uploaded files
 		Given I am on the homepage
 		And I upload the file "prs-simple-3-songs.csv"
 		When I go to the homepage
-		Then I should be on "/account/uploads/"
+		Then I should be on "/account/products/"
 		When I go to "/?homepage"
 		Then I should be on the homepage
 

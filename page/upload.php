@@ -30,26 +30,27 @@ function do_upload(
 	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
 	$time = number_format(microtime(true) - $startTime);
 	Log::debug("{$time}s - Created uploads");
-	$db->executeSql("START TRANSACTION");
+	$db->executeSql("set global local_infile=true");
+	$db->executeSql("start transaction");
 
 	foreach($uploadList as $upload) {
-		$usageList = $usageRepository->createUsagesFromUpload($upload);
-		$time = number_format(microtime(true) - $startTime);
-		Log::debug("{$time}s - Created " . count($usageList) . " usages");
+//		$usageCsvFilePath = $usageRepository->createUsagesFromUpload($upload);
+//		Log::debug("{$time}s - Created " . count($usageIdList) . " usages");
 
 		$uploadRepository->setProcessed($upload, $user);
 
 		$processedNum = $usageRepository->process(
 			$user,
-			$usageList,
 			$upload,
 			$artistRepository,
 			$productRepository,
 		);
 
-		$usageCount = count($usageList);
-		$time = number_format(microtime(true) - $startTime);
-		Log::debug("{$time}s - Usages created: $usageCount. Processed: $processedNum. File: $upload->filePath");
+		$db->executeSql("COMMIT");
+		$memoryPeak = memory_get_peak_usage(true);
+		$memoryNow = memory_get_usage(true);
+		echo(number_format($memoryNow / (1024 * 1024)) . "MB now, " . number_format($memoryPeak / (1024 * 1024)) . " MB peak\n");
+		echo(number_format(microtime(true) - $startTime, 2) . " seconds");
 
 		if($upload->isrcUpcMap) {
 			foreach($upload->isrcUpcMap as $isrc => $upc) {
@@ -60,8 +61,8 @@ function do_upload(
 		$uploadRepository->cacheUsage($upload);
 	}
 
-	Log::debug("COMMIT");
-	$db->executeSql("COMMIT");
+	Log::debug("committing transaction");
+	$db->executeSql("commit");
 
 	Log::debug("Looking up missing titles...");
 	$missingTitleCount = $productRepository->lookupMissingTitles($spotify, $artistRepository, $user);

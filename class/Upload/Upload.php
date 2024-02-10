@@ -72,7 +72,12 @@ abstract class Upload {
 	/** @param array<string, string> $row */
 	abstract public function extractEarning(array $row):Money;
 
-	public function loadUsageForInternalLookup(array $row):void {}
+	/**
+	 * @param array<string, string> $row
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
+	public function loadUsageForInternalLookup(array $row):void {
+	}
 
 	/** @return resource */
 	public function openFile() {
@@ -103,6 +108,7 @@ abstract class Upload {
 
 			yield $this->rowToData($headerRow, $row);
 		}
+		fseek($this->fileHandle, 0);
 	}
 
 	#[BindGetter]
@@ -142,17 +148,11 @@ abstract class Upload {
 			$line = mb_convert_encoding($line, "UTF-8", $encoding);
 		}
 		return $line;
-//		return mb_ereg_replace('[[:^print:]]', "", $line);
 	}
 
 
 	protected function stripNullBytes(string $line):string {
 		return $line;
-		return mb_ereg_replace(
-			'[[:^print:]]',
-			'',
-			$line
-		);
 	}
 
 	protected function calculateSizeString():string {

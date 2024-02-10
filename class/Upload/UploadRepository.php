@@ -8,6 +8,10 @@ use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 readonly class UploadRepository extends Repository {
 	const DIR_UPLOAD = "data/upload";
 
@@ -49,20 +53,20 @@ readonly class UploadRepository extends Repository {
 				"type" => $upload::class,
 			]);
 
-			if($upload instanceof UnknownUpload) {
+//			if($upload instanceof UnknownUpload) {
 //				$this->auditRepository->notify(
 //					$user,
 //					"Your latest upload was not processed ($upload->filename)",
 //					$upload->id,
 //				);
-			}
-			else {
+//			}
+//			else {
 //				$this->auditRepository->create(
 //					$user,
 //					$upload->id,
 //					$upload->filename,
 //				);
-			}
+//			}
 
 			array_push($completedUploadList, $upload);
 		}

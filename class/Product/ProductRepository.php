@@ -36,7 +36,7 @@ readonly class ProductRepository extends Repository {
 				"titleNormalised" => new NormalisedString($product->title),
 				"uploadUserId" => $user->id,
 			]);
-			$count ++;
+			$count++;
 		}
 
 		return $count;
@@ -51,7 +51,7 @@ readonly class ProductRepository extends Repository {
 //		]), $artist);
 //	}
 
-	public function lookupMissingTitles(SpotifyClient $spotify, ArtistRepository $artistRepository, User $user):int {
+	public function lookupMissingTitles(SpotifyClient $spotify):int {
 		set_time_limit(0);
 		$count = 0;
 
@@ -188,9 +188,9 @@ readonly class ProductRepository extends Repository {
 		return $productArray;
 	}
 
-	public function getByNormalisedTitleAndArtist(string $productTitleNormalised, Artist $artist, User $user):?Product {
+	public function getByTitleAndArtist(string $productTitle, Artist $artist, User $user):?Product {
 		return $this->rowToProduct($this->db->fetch("getByNormalisedTitleAndArtist", [
-			"normalisedTitle" => $productTitleNormalised,
+			"normalisedTitle" => new NormalisedString($productTitle),
 			"artistId" => $artist->id,
 			"userId" => $user->id,
 		]), $artist);
@@ -239,9 +239,10 @@ readonly class ProductRepository extends Repository {
 		);
 	}
 
-	public function getAll():array {
+	/** @return array<Product> */
+	public function getAll(User $user):array {
 		$all = [];
-		foreach($this->db->fetchAll("getAll") as $row) {
+		foreach($this->db->fetchAll("getAll", $user->id) as $row) {
 			array_push($all, $this->rowToProduct($row));
 		}
 		return $all;

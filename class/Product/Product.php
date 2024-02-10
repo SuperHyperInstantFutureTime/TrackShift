@@ -14,13 +14,6 @@ readonly class Product extends Entity {
 		public ?Money $totalEarning = null,
 	) {}
 
-// TODO: Refactor usage of $product->title into $product->getTitle()
-	public function __get(string $name) {
-		if($name === "title") {
-			return $this->title;
-		}
-	}
-
 	#[BindGetter]
 	public function getArtUrl():?string {
 		$filePath = "data/cache/art/$this->id";

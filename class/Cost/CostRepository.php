@@ -35,7 +35,7 @@ readonly class CostRepository extends Repository {
 	}
 
 	public function update(Cost $cost, User $user):void {
-		$oldCost = $this->getById($cost->id);
+//		$oldCost = $this->getById($cost->id);
 
 //		$this->auditRepository->update(
 //			$user,
@@ -49,6 +49,7 @@ readonly class CostRepository extends Repository {
 			"productId" => $cost->product->id,
 			"description" => $cost->description,
 			"amount" => $cost->amount->value,
+			"userId" => $user->id
 		]);
 	}
 
@@ -61,7 +62,10 @@ readonly class CostRepository extends Repository {
 //			$cost->id,
 //			trim($cost->product->title . " " . $cost->description . " " . $cost->amount)
 //		);
-		$this->db->delete("delete", $cost->id);
+		$this->db->delete("delete", [
+			"id" => $cost->id,
+			"userId" => $user->id,
+		]);
 	}
 
 
