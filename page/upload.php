@@ -30,7 +30,6 @@ function do_upload(
 	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
 	$time = number_format(microtime(true) - $startTime);
 	Log::debug("{$time}s - Created uploads");
-	$db->executeSql("set global local_infile=true");
 	$db->executeSql("start transaction");
 
 	foreach($uploadList as $upload) {

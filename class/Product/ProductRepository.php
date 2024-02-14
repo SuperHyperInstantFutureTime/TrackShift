@@ -219,7 +219,15 @@ readonly class ProductRepository extends Repository {
 		$costs = $this->db->fetchFloat("getSummaryCosts", [
 			"userId" => $user->id,
 		]);
-		return new ProductSummary($earnings ?? 0.0, $costs ?? 0.0);
+		$profits = $this->db->fetchFloat("getSummaryProfits", [
+			"userId" => $user->id,
+		]);
+
+		return new ProductSummary(
+			$earnings ?? 0.0,
+				$costs ?? 0.0,
+			$profits ?? 0.0,
+		);
 	}
 
 	private function rowToProduct(?Row $row, ?Artist $artist = null):?Product {
