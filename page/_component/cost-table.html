@@ -1,5 +1,5 @@
 <div class="actions">
-	<a href="/account/costs/_new/" class="button">Add cost</a>
+	<a href="/account/costs/_new/" class="button" target="modal">Add cost</a>
 </div>
 <input type="text" id="costsTableSearchInput" onkeyup="myFunction()" placeholder="Search costs...">
 
@@ -23,7 +23,7 @@
 		<td data-bind:text="description">The description of the cost</td>
 		<td data-bind:text="addedOn">1st Jan 1970</td>
 		<td class="centered">
-			<a href="/account/costs/{{id}}/">Edit</a>
+			<a href="/account/costs/{{id}}/" target="modal">Edit</a>
 		</td>
 		<td class="centered">
 			<form method="post">
