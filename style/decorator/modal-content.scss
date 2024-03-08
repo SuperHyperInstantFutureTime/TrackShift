@@ -6,5 +6,6 @@
 		border-radius: var(--theme-ui-border-radius);
 		background: var(--pal-6);
 		max-width: $break-small;
+		box-shadow: 1rem 1rem rgba(0,0,0,0.5);
 	}
 }
