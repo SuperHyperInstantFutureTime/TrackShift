@@ -4,7 +4,7 @@ namespace SHIFT\TrackShift\BehatContext;
 use Behat\Behat\Tester\Exception\PendingException;
 use PHPUnit\Framework\Assert as PHPUnit;
 
-class NotificationContext extends PageContext {
+class NotificationSteps extends PageContext {
 	/** @Then I should have a notification */
 	public function iShouldHaveANotification():void {
 		$bell = $this->page->find("css", "global-header .bell");

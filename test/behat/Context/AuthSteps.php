@@ -6,7 +6,7 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\RawMinkContext;
 use PHPUnit\Framework\Assert as PHPUnit;
 
-class AuthContext extends PageContext {
+class AuthSteps extends PageContext {
 	private string $lastSeenHashData;
 
 	/** @Then a new user ID should be generated */

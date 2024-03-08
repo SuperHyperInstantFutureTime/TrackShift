@@ -11,13 +11,13 @@ default:
       contexts:
         - \Behat\MinkExtension\Context\MinkContext:
         - \SHIFT\TrackShift\BehatContext\ServerContext:
-        - \SHIFT\TrackShift\BehatContext\AuthContext:
         - \SHIFT\TrackShift\BehatContext\PageContext:
-        - \SHIFT\TrackShift\BehatContext\UploadContext:
-        - \SHIFT\TrackShift\BehatContext\ProductContext:
-        - \SHIFT\TrackShift\BehatContext\SplitContext:
-        - \SHIFT\TrackShift\BehatContext\NotificationContext:
-        - \SHIFT\TrackShift\BehatContext\DebugContext:
+        - \SHIFT\TrackShift\BehatContext\AuthSteps:
+        - \SHIFT\TrackShift\BehatContext\UploadSteps:
+        - \SHIFT\TrackShift\BehatContext\ProductSteps:
+        - \SHIFT\TrackShift\BehatContext\SplitSteps:
+        - \SHIFT\TrackShift\BehatContext\NotificationSteps:
+        - \SHIFT\TrackShift\BehatContext\DebugSteps:
 
   extensions:
     Behat\MinkExtension:

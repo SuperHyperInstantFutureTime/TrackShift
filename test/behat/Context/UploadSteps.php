@@ -5,7 +5,7 @@ use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert as PHPUnit;
 
-class UploadContext extends PageContext {
+class UploadSteps extends PageContext {
 	/** @Given I should see the file uploader */
 	public function iShouldSeeTheFileUploader() {
 		$fileUploader = $this->page->find("css", "global-header file-uploader");

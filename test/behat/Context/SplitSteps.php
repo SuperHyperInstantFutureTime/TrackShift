@@ -4,7 +4,7 @@ namespace SHIFT\TrackShift\BehatContext;
 use Behat\Mink\Element\NodeElement;
 use PHPUnit\Framework\Assert as PHPUnit;
 
-class SplitContext extends PageContext {
+class SplitSteps extends PageContext {
 
 	/** @Then I should see :numSplits product splits */
 	public function iShouldSeeProductSplits(int $numSplits):void {

@@ -5,7 +5,7 @@ use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Mink\Element\NodeElement;
 use PHPUnit\Framework\Assert as PHPUnit;
 
-class ProductContext extends PageContext {
+class ProductSteps extends PageContext {
 	/** @Then I should see the total earnings for :product by :artist as :earning */
 	public function iShouldSeeTheTotalEarningsForByAs(string $product, string $artist, string $earning):void {
 		foreach($this->page->findAll("css", "product-table table tbody tr") as $tableRow) {
