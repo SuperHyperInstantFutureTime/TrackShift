@@ -1,5 +1,11 @@
 export class Modal {
 	static init() {
+		if(window.top !== window) {
+			if(window.location.href === window.top.location.href) {
+				window.top.location.href = window.location.href;
+			}
+		}
+
 		let modalElementList = document.querySelectorAll("[target='modal']");
 		modalElementList.forEach(initElement);
 
@@ -8,6 +14,7 @@ export class Modal {
 		}
 
 		handleEscapeKey();
+		handleClickOff();
 	}
 }
 
@@ -27,17 +34,6 @@ function loadIframe(e) {
 	iframe.hidden = href === "about:blank";
 	let iframeDocument = iframe.contentWindow.document;
 	iframeDocument.body.classList.add("modal");
-
-	iframeDocument.querySelectorAll("a[target='_top']").forEach(link => {
-		link.addEventListener("click", e => {
-			e.preventDefault();
-			iframe.contentWindow.location.href = "about:blank";
-		});
-	});
-
-	iframe.contentWindow.addEventListener("keydown", e => {
-		console.log(e);
-	});
 }
 
 function handleEscapeKey() {
@@ -54,6 +50,17 @@ function handleEscapeKey() {
 			doc.querySelectorAll("[name=modal]").forEach(iframe => {
 				iframe.src="about:blank"
 			});
+		}
+	});
+}
+
+function handleClickOff() {
+	if(window.top === window) {
+		return;
+	}
+	document.body.addEventListener("click", e => {
+		if(e.target === document.body) {
+			location.href = "about:blank";
 		}
 	});
 }
