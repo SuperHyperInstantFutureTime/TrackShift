@@ -137,5 +137,5 @@ function do_delete(
 	$splitId = $dynamicPath->get("split");
 	$splitRepository->delete($splitId, $user);
 //	$auditRepository->delete($user, $splitId);
-	$response->redirect("/account/splits");
+	$response->redirect("../");
 }
