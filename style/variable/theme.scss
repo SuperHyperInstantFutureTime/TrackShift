@@ -5,7 +5,7 @@
 	--theme-ui-box-shadow: none;
 	--theme-ui-box-shadow--focus: 0 0 0 2px var(--pal-2);
 	--theme-ui-outline: none;
-	--theme-ui-outline--focus: none;
+	--theme-ui-outline--focus: 2px solid var(--pal-8);
 	--theme-accessibility-outline: 4px solid var(--pal-3);
 	--theme-transition: 0.3s ease-in-out;
 }
