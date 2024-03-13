@@ -1,3 +1,5 @@
 delete from Cost
-where id = ?
--- TODO: Clamp to User ID
+where
+	id = :id
+and
+	userId = :userId

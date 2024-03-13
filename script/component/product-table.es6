@@ -4,7 +4,8 @@ const nextPageDelay = 2000;
 let nextPageDelayTriggered = false;
 
 Page.go(function() {
-	document.querySelectorAll("product-table").forEach(init);
+	// Lazy loading is now handled on the server.
+	// document.querySelectorAll("product-table").forEach(init);
 });
 
 function init(productTable) {

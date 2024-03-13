@@ -1,4 +1,4 @@
-insert into Usage (
+insert into `Usage` (
 	id,
 	uploadId,
 	data

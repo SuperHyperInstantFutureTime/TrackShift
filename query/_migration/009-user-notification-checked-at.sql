@@ -1,2 +1,2 @@
 alter table User
-    add notificationCheckedAt integer;
+    add notificationCheckedAt datetime;

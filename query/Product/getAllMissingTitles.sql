@@ -2,9 +2,10 @@ select
 	id,
 	artistId,
 	title,
-	titleNormalised
+	titleNormalised,
+	totalEarningCache
 
 from
 	Product
 where
-	title like '::UNSORTED_UPC::%'
+	title like '::UNSORTED%'

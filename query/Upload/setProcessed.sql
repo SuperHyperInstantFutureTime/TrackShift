@@ -1,6 +1,8 @@
 update Upload
 set
-	usagesProcessed = true
+	usagesProcessed = now()
 
 where
-	id = ?
+	id = :id
+and
+	userId = :userId

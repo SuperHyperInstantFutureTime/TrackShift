@@ -1,6 +1,7 @@
 <?php
 namespace SHIFT\TrackShift\Upload;
 
+use SHIFT\TrackShift\Repository\StringCleaner;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
@@ -37,11 +38,8 @@ class DistroKidUpload extends Upload {
 
 	protected string $dataRowCsvSeparator = "\t";
 
-	public function extractArtistName(array $row):string {
-		return $row["Artist"];
-	}
-
-	public function extractProductTitle(array $row):string {
+	/** @param array<string, string> $row */
+	public function loadUsageForInternalLookup(array $row):void {
 		$upc = trim($row["UPC"] ?? "");
 		$isrc = trim($row["ISRC"] ?? "");
 		$title = trim($row["Title"] ?? "");
@@ -51,7 +49,20 @@ class DistroKidUpload extends Upload {
 		}
 
 		if($row["Song/Album"] === "Album") {
-			return $this->extractProductTitleForAlbum($upc, $title);
+			$this->upcProductTitleMap[$upc] = new StringCleaner($title);
+		}
+	}
+
+	public function extractArtistName(array $row):string {
+		return $row["Artist"];
+	}
+
+	public function extractProductTitle(array $row):string {
+		$upc = trim($row["UPC"] ?? "");
+		$isrc = trim($row["ISRC"] ?? "");
+
+		if(isset($this->upcProductTitleMap[$upc])) {
+			return $this->upcProductTitleMap[$upc];
 		}
 
 		if(!$upc) {

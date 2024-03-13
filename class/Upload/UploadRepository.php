@@ -1,48 +1,22 @@
 <?php
 namespace SHIFT\TrackShift\Upload;
-
-use DateTime;
-use Gt\Database\Query\QueryCollection;
+use Gt\Database\Result\Row;
 use Gt\Input\InputData\Datum\FileUpload;
+use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
-use SHIFT\TrackShift\Audit\AuditRepository;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
-use SplFileObject;
-use ZipArchive;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 readonly class UploadRepository extends Repository {
 	const DIR_UPLOAD = "data/upload";
 
-	public function __construct(
-		QueryCollection $db,
-		private AuditRepository $auditRepository,
-	) {
-		parent::__construct($db);
-	}
-
-	public function purgeOldFiles(string $dir = self::DIR_UPLOAD):int {
-		$count = 0;
-		$expiryDate = new DateTime("-3 weeks");
-
-		foreach(glob("$dir/*") as $userDir) {
-			foreach(glob("$userDir/*") as $filePath) {
-				if(filemtime($filePath) < $expiryDate->getTimestamp()) {
-					$count += $this->deleteByFileName($filePath);
-				}
-			}
-		}
-
-		return $count;
-	}
-
-	public function setProcessed(Upload $upload):void {
-		$this->db->update("setProcessed", $upload->id);
+	public function purgeOldFiles():void {
+// TODO: this needs to be tested and implemented.
 	}
 
 	/** @return array<Upload> */
@@ -63,6 +37,7 @@ readonly class UploadRepository extends Repository {
 			}
 			$uploadedFile->moveTo($targetPath);
 
+// TODO: Handle the file encoding.
 			$this->ensureCorrectEncoding($targetPath);
 			$this->ensureUnixLineEnding($targetPath);
 			$this->ensureSeparatorMatchesExtension($targetPath);
@@ -78,25 +53,63 @@ readonly class UploadRepository extends Repository {
 				"type" => $upload::class,
 			]);
 
-			if($upload instanceof UnknownUpload) {
-				$this->auditRepository->notify(
-					$user,
-					"Your latest upload was not processed ($upload->filename)",
-					$upload->id,
-				);
-			}
-			else {
-				$this->auditRepository->create(
-					$user,
-					$upload->id,
-					$upload->filename,
-				);
-			}
+//			if($upload instanceof UnknownUpload) {
+//				$this->auditRepository->notify(
+//					$user,
+//					"Your latest upload was not processed ($upload->filename)",
+//					$upload->id,
+//				);
+//			}
+//			else {
+//				$this->auditRepository->create(
+//					$user,
+//					$upload->id,
+//					$upload->filename,
+//				);
+//			}
 
 			array_push($completedUploadList, $upload);
 		}
 
 		return $completedUploadList;
+	}
+
+	private function getUserDataDir(User $user):string {
+		return self::DIR_UPLOAD . "/$user->id";
+	}
+
+	public function getById(string $id, User $user):?Upload {
+		return $this->rowToUpload($this->db->fetch("getById", [
+			"id" => $id,
+			"userId" => $user->id
+		]));
+	}
+
+	/** @return array<Upload> */
+	public function getUploadsForUser(User $user):array {
+		$uploadList = [];
+
+		foreach($this->db->fetchAll("getForUser", [
+			"userId" => $user->id,
+		]) as $row) {
+			if($upload = $this->rowToUpload($row)) {
+				array_push(
+					$uploadList,
+					$upload,
+				);
+			}
+		}
+
+		return $uploadList;
+	}
+
+	public function delete(Upload $upload, User $user):void {
+		$this->db->update("invalidateProductCache", $upload->id);
+		$this->db->delete("delete", [
+			"id" => $upload->id,
+			"userId" => $user->id,
+		]);
+		unlink($upload->filePath);
 	}
 
 	public function clearUserData(User $user):void {
@@ -111,57 +124,24 @@ readonly class UploadRepository extends Repository {
 		}
 	}
 
-	/** @return array<Upload> */
-	public function getUploadsForUser(User $user):array {
-		$uploadList = [];
-
-		foreach($this->db->fetchAll("getForUser", [
-			"userId" => $user->id,
-		]) as $row) {
-			$type = $row->getString("type");
-			/** @var Upload $upload */
-			$filePath = $row->getString("filePath");
-			if(!is_file($filePath)) {
-				continue;
-			}
-
-			$earning = new Money(0);
-			if($earningValue = $row->getFloat("totalEarnings")) {
-				$earning = new Money($earningValue);
-			}
-
-			$upload = new $type($row->getString("id"), $filePath, $earning);
-			array_push(
-				$uploadList,
-				$upload,
-			);
-		}
-
-		return $uploadList;
-	}
-
-	public function deleteByFileName(string $filePath):int {
-		if(is_file($filePath)) {
-			unlink($filePath);
-		}
-
-		return $this->db->delete("deleteByFilePath", $filePath);
-	}
-
-
-	public function deleteById(User $user, string $id):int {
-		return $this->db->delete("delete", [
-			"id" => $id,
+	public function setProcessed(Upload $upload, User $user):void {
+		$this->db->update("setProcessed", [
+			"id" => $upload->id,
 			"userId" => $user->id,
 		]);
 	}
 
-	private function getUserDataDir(User $user):string {
-		return self::DIR_UPLOAD . "/$user->id";
+	public function cacheUsage(Upload $upload):void {
+		$earning = $this->db->fetchFloat("calculateTotalEarningForUpload", $upload->id);
+		$this->db->update("cacheEarning", [
+			"uploadId" => $upload->id,
+			"earning" => $earning,
+		]);
+		Log::debug("Caching $earning earning for upload $upload->id");
 	}
 
 	/** @return class-string */
-	public function detectUploadType(mixed $uploadedFilePath):string {
+	private function detectUploadType(string $uploadedFilePath):string {
 		$filePath = $uploadedFilePath;
 
 		$type = UnknownUpload::class;
@@ -186,8 +166,8 @@ readonly class UploadRepository extends Repository {
 	}
 
 	private function isCsv(string $filePath):bool {
-		$file = new SplFileObject($filePath);
-		$firstLine = $file->fgets();
+		$fh = fopen($filePath, "r");
+		$firstLine = fgets($fh);
 		$csvData = str_getcsv($firstLine);
 
 		if(count($csvData) <= 1) {
@@ -198,8 +178,8 @@ readonly class UploadRepository extends Repository {
 	}
 
 	private function isTsv(string $filePath):bool {
-		$file = new SplFileObject($filePath);
-		$firstLine = $file->fgets();
+		$fh = fopen($filePath, "r");
+		$firstLine = fgets($fh);
 		$csvData = str_getcsv($firstLine, "\t");
 
 		if(count($csvData) <= 1) {
@@ -208,7 +188,6 @@ readonly class UploadRepository extends Repository {
 
 		return true;
 	}
-
 	private function hasCsvColumns(
 		string $filePath,
 		string...$columnsToCheck,
@@ -244,7 +223,6 @@ readonly class UploadRepository extends Repository {
 		return $line;
 	}
 
-
 	/**
 	 * @param array<string, string> $row
 	 * @param array<string> $columnsToCheck
@@ -259,6 +237,57 @@ readonly class UploadRepository extends Repository {
 		return true;
 	}
 
+// TODO: We probably should always automatically convert to a kvp, otherwise this function is VERY similar to detectUploadTypeFromTsv and potentially others.
+
+	protected function detectUploadTypeFromCsv(mixed $filePath):string {
+		$type = UnknownUpload::class;
+		if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_COLUMNS)) {
+			$type = PRSStatementUpload::class;
+		}
+		elseif($this->hasCsvColumns($filePath, ...BandcampUpload::KNOWN_COLUMNS)) {
+			$type = BandcampUpload::class;
+		}
+		elseif($this->hasCsvColumns($filePath, ...CargoDigitalUpload::KNOWN_COLUMNS)) {
+			$type = CargoDigitalUpload::class;
+		}
+		elseif($this->hasCsvColumns($filePath, ...TuneCoreUpload::KNOWN_COLUMNS)) {
+			$type = TuneCoreUpload::class;
+		}
+		return $type;
+	}
+
+	protected function detectUploadTypeFromTsv(mixed $filePath):string {
+		$type = UnknownUpload::class;
+		if($this->hasTsvColumns($filePath, ...DistroKidUpload::KNOWN_COLUMNS)) {
+			$type = DistroKidUpload::class;
+		}
+		elseif($this->hasTsvColumns($filePath, ...CdBabyUpload::KNOWN_COLUMNS)) {
+			$type = CdBabyUpload::class;
+		}
+		return $type;
+	}
+
+	private function rowToUpload(?Row $row):?Upload {
+		if(!$row) {
+			return null;
+		}
+
+		$earnings = new Money();
+		if($earningsFloat = $row->getFloat("totalEarningCache")) {
+			$earnings = new Money($earningsFloat);
+		}
+
+		$processedAt = $row->getDateTime("usagesProcessed");
+
+		/** @var class-string<Upload> $type */
+		$type = $row->getString("type");
+		return new $type(
+			$row->getString("id"),
+			$row->getString("filePath"),
+			$earnings,
+			$processedAt,
+		);
+	}
 
 	private function ensureCorrectEncoding(string $filePath):void {
 		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
@@ -269,7 +298,7 @@ readonly class UploadRepository extends Repository {
 		$fileResult = system("file -bi '$filePath'");
 
 		if(str_contains($fileResult, "charset=utf-8")
-		|| str_contains($fileResult, "charset=binary")) {
+			|| str_contains($fileResult, "charset=binary")) {
 			return;
 		}
 
@@ -285,6 +314,28 @@ readonly class UploadRepository extends Repository {
 
 		$content = mb_convert_encoding($content, "UTF-8", $encoding);
 		file_put_contents($filePath, $content);
+	}
+
+	private function ensureUnixLineEnding(string $filePath):void {
+		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
+		if($ext === "zip" || $ext === "xlsx") {
+			return;
+		}
+		$fhIn = fopen($filePath, "r");
+
+		$firstLine = fgets($fhIn, 2048);
+		if(!str_contains($firstLine, "\r")) {
+			// Everything's OK :)
+			return;
+		}
+		fclose($fhIn);
+
+		$contents = file_get_contents($filePath);
+		$contents = str_replace("\r\n", "\n", $contents);
+		$contents = str_replace("\r", "\n", $contents);
+
+		file_put_contents("$filePath.fixed", $contents);
+		rename("$filePath.fixed", $filePath);
 	}
 
 	private function ensureSeparatorMatchesExtension(string $filePath):void {
@@ -325,55 +376,5 @@ readonly class UploadRepository extends Repository {
 		fclose($fhOut);
 
 		rename("$filePath.fixed", $filePath);
-	}
-
-	private function ensureUnixLineEnding(string $filePath):void {
-		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
-		if($ext === "zip" || $ext === "xlsx") {
-			return;
-		}
-		$fhIn = fopen($filePath, "r");
-
-		$firstLine = fgets($fhIn, 2048);
-		if(!str_contains($firstLine, "\r")) {
-			// Everything's OK :)
-			return;
-		}
-		fclose($fhIn);
-
-		$contents = file_get_contents($filePath);
-		$contents = str_replace("\r\n", "\n", $contents);
-		$contents = str_replace("\r", "\n", $contents);
-
-		file_put_contents("$filePath.fixed", $contents);
-		rename("$filePath.fixed", $filePath);
-	}
-
-	protected function detectUploadTypeFromCsv(mixed $filePath):string {
-		$type = UnknownUpload::class;
-		if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_COLUMNS)) {
-			$type = PRSStatementUpload::class;
-		}
-		elseif($this->hasCsvColumns($filePath, ...BandcampUpload::KNOWN_COLUMNS)) {
-			$type = BandcampUpload::class;
-		}
-		elseif($this->hasCsvColumns($filePath, ...CargoDigitalUpload::KNOWN_COLUMNS)) {
-			$type = CargoDigitalUpload::class;
-		}
-		elseif($this->hasCsvColumns($filePath, ...TuneCoreUpload::KNOWN_COLUMNS)) {
-			$type = TuneCoreUpload::class;
-		}
-		return $type;
-	}
-
-	protected function detectUploadTypeFromTsv(mixed $filePath):string {
-		$type = UnknownUpload::class;
-		if($this->hasTsvColumns($filePath, ...DistroKidUpload::KNOWN_COLUMNS)) {
-			$type = DistroKidUpload::class;
-		}
-		elseif($this->hasTsvColumns($filePath, ...CdBabyUpload::KNOWN_COLUMNS)) {
-			$type = CdBabyUpload::class;
-		}
-		return $type;
 	}
 }

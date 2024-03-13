@@ -29,11 +29,7 @@ readonly class ArtistRepository extends Repository {
 	}
 
 	public function getByName(string $artistName, User $user):?Artist {
-		return $this->rowToArtist($this->db->fetch("getArtistByName", $artistName, $user->id));
-	}
-
-	public function getByNormalisedName(string $normalisedName, User $user):?Artist {
-		return $this->rowToArtist($this->db->fetch("getArtistByNormalisedName", $normalisedName, $user->id));
+		return $this->rowToArtist($this->db->fetch("getArtistByNameNormalised", (string)(new NormalisedString($artistName)), $user->id));
 	}
 
 	private function rowToArtist(?Row $row):?Artist {

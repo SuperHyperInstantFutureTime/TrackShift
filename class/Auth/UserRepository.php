@@ -47,7 +47,8 @@ readonly class UserRepository extends Repository {
 		$this->session->set(self::SESSION_USER, $user);
 	}
 
-	public function forget():void {
+	public function forget(User $user):void {
+		$this->db->delete("delete", $user->id);
 		$this->session->remove(self::SESSION_USER);
 	}
 

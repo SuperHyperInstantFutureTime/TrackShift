@@ -25,13 +25,13 @@ use SHIFT\TrackShift\Usage\UsageRepository;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ServiceLoader extends DefaultServiceLoader {
-	public function loadAuditRepo():AuditRepository {
-		$database = $this->container->get(Database::class);
-		return new AuditRepository(
-			$database->queryCollection("Audit"),
-			$this->container->get(UserRepository::class),
-		);
-	}
+//	public function loadAuditRepo():AuditRepository {
+//		$database = $this->container->get(Database::class);
+//		return new AuditRepository(
+//			$database->queryCollection("Audit"),
+//			$this->container->get(UserRepository::class),
+//		);
+//	}
 
 	public function loadContentRepo():ContentRepository {
 		return new ContentRepository("data/web-content");
@@ -41,7 +41,6 @@ class ServiceLoader extends DefaultServiceLoader {
 		$db = $this->container->get(Database::class);
 		return new UploadRepository(
 			$db->queryCollection("Upload"),
-			$this->container->get(AuditRepository::class),
 		);
 	}
 
@@ -71,14 +70,6 @@ class ServiceLoader extends DefaultServiceLoader {
 		);
 	}
 
-	public function loadSpotify():SpotifyClient {
-		$spotifyConfig = $this->config->getSection("spotify");
-		return new SpotifyClient(
-			$spotifyConfig->getString("client_id"),
-			$spotifyConfig->getString("client_secret"),
-		);
-	}
-
 	public function loadUser():User {
 		$userRepo = $this->container->get(UserRepository::class);
 		$user = $userRepo->getLoggedInUser();
@@ -102,7 +93,7 @@ class ServiceLoader extends DefaultServiceLoader {
 		return new CostRepository(
 			$db->queryCollection("Cost"),
 			$this->container->get(ProductRepository::class),
-			$this->container->get(AuditRepository::class),
+//			$this->container->get(AuditRepository::class),
 		);
 	}
 
@@ -113,6 +104,14 @@ class ServiceLoader extends DefaultServiceLoader {
 			$database->queryCollection("Split"),
 			$this->container->get(UserRepository::class),
 			$this->container->get(ProductRepository::class),
+		);
+	}
+
+	public function loadSpotify():SpotifyClient {
+		$spotifyConfig = $this->config->getSection("spotify");
+		return new SpotifyClient(
+			$spotifyConfig->getString("client_id"),
+			$spotifyConfig->getString("client_secret"),
 		);
 	}
 

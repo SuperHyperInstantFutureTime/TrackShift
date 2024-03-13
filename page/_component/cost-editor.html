@@ -10,7 +10,7 @@
 		<button name="do" value="set-artist">Set artist</button>
 	</div>
 </form>
-<form method="post">
+<form method="post" target="_top">
 	<label>
 		<span>Product</span>
 		<select name="product" required data-bind:value="@name">
@@ -29,18 +29,7 @@
 
 	<div class="actions">
 		<button name="do" value="save">Save</button>
-		<button name="do" value="delete">Delete</button>
-		<a href="/account/costs/">Cancel</a>
+		<button name="do" value="delete" onclick="return confirm('Are you sure you want to delete this cost?')">Delete</button>
+		<a href="/account/costs/" target="_top">Cancel</a>
 	</div>
 </form>
-
-<script>
-if(window !== window.top) {
-	document.body.classList.add("modal");
-	let link=document.querySelector(".actions a");
-	link.addEventListener("click", e => {
-		e.preventDefault();
-		location.href = "about:blank";
-	});
-}
-</script>

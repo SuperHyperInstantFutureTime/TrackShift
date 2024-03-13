@@ -6,7 +6,6 @@ use Gt\Logger\Log;
 use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
-use SHIFT\TrackShift\Auth\UserRepository;
 use SHIFT\TrackShift\Product\ProductRepository;
 use SHIFT\TrackShift\Upload\UploadRepository;
 use SHIFT\TrackShift\Usage\UsageRepository;
@@ -16,68 +15,60 @@ function go(Response $response):void {
 }
 
 function do_upload(
-	Input $input,
-	Response $response,
-	UserRepository $userRepository,
-	User $user,
 	UploadRepository $uploadRepository,
 	UsageRepository $usageRepository,
 	ArtistRepository $artistRepository,
 	ProductRepository $productRepository,
 	SpotifyClient $spotify,
-	Database $database,
+	User $user,
+	Database $db,
+	Input $input,
+	Response $response,
 ):void {
+	$startTime = microtime(true);
 	set_time_limit(600);
-	$database->executeSql("begin transaction");
-	$database->executeSql("PRAGMA foreign_keys = 0");
-
-	$userRepository->persistUser($user);
 	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
+	$time = number_format(microtime(true) - $startTime);
+	Log::debug("{$time}s - Created uploads");
+	$db->executeSql("start transaction");
+
 	foreach($uploadList as $upload) {
-		$usageListTotal = $usageRepository->createUsagesFromUpload($upload);
-		$chunks = array_chunk($usageListTotal, 100);
+//		$usageCsvFilePath = $usageRepository->createUsagesFromUpload($upload);
+//		Log::debug("{$time}s - Created " . count($usageIdList) . " usages");
 
-		$artistProductTuple = [];
+		$uploadRepository->setProcessed($upload, $user);
 
-		foreach($chunks as $chunkIndex => $usageList) {
-			$uploadRepository->setProcessed($upload);
-			$chunkedArtistProductTuple = $usageRepository->process(
-				$user,
-				$usageList,
-				$upload,
-				$artistRepository,
-				$productRepository,
-			);
-			if($artistProductTuple) {
-				$artistProductTuple[0] = array_merge($artistProductTuple[0], $chunkedArtistProductTuple[0]);
-				$artistProductTuple[1] = array_merge($artistProductTuple[1], $chunkedArtistProductTuple[1]);
-			}
-			else {
-				$artistProductTuple = $chunkedArtistProductTuple;
-			}
+		$processedNum = $usageRepository->process(
+			$user,
+			$upload,
+			$artistRepository,
+			$productRepository,
+		);
 
-			$usageCount = count($usageList);
-			$processedNum = count($chunkedArtistProductTuple);
-			Log::debug("Usages created: $usageCount. Processed: $processedNum. File: $upload->filePath (iteration $chunkIndex)");
-		}
+		$db->executeSql("COMMIT");
+		$memoryPeak = memory_get_peak_usage(true);
+		$memoryNow = memory_get_usage(true);
+		echo(number_format($memoryNow / (1024 * 1024)) . "MB now, " . number_format($memoryPeak / (1024 * 1024)) . " MB peak\n");
+		echo(number_format(microtime(true) - $startTime, 2) . " seconds");
 
 		if($upload->isrcUpcMap) {
-			$database->executeSql("end transaction");
 			foreach($upload->isrcUpcMap as $isrc => $upc) {
 				$productRepository->changeProductIsrcToUpc($isrc, $upc);
 			}
-			$database->executeSql("begin transaction");
 		}
+
+		$uploadRepository->cacheUsage($upload);
 	}
 
-	Log::debug("All chunks are processed!");
-
-	$database->executeSql("end transaction");
-	$database->executeSql("PRAGMA foreign_keys = 1");
+	Log::debug("committing transaction");
+	$db->executeSql("commit");
 
 	Log::debug("Looking up missing titles...");
-	$missingTitleCount = $productRepository->lookupMissingTitles($spotify);
+	$missingTitleCount = $productRepository->lookupMissingTitles($spotify, $artistRepository, $user);
 	Log::debug("Looked up $missingTitleCount titles on Spotify");
+	$duplicateCount = $productRepository->deduplicate($user);
+	Log::debug("De-duplicated $duplicateCount products");
+	$productRepository->calculateUncachedEarnings($user);
 
 	if($advanceTo = $input->getString("advance")) {
 		$response->redirect($advanceTo);

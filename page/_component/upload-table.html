@@ -11,11 +11,11 @@
 	</tr>
 	</thead>
 	<tbody>
-	<tr data-list>
+	<tr data-list data-bind:class=":isProcessing processing">
 		<td data-bind:text="type">Unknown</td>
-		<td data-bind:text="basename">abc.xyz</td>
+		<td data-bind:text="basename" class="basename">abc.xyz</td>
 		<td data-bind:text="createdAtFormattedDate">1st Jan 1970</td>
-		<td data-bind:text="totalEarnings">-</td>
+		<td data-bind:text="totalEarnings" class="earnings">-</td>
 		<td class="centered" data-bind:text="sizeString">0 B</td>
 		<td class="centered">
 			<form method="post">

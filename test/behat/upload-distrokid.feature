@@ -14,6 +14,6 @@ Feature: App should handle DistroKid CSV files
 		When I go to "/account/products/"
 		Then I should see the following table data:
 			| Artist | Title | Earnings |
-			| Artist 1 | ::UNSORTED_UPC::111111111111 | £0.01 |
-			| Artist 2 | ::UNSORTED_UPC::222222222222 | £0.00 |
-			| Artist 3 | ::UNSORTED_UPC::333333333333 | £0.00 |
+			| Artist 1 | Unknown Album (UPC 111111111111) | < £0.01 |
+			| Artist 2 | Unknown Album (UPC 222222222222) | < £0.01 |
+			| Artist 3 | Unknown Album (UPC 333333333333) | < £0.01 |

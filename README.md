@@ -46,3 +46,10 @@ Within the `class` directory are namespace-organised directories. Organised with
 - `ProductEarning`: Usages are converted into earnings which represent the different `Money` amounts associated to each usage of a Product: earning, cost, outgoing, profit.
 - `Cost`: Costs can be added to Products which will be subtracted from the earning.
 - `Split`: Splits can be added to Products to divide the remaining profit between different parties, according to their `SplitPercentage` value. A special type of percentage `RemainderSplitPercentage` is always added to a `Split`, with a value that is calculated as the remaining split from 100%.
+
+Database
+--------
+
+Since the first version, we've switched from SQLite to MySQL. (Insert quote about "how long until you realise MySQL is the solution?").
+
+To achieve the features we need, MySQL imports directly from CSV. This is done by altering the 

@@ -5,9 +5,9 @@ select
 	Artist.nameNormalised as artistNameNormalised,
 	title,
 	titleNormalised,
-	round(sum(UsageOfProduct.earning), 2) as totalEarning,
-	coalesce(Cost.sumAmount, 0) as totalCost,
-	coalesce(SplitPercentage.sumPercentage, 0) as percentageOutgoing
+	Product.totalEarningCache,
+	J_Product_Cost.sumAmount as totalCost,
+	J_Product_SplitPercentage.sumPercentage as percentageOutgoing
 
 from
 	Product
@@ -21,9 +21,9 @@ left join
 			Cost
 		group by
 			productId
-	) cost
+	) J_Product_Cost
 on
-	Cost.productId = Product.id
+	J_Product_Cost.productId = Product.id
 
 left join
 	(
@@ -38,34 +38,23 @@ left join
 			Split.id = SplitPercentage.splitId
 		group by
 			Split.productId
-	) SplitPercentage
+	) J_Product_SplitPercentage
 on
-	SplitPercentage.productId = Product.id
+	J_Product_SplitPercentage.productId = Product.id
 
 inner join
 	Artist
 on
 	Artist.id = Product.artistId
 
-inner join
-	UsageOfProduct
-on
-	UsageOfProduct.productId = Product.id
-
-inner join
-	Usage
-on
-	UsageOfProduct.usageId = Usage.id
-
-inner join
-	Upload
-on
-	Upload.id = Usage.uploadId
-and
-	Upload.userId = ?
+where
+	Product.uploadUserId = :userId
 
 group by
-	title
+	Product.id
 
 order by
-	sum(earning) desc
+	min(Product.totalEarningCache) desc
+
+limit :limit
+offset :offset

@@ -1,0 +1,32 @@
+<div class="actions">
+	<a href="/account/splits/_new/" target="modal" class="button">Add new split</a>
+</div>
+<ul id="splitsList">
+	<li data-list>
+		<div>
+			<h1 data-bind:text="product.artist.name">Artist name</h1>
+			<h2 data-bind:text="product.title">Product title</h2>
+			<a href="/account/splits/{{id}}" target="modal">Edit</a>
+		</div>
+
+		<table data-bind:list="splitPercentageList">
+			<thead>
+			<tr>
+				<th>Party</th>
+				<th>Percentage split</th>
+				<th>Email</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr data-list>
+				<td data-bind:text="owner">You</td>
+				<td data-bind:text="percentage" class="percentage">100%</td>
+				<td data-bind:text="contact"></td>
+			</tr>
+			</tbody>
+		</table>
+	</li>
+</ul>
+
+<modal-popup />
+

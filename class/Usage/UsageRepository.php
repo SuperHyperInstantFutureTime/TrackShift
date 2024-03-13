@@ -1,156 +1,147 @@
 <?php
 namespace SHIFT\TrackShift\Usage;
 
-use Gt\Database\Query\QueryCollection;
-use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
-use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\Artist;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Product\Product;
 use SHIFT\TrackShift\Product\ProductRepository;
-use SHIFT\TrackShift\Repository\NormalisedString;
 use SHIFT\TrackShift\Repository\Repository;
+use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Upload\Upload;
 
 readonly class UsageRepository extends Repository {
 	const UNSORTED_UPC = "::UNSORTED_UPC::";
 	const UNSORTED_ISRC = "::UNSORTED_ISRC::";
-	const SEPARATOR = "::::::";
-
-	/** @return array<Usage> */
-	public function createUsagesFromUpload(Upload $upload):array {
-		$usageList = [];
-
-		foreach($upload->generateDataRows() as $row) {
-			$usage = new Usage(
-				new Ulid("usage"),
-				$upload,
-				$row,
-			);
-			array_push($usageList, $usage);
-			$this->db->insert("create", [
-				"id" => $usage->id,
-				"uploadId" => $upload->id,
-				"data" => json_encode($row),
-			]);
-		}
-
-		return $usageList;
-	}
 
 	/**
-	 * @param array<Usage> $usageList
-	 * @return array<array<string>> A tuple of artistName:productTitle
+	 * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+	 * @SuppressWarnings(PHPMD.NPathComplexity)
 	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
 	// phpcs:ignore
 	public function process(
 		User $user,
-		array $usageList,
 		Upload $upload,
 		ArtistRepository $artistRepository,
 		ProductRepository $productRepository,
-	):array {
-		$importedUsageIdList = [];
-		$importedArtistNameList = [];
-		$importedArtistNameListNormalised = [];
-		$importedProductTitleList = [];
-		$importedProductTitleListNormalised = [];
-		$importedCombinedArtistNameProductTitleListNormalised = [];
-		$importedEarningList = [];
-		$mapCombinedArtistNameProductTitleToProduct = [];
+	):int {
+		$i = 0;
 
-		$artistList = [];
+		$existingArtistList = $artistRepository->getAll($user);
+		$existingProductList = $productRepository->getAll($user);
 
-		foreach($usageList as $usage) {
-			$artistName = $upload->extractArtistName($usage->row);
-			$artistNameNormalised = (string)(new NormalisedString($artistName));
-			$productTitle = $upload->extractProductTitle($usage->row);
-			$productTitleNormalised = (string)(new NormalisedString($productTitle));
-			$earning = $upload->extractEarning($usage->row);
+		$artistMap = array_reduce($existingArtistList, function(array $carry, Artist $artist):array {
+			$carry[$artist->id] = $artist->name;
+			return $carry;
+		}, []);
+		$combinedArtistNameProductTitleMap = array_reduce($existingProductList, function(array $carry, Product $product):array {
+			$carry[$product->id] = $product->artist->name . ":" . $product->title;
+			return $carry;
+		}, []);
 
-			array_push($importedUsageIdList, $usage->id);
-			array_push($importedArtistNameList, $artistName);
-			array_push($importedArtistNameListNormalised, $artistNameNormalised);
-			array_push($importedProductTitleList, $productTitle);
-			array_push($importedProductTitleListNormalised, $productTitleNormalised);
-			array_push($importedEarningList, $earning);
+		$dbUsageFilePath = "/tmp/trackshift/usages-csv/$upload->id/usage.csv";
+		$dbUOPFilePath = "/tmp/trackshift/usages-csv/$upload->id/usage-of-product.csv";
+		if(!is_dir(dirname($dbUsageFilePath))) {
+			mkdir(dirname($dbUsageFilePath), recursive: true);
+		}
+		$fhUsages = fopen($dbUsageFilePath, "w");
+		$fhUOP = fopen($dbUOPFilePath, "w");
 
-			array_push($importedCombinedArtistNameProductTitleListNormalised, $artistNameNormalised . self::SEPARATOR . $productTitleNormalised);
-			$this->db->update("setProcessed", $usage->id);
+		foreach($upload->generateDataRows() as $row) {
+			$upload->loadUsageForInternalLookup($row);
 		}
 
-		$importedUniqueArtistNameList = array_unique($importedArtistNameList);
-		$importedUniqueArtistNameListNormalised = array_unique($importedArtistNameListNormalised);
-		/** @var array<Artist> $toCreateArtistList */
-		$toCreateArtistList = [];
-		$mapArtistNameNormalisedToId = [];
-		foreach($importedUniqueArtistNameListNormalised as $i => $artistNameNormalised) {
-			$artistName = $importedUniqueArtistNameList[$i];
-			$artist = $artistRepository->getByNormalisedName($artistNameNormalised, $user);
-			if(!$artist) {
+		$usageOfProductMap = [];
+
+		foreach($upload->generateDataRows() as $row) {
+			$artistName = $upload->extractArtistName($row);
+			$productTitle = $upload->extractProductTitle($row);
+			$earning = $upload->extractEarning($row);
+			$combinedArtistNameProductTitle = "$artistName:$productTitle";
+
+			if($existingArtistId = array_search($artistName, $artistMap)) {
+				$artistId = $existingArtistId;
 				$artist = new Artist(
-					new Ulid("artist"),
+					$artistId,
 					$artistName,
 				);
-				array_push($toCreateArtistList, $artist);
+			}
+			else {
+				$artistId = (string)(new Ulid("artist"));
+				$artist = new Artist(
+					$artistId,
+					$artistName,
+				);
+				$artistRepository->create($user, $artist);
+				$artistMap[$artistId] = $artistName;
 			}
 
-			$artistList[$artist->id] = $artist;
-			$mapArtistNameNormalisedToId[$artistNameNormalised] = $artist->id;
-		}
-
-		$importedUniqueCombinedArtistNameProductTitleListNormalised = array_unique($importedCombinedArtistNameProductTitleListNormalised);
-		/** @var array<Product> $toCreateProductList */
-		$toCreateProductList = [];
-		foreach($importedUniqueCombinedArtistNameProductTitleListNormalised as $i => $combinedArtistProductNormalised) {
-			[$artistNameNormalised, $productTitleNormalised] = explode(self::SEPARATOR, $combinedArtistProductNormalised);
-			$artistId = $mapArtistNameNormalisedToId[$artistNameNormalised] ?? null;
-			if(!$artistId) {
-				continue;
-			}
-
-			$artist = $artistList[$artistId];
-
-			$productTitle = $importedProductTitleList[$i];
-			$product = $productRepository->find($productTitleNormalised, $artist, true);
-			if(!$product) {
+			if($existingProductId = array_search($combinedArtistNameProductTitle, $combinedArtistNameProductTitleMap)) {
+				$productId = $existingProductId;
 				$product = new Product(
-					new Ulid("product"),
+					$productId,
 					$productTitle,
 					$artist,
 				);
-				array_push($toCreateProductList, $product);
 			}
-//			$productList[$product->id] = $product;
-			$mapCombinedArtistNameProductTitleToProduct[$combinedArtistProductNormalised] = $product;
-		}
-
-		$artistCount = $artistRepository->create($user, ...$toCreateArtistList);
-		$productCount = $productRepository->create(...$toCreateProductList);
-
-		Log::debug("Created $artistCount artists and $productCount products");
-
-		foreach($importedEarningList as $i => $earning) {
-			$artistNameNormalised = $importedArtistNameListNormalised[$i];
-			$productTitleNormalised = $importedProductTitleListNormalised[$i];
-			$combinedArtistProductNormalised = $artistNameNormalised . self::SEPARATOR . $productTitleNormalised;
-			$product = $mapCombinedArtistNameProductTitleToProduct[$combinedArtistProductNormalised] ?? null;
-
-			if(!$product) {
-				continue;
+			else {
+				$productId = (string)(new Ulid("product"));
+				$product = new Product(
+					$productId,
+					$productTitle,
+					$artist,
+				);
+				$productRepository->create($user, $product);
+				$productMap[(string)$productId] = $productTitle;
+				$combinedArtistNameProductTitleMap[(string)$productId] = $combinedArtistNameProductTitle;
 			}
 
-			$this->db->insert("assignProductUsage", [
-				"id" => (string)(new Ulid("pu")),
-				"usageId" => $importedUsageIdList[$i],
-				"productId" => $product->id,
-				"earning" => $earning->value,
+			$usageId = (string)(new Ulid("usage"));
+			if(!isset($usageOfProductMap[$usageId])) {
+				$usageOfProductMap[$usageId] = [];
+			}
+			if(!isset($usageOfProductMap[$usageId][$productId])) {
+				$usageOfProductMap[$usageId][$productId] = new Money();
+			}
+			/** @var Money $currentEarning */
+			$currentEarning = $usageOfProductMap[$usageId][$productId];
+			$currentEarning = $currentEarning->withAddition($earning);
+			$usageOfProductMap[$usageId][$productId] = $currentEarning;
+
+			fputcsv($fhUsages, [
+				$usageId,
+				$upload->id,
+				json_encode($row),
 			]);
+			$i++;
 		}
+		fclose($fhUsages);
 
-		return [$importedArtistNameList, $importedProductTitleList];
+		foreach($usageOfProductMap as $usageId => $productMap) {
+			/**
+			 * @var string $productId
+			 * @var Money $earning
+			 **/
+			foreach($productMap as $productId => $earning) {
+				fputcsv($fhUOP, [
+					(string)(new Ulid("product_usage")),
+					$usageId,
+					$productId,
+					$earning->value,
+				]);
+			}
+		}
+		fclose($fhUOP);
+
+		$this->db->insert("loadUsageFromFile", [
+			"infileName" => $dbUsageFilePath,
+		]);
+		$this->db->insert("loadUsageOfProductFromFile", [
+			"infileName" => $dbUOPFilePath,
+		]);
+
+		return $i;
 	}
 }

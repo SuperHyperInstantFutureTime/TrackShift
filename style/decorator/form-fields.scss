@@ -20,6 +20,7 @@
 
 	.actions:not(.auto-submit) {
 		display: flex;
+		gap: 1rem;
 		align-items: center;
 		margin: 1rem 0;
 	}

@@ -5,15 +5,13 @@ Feature: TrackShift should split my share of profits
 
 	Scenario: A product has no splits by default
 		Given I am on the homepage
-		And I attach the file "bandcamp-simple-3-songs.csv" to "upload[]"
-		And I press "Upload"
+		And I upload the file "bandcamp-simple-3-songs.csv"
 		When I go to "/account/splits/"
 		Then I should see 0 product splits
 
 	Scenario: A product with 50/50 splits
 		Given I am on the homepage
-		And I attach the file "bandcamp-simple-3-songs.csv" to "upload[]"
-		And I press "Upload"
+		And I upload the file "bandcamp-simple-3-songs.csv"
 		When I go to "/account/splits/"
 		And I follow "Add new split"
 		Then I should be on "/account/splits/_new/"

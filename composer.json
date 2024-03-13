@@ -1,6 +1,7 @@
 {
-	"name": "shift/trackshift",
-	"description": "",
+	"name": "superhyperinstantfuturetime/trackshift",
+	"description": "A music royalties data aggregator",
+
 	"require": {
 		"php": ">=8.2",
 		"ext-iconv": "*",
@@ -8,14 +9,13 @@
 		"ext-zip": "*",
 		"superhyperinstantfuturetime/spotify-api": "dev-master",
 		"phpgt/webengine": "dev-master",
-		"phpgt/dom": "dev-master as v4.1.6",
 		"authwave/php-client": "2022.x-dev",
 		"openspout/openspout": "v4.22.0",
 		"league/commonmark": "^2.4"
 	},
 	"require-dev": {
-		"phpstan/phpstan": "^1.9",
-		"phpunit/phpunit": "^10.2",
+		"phpunit/phpunit": "^10.4",
+		"phpstan/phpstan": "^1.10",
 		"behat/behat": "^3.11",
 		"friends-of-behat/mink-extension": "^2.7",
 		"behat/mink-goutte-driver": "^2.0",
@@ -23,6 +23,7 @@
 		"pdepend/pdepend": "dev-master",
 		"squizlabs/php_codesniffer": "^3.7"
 	},
+
 	"autoload": {
 		"psr-4": {
 			"SHIFT\\TrackShift\\": "./class"
