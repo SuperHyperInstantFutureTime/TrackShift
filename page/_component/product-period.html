@@ -1,0 +1,15 @@
+<form onchange="this.submit()">
+	<div class="double">
+		<label>
+			<span>From</span>
+			<input type="date" name="p-from" data-bind:value="@name" />
+		</label>
+		<label>
+			<span>To</span>
+			<input type="date" name="p-to" data-bind:value="@name" data-bind:min="p-from" />
+		</label>
+	</div>
+	<div class="actions">
+		<button class="auto-submit" name="do" value="set-period">Set period</button>
+	</div>
+</form>

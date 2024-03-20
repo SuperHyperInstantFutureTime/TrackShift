@@ -1,0 +1,16 @@
+column-container {
+	@extend %o-container;
+
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	justify-content: stretch;
+
+	@media(min-width: $break-small) {
+		flex-direction: row;
+	}
+
+	>* {
+		flex-grow: 1;
+	}
+}

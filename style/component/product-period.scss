@@ -1,0 +1,12 @@
+product-period {
+	display: block;
+	padding: 1rem;
+
+	form {
+		@extend %d-form-fields;
+
+		.actions {
+			justify-content: flex-end;
+		}
+	}
+}

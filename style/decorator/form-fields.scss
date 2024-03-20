@@ -1,4 +1,14 @@
 %d-form-fields {
+	.double {
+		display: flex;
+		justify-content: stretch;
+		gap: 1rem;
+
+		>* {
+			flex-grow: 1;
+		}
+	}
+
 	label {
 		display: block;
 		margin: 0 0 1rem 0;
