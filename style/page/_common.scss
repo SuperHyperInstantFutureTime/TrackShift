@@ -1,5 +1,45 @@
 body {
     >article {
         @extend %d-editorial-content, %d-typography, %o-container
+        }
+        .dark {
+            background-color: var(--pal-5);
+            color:var(--pal-6);
+        }
+        .light {
+            background-color: var(--pal-utility-light-1);
+            color:var(--pal-5);
+        }
+        .mustard {
+            background-color: var(--pal-8);
+        }
+        .red {
+            background-color: var(--pal-1);
+            color:var(--pal-5);
+        }
+        .light-blue {
+            background-color: var(--pal-2);
+            color:var(--pal-utility-dark-1);
+        }
+    >.article-fluid {
+        max-width:var(--size-page-width-fluid);
+    }
+    .iframe-container {
+        display: block;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+        border-radius:1rem;
+        margin: 4rem auto;
+    }
+    .responsive-iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
     }
 }

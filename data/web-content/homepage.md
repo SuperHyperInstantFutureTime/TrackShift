@@ -1,8 +1,4 @@
-# Simple, loveable admin tools for independent record labels and artists.
-
-## Try it now. No login required! &#8631;
-
-<section>
+<section class="three-quarter-width">
 
 ## We process sales data for record labels so they can work out artist royalties in seconds.
 
@@ -17,6 +13,13 @@ If you don't see yours, let us know and we'll make it happen.
 
 <a class="button button-red" href="mailto:biff@trackshift.app">Get in touch</a>
 
+</section>
+
+<section>
+
+## How it works
+
+Upload a sales report from Bandcamp and/or your distributor. TrackShift will sort the data and build your catalogue automatically. No setup required!
 </section>
 
 <section class="three-quarter-width">
