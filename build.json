@@ -58,5 +58,15 @@
 			"command": "vendor/bin/sync",
 			"arguments": ["asset/", "www/asset", "--delete"]
 		}
+	},
+
+	"data/cache/art": {
+		"require": {
+			"vendor/bin/sync": "*"
+		},
+		"execute": {
+			"command": "vendor/bin/sync",
+			"arguments": ["./data/cache/art", "./www/data/cache/art", "--symlink"]
+		}
 	}
 }
