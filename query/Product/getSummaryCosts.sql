@@ -11,3 +11,7 @@ on
 
 where
 	Product.uploadUserId = :userId
+and
+	Cost.date >= :periodFrom
+and
+	Cost.date <= :periodTo

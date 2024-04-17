@@ -19,6 +19,8 @@ left join
 			sum(Cost.amount) as sumAmount
 		from
 			Cost
+		where
+			Cost.date >= :periodFrom and Cost.date <= :periodTo
 		group by
 			productId
 	) J_Product_Cost

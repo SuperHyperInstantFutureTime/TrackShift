@@ -31,6 +31,7 @@ readonly class CostRepository extends Repository {
 			"userId" => $user->id,
 			"description" => $cost->description,
 			"amount" => $cost->amount->value,
+			"date" => $cost->date,
 		]);
 	}
 
@@ -49,6 +50,7 @@ readonly class CostRepository extends Repository {
 			"productId" => $cost->product->id,
 			"description" => $cost->description,
 			"amount" => $cost->amount->value,
+			"date" => $cost->date,
 			"userId" => $user->id
 		]);
 	}
@@ -99,6 +101,7 @@ readonly class CostRepository extends Repository {
 			$product,
 			$row->getString("description"),
 			new Money($row->getFloat("amount")),
+			$row->getDateTime("date"),
 		);
 	}
 }

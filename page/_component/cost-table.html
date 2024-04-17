@@ -1,44 +1,8 @@
 <div class="actions">
 	<a href="/account/costs/_new/" class="button" target="modal">Add cost</a>
 </div>
-<input type="text" id="costsTableSearchInput" onkeyup="myFunction()" placeholder="Search costs...">
-
-<table id="costsTable">
-	<thead>
-	<tr>
-		<th>Artist</th>
-		<th>Product</th>
-		<th>Cost</th>
-		<th>Description</th>
-		<th>Date Added</th>
-		<th class="centered">Edit</th>
-		<th class="centered">Delete</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr data-list>
-		<td data-bind:text="product.artist.name">Artist Name</td>
-		<td data-bind:text="product.title">Product Title</td>
-		<td data-bind:text="amount">0.00</td>
-		<td data-bind:text="description">The description of the cost</td>
-		<td data-bind:text="addedOn">1st Jan 1970</td>
-		<td class="centered">
-			<a href="/account/costs/{{id}}/" target="modal">Edit</a>
-		</td>
-		<td class="centered">
-			<form method="post">
-				<input type="hidden" name="id" data-bind:value="@name" />
-				<button name="do" value="delete" onclick="return confirm('Delete the cost of {{amount}} for {{product.title}} by {{product.artist.name}}?')">Delete</button>
-			</form>
-		</td>
-	</tr>
-	</tbody>
-</table>
-
-<modal-popup />
-
 <script>
-	function myFunction() {
+	function filterProductsTable() {
 		// Declare variables
 		var input, filter, table, tr, td, i, txtValue;
 		input = document.getElementById("costsTableSearchInput");
@@ -60,3 +24,38 @@
 		}
 	}
 </script>
+<input type="text" id="costsTableSearchInput" onkeyup="filterProductsTable()" placeholder="Search costs...">
+
+<table id="costsTable">
+	<thead>
+	<tr>
+		<th>Artist</th>
+		<th>Product</th>
+		<th>Cost</th>
+		<th>Description</th>
+		<th>Date</th>
+		<th class="centered">Edit</th>
+		<th class="centered">Delete</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr data-list>
+		<td data-bind:text="product.artist.name">Artist Name</td>
+		<td data-bind:text="product.title">Product Title</td>
+		<td data-bind:text="amount">0.00</td>
+		<td data-bind:text="description">The description of the cost</td>
+		<td data-bind:text="dateFormatted">0th Month 0000</td>
+		<td class="centered">
+			<a href="/account/costs/{{id}}/" target="modal">Edit</a>
+		</td>
+		<td class="centered">
+			<form method="post">
+				<input type="hidden" name="id" data-bind:value="@name" />
+				<button name="do" value="delete" onclick="return confirm('Delete the cost of {{amount}} for {{product.title}} by {{product.artist.name}}?')">Delete</button>
+			</form>
+		</td>
+	</tr>
+	</tbody>
+</table>
+
+<modal-popup />

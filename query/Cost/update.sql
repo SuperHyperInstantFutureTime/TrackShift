@@ -2,7 +2,8 @@ update Cost
 set
 	productId = :productId,
 	description = :description,
-	amount = :amount
+	amount = :amount,
+	date = :date
 
 where
 	id = :id

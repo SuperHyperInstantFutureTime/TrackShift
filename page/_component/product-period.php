@@ -6,11 +6,10 @@ function go(
 	Input $input,
 	Binder $binder,
 ):void {
-	$from = $input->getDateTime("p-from");
-	$to = $input->getDateTime("p-to");
-	if($from > $to) {
-		$to = $from;
+	if($from = $input->getDateTime("p-from")) {
+		$binder->bindKeyValue("p-from", $from->format("Y-m-d"));
 	}
-
-//	$binder->bindKeyValue("p-from", );
+	if($to = $input->getDateTime("p-to")) {
+		$binder->bindKeyValue("p-to", $to->format("Y-m-d"));
+	}
 }

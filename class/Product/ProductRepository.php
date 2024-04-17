@@ -1,6 +1,7 @@
 <?php
 namespace SHIFT\TrackShift\Product;
 
+use DateTimeInterface;
 use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\Row;
 use Gt\Logger\Log;
@@ -109,13 +110,21 @@ readonly class ProductRepository extends Repository {
 	}
 
 	/** @return array<ProductEarning> */
-	public function getProductEarnings(User $user, int $count, int $offset):array {
+	public function getProductEarnings(
+		User $user,
+		int $count,
+		int $offset,
+		DateTimeInterface $periodFrom,
+		DateTimeInterface $periodTo,
+	):array {
 		$earningList = [];
 
 		$resultSet = $this->db->fetchAll("getEarnings", [
 			"userId" => $user->id,
 			"limit" => $count,
 			"offset" => $offset,
+			"periodFrom" => $periodFrom,
+			"periodTo" => $periodTo,
 		]);
 		foreach($resultSet as $row) {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
@@ -212,20 +221,23 @@ readonly class ProductRepository extends Repository {
 		$this->db->update("clearProductEarningCache", $product->id);
 	}
 
-	public function getSummary(User $user):ProductSummary {
-		$earnings = $this->db->fetchFloat("getSummaryEarnings", [
+	public function getSummary(
+		User $user,
+		DateTimeInterface $periodFrom,
+		DateTimeInterface $periodTo,
+	):ProductSummary {
+		$bindings = [
 			"userId" => $user->id,
-		]);
-		$costs = $this->db->fetchFloat("getSummaryCosts", [
-			"userId" => $user->id,
-		]);
-		$profits = $this->db->fetchFloat("getSummaryProfits", [
-			"userId" => $user->id,
-		]);
+			"periodFrom" => $periodFrom,
+			"periodTo" => $periodTo,
+		];
+		$earnings = $this->db->fetchFloat("getSummaryEarnings", $bindings);
+		$costs = $this->db->fetchFloat("getSummaryCosts", $bindings);
+		$profits = $this->db->fetchFloat("getSummaryProfits", $bindings);
 
 		return new ProductSummary(
 			$earnings ?? 0.0,
-				$costs ?? 0.0,
+			$costs ?? 0.0,
 			$profits ?? 0.0,
 		);
 	}

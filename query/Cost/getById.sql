@@ -2,7 +2,8 @@ select
 	id,
 	productId,
 	description,
-	amount
+	amount,
+	date
 
 from
 	Cost
