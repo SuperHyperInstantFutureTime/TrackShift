@@ -1,12 +1,12 @@
-<form onchange="this.submit()">
+<form>
 	<div class="double">
 		<label>
 			<span>From</span>
-			<input type="date" name="p-from" data-bind:value="@name" />
+			<input type="date" name="p-from" data-bind:value="@name" onblur="this.form.submit()" />
 		</label>
 		<label>
 			<span>To</span>
-			<input type="date" name="p-to" data-bind:value="@name" data-bind:min="p-from" />
+			<input type="date" name="p-to" data-bind:value="@name" data-bind:min="p-from" onblur="this.form.submit()" />
 		</label>
 	</div>
 	<div class="actions">
