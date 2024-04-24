@@ -72,6 +72,9 @@ abstract class Upload {
 	/** @param array<string, string> $row */
 	abstract public function extractEarning(array $row):Money;
 
+	/** @param array<string, string> $row */
+	abstract public function extractEarningDate(array $row):DateTime;
+
 	/**
 	 * @param array<string, string> $row
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)

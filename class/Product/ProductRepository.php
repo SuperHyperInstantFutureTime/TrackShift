@@ -129,7 +129,7 @@ readonly class ProductRepository extends Repository {
 		foreach($resultSet as $row) {
 			$artist = new Artist($row->getString("artistId"), $row->getString("artistName"));
 			$earning = null;
-			if($totalEarningFloat = $row->getFloat("totalEarningCache")) {
+			if($totalEarningFloat = $row->getFloat("totalEarningCache") ?? $row->getFloat("totalEarning")) {
 				$earning = new Money($totalEarningFloat);
 			}
 			if(!$earning) {

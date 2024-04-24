@@ -5,12 +5,23 @@ select
 	Artist.nameNormalised as artistNameNormalised,
 	title,
 	titleNormalised,
-	Product.totalEarningCache,
+
+	sum(UsageOfProduct.earning) as totalEarning,
+
 	J_Product_Cost.sumAmount as totalCost,
 	J_Product_SplitPercentage.sumPercentage as percentageOutgoing
 
 from
 	Product
+
+inner join
+	UsageOfProduct
+on
+	UsageOfProduct.productId = Product.id
+and
+	UsageOfProduct.earningDate >= :periodFrom
+and
+	UsageOfProduct.earningDate <= :periodTo
 
 left join
 	(

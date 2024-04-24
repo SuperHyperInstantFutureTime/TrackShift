@@ -1,8 +1,10 @@
 <?php
 namespace SHIFT\TrackShift\Upload;
 
+use DateTime;
 use OpenSpout\Reader\XLSX\Reader;
 use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\TrackShiftException;
 use SHIFT\TrackShift\Usage\Usage;
 use Generator;
 
@@ -20,6 +22,28 @@ class CargoPhysicalUpload extends Upload {
 	public function extractEarning(array $row):Money {
 		$value = str_replace(["(", ")"], "", $row["Net after fee"]);
 		return new Money((float)filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ));
+	}
+
+	public function extractEarningDate(array $row):DateTime {
+		$timestamp = $row["Period"];
+		$matchSuccess = preg_match("/(?P<YEAR>\d{4})_(?P<MONTH_NUM>\d+)/", $timestamp, $matches);
+		if(!$matchSuccess) {
+			throw new TrackShiftException("Cargo Physical earning date does not match: $timestamp");
+		}
+
+		$monthOfNextQuarter = match((int)$matches["MONTH_NUM"]) {
+			1, 2, 3 => 4,
+			4, 5, 6 => 8,
+			7, 8, 9 => 10,
+			10, 11, 12 => 1,
+		};
+
+		$year = $matches["YEAR"];
+		if($monthOfNextQuarter === 1) {
+			$year++;
+		}
+
+		return new DateTime("$year-$monthOfNextQuarter-01");
 	}
 
 	public function generateDataRows():Generator {

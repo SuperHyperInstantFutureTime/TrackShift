@@ -8,6 +8,7 @@ use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Product\Product;
 use SHIFT\TrackShift\Product\ProductRepository;
 use SHIFT\TrackShift\Repository\Repository;
+use SHIFT\TrackShift\Royalty\Earning;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Upload\Upload;
 
@@ -58,7 +59,8 @@ readonly class UsageRepository extends Repository {
 		foreach($upload->generateDataRows() as $row) {
 			$artistName = $upload->extractArtistName($row);
 			$productTitle = $upload->extractProductTitle($row);
-			$earning = $upload->extractEarning($row);
+			$money = $upload->extractEarning($row);
+			$earningDate = $upload->extractEarningDate($row);
 			$combinedArtistNameProductTitle = "$artistName:$productTitle";
 
 			if($existingArtistId = array_search($artistName, $artistMap)) {
@@ -103,12 +105,11 @@ readonly class UsageRepository extends Repository {
 				$usageOfProductMap[$usageId] = [];
 			}
 			if(!isset($usageOfProductMap[$usageId][$productId])) {
-				$usageOfProductMap[$usageId][$productId] = new Money();
+				$usageOfProductMap[$usageId][$productId] = [];
 			}
-			/** @var Money $currentEarning */
-			$currentEarning = $usageOfProductMap[$usageId][$productId];
-			$currentEarning = $currentEarning->withAddition($earning);
-			$usageOfProductMap[$usageId][$productId] = $currentEarning;
+
+			$newEarning = new Earning($earningDate, $money->value);
+			array_push($usageOfProductMap[$usageId][$productId], $newEarning);
 
 			fputcsv($fhUsages, [
 				$usageId,
@@ -122,15 +123,18 @@ readonly class UsageRepository extends Repository {
 		foreach($usageOfProductMap as $usageId => $productMap) {
 			/**
 			 * @var string $productId
-			 * @var Money $earning
+			 * @var array<Earning> $earningArray
 			 **/
-			foreach($productMap as $productId => $earning) {
-				fputcsv($fhUOP, [
-					(string)(new Ulid("product_usage")),
-					$usageId,
-					$productId,
-					$earning->value,
-				]);
+			foreach($productMap as $productId => $earningArray) {
+				foreach($earningArray as $earning) {
+					fputcsv($fhUOP, [
+						(string)(new Ulid("product_usage")),
+						$usageId,
+						$productId,
+						$earning->value,
+						$earning->earningDate->format("Y-m-d"),
+					]);
+				}
 			}
 		}
 		fclose($fhUOP);

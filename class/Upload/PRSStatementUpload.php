@@ -1,6 +1,8 @@
 <?php
 namespace SHIFT\TrackShift\Upload;
 
+use DateTime;
+use SHIFT\TrackShift\NotYetImplementedException;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\Usage;
 
@@ -17,5 +19,9 @@ class PRSStatementUpload extends Upload {
 
 	public function extractEarning(array $row): Money {
 		return new Money((float)$row["Amount (performance revenue)"]);
+	}
+
+	public function extractEarningDate(array $row):DateTime {
+		throw new NotYetImplementedException("PRS Statement earning date is not yet implemented");
 	}
 }
