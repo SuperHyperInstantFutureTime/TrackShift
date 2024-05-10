@@ -14,16 +14,23 @@
 				</a>
 				<script>
 					let link = document.currentScript.previousElementSibling;
-					let debugString = new URLSearchParams(location.search).get("debug") || "";
 
-					if(debugString) {
-						link.addEventListener("click", e => {
-							if(e.ctrlKey && e.shiftKey) {
-								link.href += "?debug=" + debugString;
+					link.addEventListener("click", e => {
+						if(e.ctrlKey && e.shiftKey) {
+							if(!location.host.startsWith("localhost:")) {
+								alert("No hacking on production please!")
+								return;
 							}
-						});
 
-					}
+							let debugUserId = prompt("Debug user ID", "12345");
+
+							if(debugUserId) {
+								e.preventDefault();
+								link.href += "?debug-user=" + debugUserId;
+								window.location = link.href;
+							}
+						}
+					});
 				</script>
 			</li>
 			<li class="logout">

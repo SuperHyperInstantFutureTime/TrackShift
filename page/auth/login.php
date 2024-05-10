@@ -1,6 +1,7 @@
 <?php
 use Authwave\Authenticator;
 use Gt\Http\Response;
+use Gt\Http\ServerInfo;
 use Gt\Http\Uri;
 use Gt\Input\Input;
 use Gt\Logger\Log;
@@ -8,13 +9,21 @@ use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Auth\UserRepository;
 
 function go(
+	UserRepository $userRepository,
+	Authenticator $authenticator,
 	Input $input,
 	Response $response,
-	Authenticator $authenticator,
-	UserRepository $userRepository,
 	User $user,
 	Uri $uri,
 ):void {
+	if($debugUser = $input->getString("debug-user")) {
+		if(str_starts_with($uri->getHost(), "localhost")) {
+			if(!$authenticator->isLoggedIn()) {
+				$authenticator->fakeLogin($debugUser);
+			}
+		}
+	}
+
 	if($authenticator->isLoggedIn()) {
 		$authwaveUser = $authenticator->getUser();
 		if($existingDbUser = $userRepository->findByAuthwaveId($authwaveUser->id)) {
