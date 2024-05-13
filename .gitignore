@@ -8,3 +8,4 @@ access-token.dat
 /data/cache
 /data/upload
 /node_modules
+.DS_Store
