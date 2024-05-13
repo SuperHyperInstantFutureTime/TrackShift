@@ -1,3 +1,72 @@
 section {
-	
+    flex-direction: column;
+    .card-row, .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width:100%;
+    }
+    .column-one-third-width {
+        width: 33.333%;
+    }
+    .column-two-thirds-width {
+        width: 66.666%;
+    }
+    .column-half-width {
+        width:50%;
+    }
+    .column-three-quarter-width {
+        width:75%;
+    }
+    .column-one-quarter-width {
+        width:25%;
+    }
+    .form-container {
+        width:50%;
+    }
+    .card {
+        width:100%;
+        text-align: center;
+        padding-top:2rem;
+        padding-bottom: 2rem;
+        margin-bottom:2rem;
+        border-radius: var(--theme-ui-border-radius);
+        transition: all 0.3s ease-in-out; 
+        h3 {
+            font-size:1.75rem;
+        }
+        .small {
+            font-size:1rem;
+        }
+        &:last-of-type {
+            margin-right:0;
+        }
+        @media(min-width: $break-small) {
+			width:18.75%;
+            display:inline-block;
+            margin-right:1rem;
+            padding-top:1rem;
+            padding-bottom: 1rem;
+            &:last-of-type {
+                margin-right:0;
+            }
+            &:hover {
+                transform: scale(1.1);
+            }
+            .card-text {
+                padding-left:1rem;
+                padding-right:1rem;
+            }
+            h3 {
+                font-size:1.25rem;
+            }
+	    }
+    }
+    .card-image {
+        width:50%;
+    }
+    .card-text {
+        padding-left:2rem;
+        padding-right:2rem;
+    }
 }

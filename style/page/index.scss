@@ -1,3 +1,18 @@
 body.uri--index {
-   
+    global-header {
+           file-uploader {
+                  display: none;
+           }
+           margin-bottom:5rem;
+    }
+    .article-fluid {
+        margin:0 0;
+        padding-left:1rem;
+        padding-right:1rem;
+        display: block;
+    }
+    form#mc-form {
+		@extend %d-form-fields;
+		width:50%;
+	}
 }
