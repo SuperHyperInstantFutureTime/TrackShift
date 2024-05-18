@@ -87,4 +87,39 @@
         height:100%;
         width:100%;
     }
+    aside {
+        font-family: var(--font-family-main);
+        background: var(--pal-3);
+        padding:1rem;
+        width:auto;
+        border-radius: 0.5rem;
+        line-height: var(--font-readable-line-height);
+        margin-bottom:2rem;
+    }
+    ol, ul {
+        font-size:var(--font-size-base);
+        font-family: var(--font-family-main);
+        line-height: var(--font-readable-line-height);
+    }
+    .back-to-top {
+        position: fixed;
+        display: block;
+        bottom:3rem;
+        right:3rem;
+        z-index: 1000;
+    }
+    table {
+        width:auto;
+        border:1px solid black;
+        padding:1.5rem;
+        margin-top:1rem;
+        margin-bottom:1rem;
+        thead {
+            font-weight:bold;
+        }
+        .totals {
+            font-weight: bold;
+            margin-top:2rem;
+        }
+    }
 }

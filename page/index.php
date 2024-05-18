@@ -16,7 +16,7 @@ function go(
 ):void {
 	if($uploadRepository->getUploadsForUser($user)) {
 		if(!$input->contains("homepage")) {
-			$response->redirect("/account/products/");
+			$response->redirect("/account/usingTrackshift/");
 		}
 	}
 
