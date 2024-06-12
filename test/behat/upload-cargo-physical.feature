@@ -14,5 +14,5 @@ Feature: App should handle Cargo Physical Excel files
 		When I go to "/account/products/"
 		Then I should see the following table data:
 			| Artist | Title | Earnings |
-			| ARTIST 1 | ALBUM 1 | < £0.01 |
+			| ARTIST 1 | ALBUM 1 | £-0.32 |
 			| ARTIST 2 | ALBUM 100 | £5.19 |

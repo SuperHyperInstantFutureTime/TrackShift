@@ -23,6 +23,7 @@ class BandcampUpload extends Upload {
 	}
 
 	public function extractEarningDate(array $row):DateTime {
-		return DateTime::createFromFormat("d/m/Y", $row["date"]);
+		preg_match("/(?<DATE_STRING>[^\s$]+)\s?.*$/", $row["date"], $matches);
+		return DateTime::createFromFormat("d/m/y", $matches["DATE_STRING"]);
 	}
 }

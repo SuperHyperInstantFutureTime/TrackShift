@@ -1,10 +1,10 @@
 select
 	Product.id as productId,
-	artistId,
+	Product.artistId,
 	Artist.name as artistName,
 	Artist.nameNormalised as artistNameNormalised,
-	title,
-	titleNormalised,
+	Product.title,
+	Product.titleNormalised,
 
 	sum(UsageOfProduct.earning) as totalEarning,
 
