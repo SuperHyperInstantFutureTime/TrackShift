@@ -50,6 +50,9 @@
 		background-color:var(--pal-7);
 		color:var(--pal-5);
 	}
+	.light-highlight {
+		background-color: var(--pal-3);
+	}
 	::selection {
 		background-color: var(--pal-1);
 		color: var(--pal-6);}

@@ -42,7 +42,7 @@ section {
             margin-right:0;
         }
         @media(min-width: $break-small) {
-			width:18.75%;
+			//width:18.75%;
             display:inline-block;
             margin-right:1rem;
             padding-top:1rem;
@@ -51,7 +51,7 @@ section {
                 margin-right:0;
             }
             &:hover {
-                transform: scale(1.1);
+                transform: scale(1.05);
             }
             .card-text {
                 padding-left:1rem;

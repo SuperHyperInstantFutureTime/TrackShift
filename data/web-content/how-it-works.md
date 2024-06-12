@@ -6,6 +6,8 @@
   <iframe class="responsive-iframe" src="https://www.youtube.com/embed/OrtrzIWfGYw"></iframe>
 </div> 
 
-CTA
+<a href="#start" class="button">
+    <span>Try it Now</span>
+</a>
 
 </section>

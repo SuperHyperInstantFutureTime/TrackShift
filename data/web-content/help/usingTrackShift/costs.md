@@ -1,6 +1,13 @@
 <a id="costs"></a>
 ## Costs
 
+### Where are Costs?
+
+Third tab along on your account page at [trackshift.app/account](trackshift.app/account)
+
+...or go to [trackshift.app/account/costs](trackshift.app/account/costs)
+
+### What are Costs?
 Costs are expenses that affect a Product's Balance, and whether or not it has 'earned out' into profit.
 
 <aside>
@@ -42,10 +49,22 @@ The album would need to earn more than £5200 before any Outgoing profits will s
 1. Click 'Add Cost'
 2. Select the Artist from the dropdown
 3. Select the Album from the dropdown
-2. Enter a description for the Cost e.g. Vinyl Manufacturing
-3. Enter an amount
-4. Click 'Save'
+4. Enter a description for the Cost e.g. Vinyl Manufacturing
+5. Enter an amount
+6. Click 'Create'
+
+The Cost will count as a negative on the Balance of a Product. If you view the Product on the Products table, you'll see the Balance has been affected by the Cost you created.
+
+### Finding a Cost
+
+1. Click the Costs tab or go to trackshift.app/account/costs
+2. Type in the artist name in the search box or scroll to find the cost.
 
 ### Deleting a Cost
+
+1. Scroll to the Cost you want to Delete.
+2. Click 'Delete' on the right hand side of the Cost.
+
+The Cost will no longer have any affect on the Balance of a Product.
 
 <hr>

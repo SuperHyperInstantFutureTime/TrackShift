@@ -1,6 +1,6 @@
 # Using TrackShift
 
-TrackShift organises your operations into the following sections:
+TrackShift organises your Record Label operations into the following sections:
 
 1. <a href="#products">Products</a>
 2. <a href="#costs">Costs</a>

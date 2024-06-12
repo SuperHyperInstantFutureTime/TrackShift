@@ -1,13 +1,9 @@
 %d-editorial-content {
     section {
-        margin-bottom:5rem;
         padding-top:5rem;
         padding-bottom:5rem;
-        overflow:hidden;
         margin:0 auto;
-        display:block;
         max-width: var(--size-page-width);
-        overflow-x:hidden;
         position: relative;
         display: flex;
         align-items: center;
@@ -55,8 +51,11 @@
         
         }
     }
-    h2 {
+    h1, h2 {
         margin-top:0;
+    }
+    h3 {
+        margin-top:2.5rem;
     }
    
     .pill {
