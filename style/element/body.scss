@@ -1,7 +1,7 @@
 body {
 	margin: 0;
 	height: 100%;
-	background-color: var(--pal-page-bg);
+	background-color: var(--pal-utility-light-1);
 	color: var(--pal-body);
 	font-family: var(--font-family-main);
 	overflow-x: hidden;
@@ -10,7 +10,6 @@ body {
 		global-header, global-footer, account-tabs {
 			display: none;
 		}
-
 		background: none;
 	}
 }

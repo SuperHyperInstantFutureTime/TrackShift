@@ -2,5 +2,5 @@
 use Gt\Http\Response;
 
 function go(Response $response):void {
-	$response->redirect("./products/");
+	$response->redirect("./usingTrackshift/");
 }

@@ -15,10 +15,6 @@ class Money implements Stringable {
 			return "-";
 		}
 
-		if($this->value <= 0.02) {
-			return "< £0.01";
-		}
-
 		return "£" . number_format($this->value, 2);
 	}
 

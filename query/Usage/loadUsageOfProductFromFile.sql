@@ -7,5 +7,6 @@ lines terminated by '\n'
 	id,
 	usageId,
 	productId,
-	earning
+	earning,
+	earningDate
 )

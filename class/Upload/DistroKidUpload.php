@@ -1,6 +1,7 @@
 <?php
 namespace SHIFT\TrackShift\Upload;
 
+use DateTime;
 use SHIFT\TrackShift\Repository\StringCleaner;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\UsageRepository;
@@ -78,6 +79,10 @@ class DistroKidUpload extends Upload {
 
 	public function extractEarning(array $row):Money {
 		return new Money((float)$row["Earnings (USD)"]);
+	}
+
+	public function extractEarningDate(array $row):DateTime {
+		return new DateTime($row["Reporting Date"]);
 	}
 
 	/**

@@ -38,5 +38,7 @@ button {
 	&[disabled] {
 		background-color: var(--pal-ui-bg--disabled);
 	}
-
+	.button-red {
+	background-color:red;
+	}
 }

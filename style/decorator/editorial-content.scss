@@ -1,7 +1,25 @@
 %d-editorial-content {
     section {
-        margin-bottom:4rem;
-        overflow:hidden;
+        padding-top:5rem;
+        padding-bottom:5rem;
+        margin:0 auto;
+        max-width: var(--size-page-width);
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .three-quarter-width {
+        width:65%;
+    }
+    .one-quarter-width {
+        width:35%;
+        position:relative;
+        height:100%;
+        display: flex;
+
+    }
+    .center {
+        text-align: center;
     }
     .float {
         @media(min-width: $break-medium) {
@@ -28,12 +46,79 @@
     }
     img {
         width:100%;
-
+        border-radius:var(--theme-ui-border-radius);
         @media(min-width: $break-medium) {
         
         }
     }
-    h2 {
+    h1, h2 {
         margin-top:0;
+    }
+    h3 {
+        margin-top:2.5rem;
+    }
+   
+    .pill {
+        display: inline-block;
+        border:4px solid;
+        border-color:var(--pal-3);
+        padding:0.8rem 1.5rem;
+        border-radius: 50rem;
+        margin-right:1rem;
+        margin-bottom:1rem;
+        background-color: black;
+        color:white;
+        font-weight: bold;
+        font-family: var(--font-family-main);
+        font-size: var(--font-size-base);
+        cursor: default;
+        transition: all 0.3s ease-in-out !important;
+        
+        @media(min-width: $break-small) {
+            &:hover {
+                transform: scale(1.2);
+            }
+        }
+    }
+    .pill-container {
+        margin-top:3rem;
+        margin-bottom:3rem;
+        height:100%;
+        width:100%;
+    }
+    aside {
+        font-family: var(--font-family-main);
+        background: var(--pal-3);
+        padding:1rem;
+        width:auto;
+        border-radius: 0.5rem;
+        line-height: var(--font-readable-line-height);
+        margin-bottom:2rem;
+    }
+    ol, ul {
+        font-size:var(--font-size-base);
+        font-family: var(--font-family-main);
+        line-height: var(--font-readable-line-height);
+    }
+    .back-to-top {
+        position: fixed;
+        display: block;
+        bottom:3rem;
+        right:3rem;
+        z-index: 1000;
+    }
+    table {
+        width:auto;
+        border:1px solid black;
+        padding:1.5rem;
+        margin-top:1rem;
+        margin-bottom:1rem;
+        thead {
+            font-weight:bold;
+        }
+        .totals {
+            font-weight: bold;
+            margin-top:2rem;
+        }
     }
 }

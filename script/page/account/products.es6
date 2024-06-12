@@ -1,6 +1,6 @@
 import {Page} from "../../inc/Page.es6";
 
-Page.match("uri--account--products").go(function() {
+Page.match("uri--account--usingTrackshift").go(function() {
 	if((new URL(location.href)).searchParams.has("page")) {
 		return;
 	}

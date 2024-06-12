@@ -56,6 +56,8 @@ function go(
 			$binder->bindKeyValue("product", $cost->product->id);
 		}
 	}
+
+	$binder->bindKeyValue("date", date("Y-m-d"));
 }
 
 function do_set_artist(Input $input, Response $response, Uri $uri):void {
@@ -74,6 +76,7 @@ function do_save(
 	$product = $productRepository->getById($input->getString("product"));
 	$description = $input->getString("description");
 	$amount = new Money($input->getFloat("amount"));
+	$date = $input->getDateTime("date");
 
 	$id = $dynamicPath->get("cost");
 
@@ -84,6 +87,7 @@ function do_save(
 			$product,
 			$description,
 			$amount,
+			$date,
 		);
 		$costRepository->create($cost, $user);
 		$response->redirect("/account/costs/?created=$id");
@@ -94,6 +98,7 @@ function do_save(
 			$product,
 			$description,
 			$amount,
+			$date,
 		);
 		$costRepository->update($cost, $user);
 		$response->redirect("/account/costs/?updated=$id");

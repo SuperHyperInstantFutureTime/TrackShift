@@ -3,13 +3,12 @@ namespace SHIFT\TrackShift;
 
 use Authwave\Authenticator;
 use Gt\Database\Database;
-use Gt\Fetch\Http;
 use Gt\Http\Uri;
 use Gt\Session\Session;
 use Gt\WebEngine\Middleware\DefaultServiceLoader;
 use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\ArtistRepository;
-use SHIFT\TrackShift\Audit\AuditRepository;
+//use SHIFT\TrackShift\Audit\AuditRepository;
 use SHIFT\TrackShift\Auth\Settings;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Auth\UserRepository;
@@ -74,6 +73,10 @@ class ServiceLoader extends DefaultServiceLoader {
 		$userRepo = $this->container->get(UserRepository::class);
 		$user = $userRepo->getLoggedInUser();
 		if(!$user) {
+			$user = $userRepo->createNewUser();
+		}
+
+		if(!$userRepo->getById($user->id)) {
 			$user = $userRepo->createNewUser();
 		}
 

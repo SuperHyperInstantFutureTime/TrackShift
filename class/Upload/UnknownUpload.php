@@ -1,6 +1,7 @@
 <?php
 namespace SHIFT\TrackShift\Upload;
 
+use DateTime;
 use SHIFT\TrackShift\Royalty\Money;
 
 class UnknownUpload extends Upload {
@@ -19,5 +20,9 @@ class UnknownUpload extends Upload {
 	// phpcs:ignore
 	public function extractEarning(array $row):Money {
 		return new Money(0);
+	}
+
+	public function extractEarningDate(array $row):DateTime {
+		return new DateTime("1970-01-01");
 	}
 }

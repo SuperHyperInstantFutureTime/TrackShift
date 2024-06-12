@@ -8,20 +8,27 @@
 
 	h1, h2, h3, h4, h5, h6 {
 		font-family: var(--font-family-heading);
+		font-weight: 600;
 	}
 
 	h1 {
 		font-size: var(--font-size-1);
+		display: block;
 	}
 	h2 {
 		font-size: var(--font-size-2);
+		@media(max-width: $break-small) {
+			font-size:calc(var(--font-size-2) * 0.9);
+		}
 	}
 	p {
 		font-size: var(--font-size-base);
 		line-height: var(--font-readable-line-height);
 		font-family: var(--font-family-main);
+		&.small {
+			font-size: var(--font-size-small);
+		}
 	}
-
 	hr {
 		margin: 4rem 0;
 	}
@@ -29,4 +36,24 @@
 	.centered {
 		text-align: center;
 	}
+	.highlight {
+		padding-left:1rem;
+		padding-right:1rem;
+		margin-bottom: 2rem;
+		display: inline-block;
+	}
+	.blue-highlight {
+		background-color: var(--pal-2);
+		color: var(--pal-5);
+	}
+	.green-highlight {
+		background-color:var(--pal-7);
+		color:var(--pal-5);
+	}
+	.light-highlight {
+		background-color: var(--pal-3);
+	}
+	::selection {
+		background-color: var(--pal-1);
+		color: var(--pal-6);}
 }

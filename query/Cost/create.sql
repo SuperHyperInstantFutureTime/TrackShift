@@ -3,12 +3,14 @@ insert into Cost(
 	productId,
 	userId,
 	description,
-	amount
+	amount,
+	date
 )
 values (
 	:id,
 	:productId,
 	:userId,
 	:description,
-	:amount
+	:amount,
+	:date
 )

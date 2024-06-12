@@ -2,6 +2,7 @@
 namespace SHIFT\TrackShift\Cost;
 
 use DateTime;
+use DateTimeInterface;
 use Gt\DomTemplate\BindGetter;
 use Gt\Ulid\Ulid;
 use SHIFT\TrackShift\Product\Product;
@@ -14,6 +15,7 @@ readonly class Cost extends Entity {
 		public Product $product,
 		public string $description,
 		public Money $amount,
+		public DateTimeInterface $date,
 	) {}
 
 	#[BindGetter]
@@ -22,5 +24,10 @@ readonly class Cost extends Entity {
 		$timestamp = $ulid->getTimestamp() / 1000;
 		$dateTime = new DateTime("@$timestamp");
 		return $dateTime->format("jS M Y g:ia");
+	}
+
+	#[BindGetter]
+	public function getDateFormatted():string {
+		return $this->date->format("jS M Y");
 	}
 }

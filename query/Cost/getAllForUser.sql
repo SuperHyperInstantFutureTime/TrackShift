@@ -4,6 +4,7 @@ select distinct
 	Cost.userId,
 	Cost.description,
 	Cost.amount,
+	Cost.date,
 	Artist.name,
 	Product.title
 
