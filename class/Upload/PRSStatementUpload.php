@@ -21,7 +21,7 @@ class PRSStatementUpload extends Upload {
 		return new Money((float)$row["Amount (performance revenue)"]);
 	}
 
-	public function extractEarningDate(array $row):DateTime {
+	public function extractEarningDate(array $row):DateTime { // phpcs:ignore
 		throw new NotYetImplementedException("PRS Statement earning date is not yet implemented");
 	}
 }

@@ -24,6 +24,6 @@ class CdBabyUpload extends Upload {
 	public function extractEarningDate(array $row):DateTime {
 		// Expected format: 10/15/2023 12:00:00 AM
 		$dateString = $row["Report Date"];
-		return DateTime::createFromFormat("m/d/Y H:i:s a", $dateString);
+		return date_create_from_format("m/d/Y H:i:s a", $dateString);
 	}
 }

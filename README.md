@@ -53,3 +53,16 @@ Database
 Since the first version, we've switched from SQLite to MySQL. (Insert quote about "how long until you realise MySQL is the solution?").
 
 To achieve the features we need, MySQL imports directly from CSV. This is done by altering the 
+
+Currencies
+----------
+
+To automate currency conversion, we need to know the currency of the uploaded statements. Here's where that data lives:
+
++ Bandcamp: `currency`
++ Cargo Digital: `Currency`
++ Cargo Physical: ???
++ CD Baby: ???
++ DistroKid: Always USD
++ PRS: Always GBP
++ Tunecore: `Currency`

@@ -21,7 +21,8 @@ class BelieveDistributionUpload extends Upload {
 		return new Money((float)$row["Net Revenue"]);
 	}
 
-	public function extractEarningDate(array $row):DateTime {
+
+	public function extractEarningDate(array $row):DateTime { // phpcs:ignore
 		throw new NotYetImplementedException("Believe distributions do not have an earning date extractor yet");
 	}
 }

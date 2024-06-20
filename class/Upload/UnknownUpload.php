@@ -22,7 +22,7 @@ class UnknownUpload extends Upload {
 		return new Money(0);
 	}
 
-	public function extractEarningDate(array $row):DateTime {
+	public function extractEarningDate(array $row):DateTime { // phpcs:ignore
 		return new DateTime("1970-01-01");
 	}
 }
