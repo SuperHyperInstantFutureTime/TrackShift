@@ -8,6 +8,7 @@ class Money implements Stringable {
 
 	public function __construct(
 		public readonly float $value = 0,
+		public readonly ?Currency $currency = null,
 	) {}
 
 	public function __toString():string {
@@ -15,7 +16,7 @@ class Money implements Stringable {
 			return "-";
 		}
 
-		return "£" . number_format($this->value, 2);
+		return number_format($this->value, 2);
 	}
 
 	public function withAddition(Money $add):self {

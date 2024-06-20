@@ -1,4 +1,5 @@
 <?php
+use Gt\Config\Config;
 use Gt\Database\Database;
 use Gt\Http\Response;
 use Gt\Input\Input;
@@ -6,7 +7,9 @@ use Gt\Logger\Log;
 use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Auth\UserRepository;
 use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Upload\UploadRepository;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
@@ -20,11 +23,17 @@ function do_upload(
 	ArtistRepository $artistRepository,
 	ProductRepository $productRepository,
 	SpotifyClient $spotify,
+	UserRepository $userRepository,
 	User $user,
 	Database $db,
 	Input $input,
+	Config $config,
 	Response $response,
 ):void {
+	$settings = $userRepository->getUserSettings($user);
+	$currencyString = $settings->get("currency") ?? "GBP";
+	$userCurrency = Currency::fromCode($currencyString);
+
 	$startTime = microtime(true);
 	set_time_limit(600);
 	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
@@ -43,6 +52,7 @@ function do_upload(
 			$upload,
 			$artistRepository,
 			$productRepository,
+			$userCurrency,
 		);
 
 		$db->executeSql("COMMIT");

@@ -59,10 +59,23 @@ Currencies
 
 To automate currency conversion, we need to know the currency of the uploaded statements. Here's where that data lives:
 
-+ Bandcamp: `currency`
-+ Cargo Digital: `Currency`
-+ Cargo Physical: ???
-+ CD Baby: ???
-+ DistroKid: Always USD
-+ PRS: Always GBP
-+ Tunecore: `Currency`
+- Bandcamp: `currency`
+- Cargo Digital: `Currency`
+- Cargo Physical: Always GBP
+- CD Baby: Always USD
+- DistroKid: Always USD
+- PRS: Always GBP
+- Tunecore: `Currency`
+
+The `cron/exchange-rates.php` script will download all exchange rates from 2010, using https://openexchangerates.org/. These are cached into dated JSON files within `data/cache/currency`. The closest date is used at the point of estimation. 
+
+No estimation is done on-the-fly, because that would take too much processing time. Instead, there are new fields in the UsageOfProduct table:
+
+- `originalCurrency` field to store the currency of the upload.
+- `originalEarning` is the value taken from the statement upload.
+- `earning` is changed now so that it will be set to the same value as `originalEarning` if the statement is the user's currency, or whatever the corresponding estimate is.
+- `statementType` field for future reference.
+- `estimateGBP`, `estimateUSD`, `estimateEUR` fields to store the estimated earning in the three currencies.
+- `earningConfirmed` for now, anything non-null indicates that the `earning` value is confirmed as accurate. We can use a datetime string. In the future we will want to use a foreign key to the `Income` table, when it's made.
+
+The user will store their currency in the `Settings` table. For now, default to GBP, but in the future default using their IP address.

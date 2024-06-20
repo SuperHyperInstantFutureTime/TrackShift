@@ -3,6 +3,7 @@ namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
 use OpenSpout\Reader\XLSX\Reader;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\TrackShiftException;
 use SHIFT\TrackShift\Usage\Usage;
@@ -21,7 +22,10 @@ class CargoPhysicalUpload extends Upload {
 
 	public function extractEarning(array $row):Money {
 		$value = str_replace(["(", ")"], "", $row["Net after fee"]);
-		return new Money((float)filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ));
+		return new Money(
+			(float)filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ),
+			Currency::GBP,
+		);
 	}
 
 	public function extractEarningDate(array $row):DateTime {

@@ -2,6 +2,7 @@
 namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 
 class CdBabyUpload extends Upload {
@@ -18,7 +19,10 @@ class CdBabyUpload extends Upload {
 	}
 
 	public function extractEarning(array $row): Money {
-		return new Money((float)$row["Subtotal"]);
+		return new Money(
+			(float)$row["Subtotal"],
+			Currency::USD,
+		);
 	}
 
 	public function extractEarningDate(array $row):DateTime {

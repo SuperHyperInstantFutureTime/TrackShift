@@ -3,6 +3,7 @@ namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
 use SHIFT\TrackShift\Repository\StringCleaner;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
@@ -78,7 +79,10 @@ class DistroKidUpload extends Upload {
 	}
 
 	public function extractEarning(array $row):Money {
-		return new Money((float)$row["Earnings (USD)"]);
+		return new Money(
+			(float)$row["Earnings (USD)"],
+			Currency::USD,
+		);
 	}
 
 	public function extractEarningDate(array $row):DateTime {

@@ -46,7 +46,7 @@
 
 	<rule ref="rulesets/cleancode.xml/StaticAccess">
 		<properties>
-			<property name="exceptions" value="Gt\Logger\Log" />
+			<property name="exceptions" value="\Gt\Logger\Log,\SHIFT\TrackShift\Royalty\Currency" />
 		</properties>
 	</rule>
 </ruleset>

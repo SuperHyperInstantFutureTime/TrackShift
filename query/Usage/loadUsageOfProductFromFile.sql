@@ -8,5 +8,11 @@ lines terminated by '\n'
 	usageId,
 	productId,
 	earning,
-	earningDate
+	earningDate,
+	originalEarning,
+	originalCurrency,
+	statementType,
+	estimateEUR,
+	estimateGBP,
+	estimateUSD
 )

@@ -2,6 +2,7 @@
 namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\Usage;
 
@@ -19,7 +20,10 @@ class BandcampUpload extends Upload {
 	}
 
 	public function extractEarning(array $row):Money {
-		return new Money((float)$row["net amount"]);
+		return new Money(
+			(float)$row["net amount"],
+			Currency::fromCode($row["currency"]),
+		);
 	}
 
 	public function extractEarningDate(array $row):DateTime {
