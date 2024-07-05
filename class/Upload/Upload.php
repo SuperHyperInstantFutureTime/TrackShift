@@ -147,8 +147,8 @@ abstract class Upload {
 		}
 
 		$line = fgets($this->fileHandle);
-		$line = $this->correctEncoding($line);
 		$line = $this->stripNullBytes($line);
+		$line = $this->correctEncoding($line);
 		$row = str_getcsv($line, $this->dataRowCsvSeparator);
 
 		if(!$row[0]) {
