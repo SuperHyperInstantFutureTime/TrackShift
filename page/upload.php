@@ -91,7 +91,7 @@ function do_upload(
 	$missingTitleCount = $productRepository->lookupMissingTitles($spotify, $artistRepository, $user);
 	Log::debug("Looked up $missingTitleCount titles on Spotify");
 	$duplicateCount = $productRepository->deduplicate($user);
-	Log::debug("De-duplicated $duplicateCount products");
+	Log::debug("De-duplicated $duplicateCount usingTrackshift");
 	$productRepository->calculateUncachedEarnings($user);
 
 	if($advanceTo = $input->getString("advance")) {

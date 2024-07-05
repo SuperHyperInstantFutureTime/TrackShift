@@ -90,6 +90,10 @@ class DistroKidUpload extends Upload {
 		return new DateTime($row["Reporting Date"]);
 	}
 
+	public function extractEarningDate(array $row):DateTime {
+		return new DateTime($row["Reporting Date"]);
+	}
+
 	/**
 	 * @param string $upc
 	 * @param string $title
