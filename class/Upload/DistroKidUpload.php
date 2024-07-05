@@ -3,6 +3,7 @@ namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
 use SHIFT\TrackShift\Repository\StringCleaner;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
@@ -35,6 +36,7 @@ use SHIFT\TrackShift\Usage\UsageRepository;
  * product by UPC.
  */
 class DistroKidUpload extends Upload {
+	const CURRENCY_OVERRIDE = Currency::USD->name;
 	const KNOWN_COLUMNS = ["Reporting Date", "Sale Month", "Store", "Artist", "Title", "ISRC", "UPC", "Song/Album"];
 
 	protected string $dataRowCsvSeparator = "\t";
@@ -78,7 +80,14 @@ class DistroKidUpload extends Upload {
 	}
 
 	public function extractEarning(array $row):Money {
-		return new Money((float)$row["Earnings (USD)"]);
+		return new Money(
+			(float)$row["Earnings (USD)"],
+			Currency::USD,
+		);
+	}
+
+	public function extractEarningDate(array $row):DateTime {
+		return new DateTime($row["Reporting Date"]);
 	}
 
 	public function extractEarningDate(array $row):DateTime {

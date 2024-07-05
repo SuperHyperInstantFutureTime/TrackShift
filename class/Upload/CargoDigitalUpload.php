@@ -2,11 +2,13 @@
 namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\TrackShiftException;
 use SHIFT\TrackShift\Usage\Usage;
 
 class CargoDigitalUpload extends Upload {
+	const CURRENCY_OVERRIDE = Currency::GBP->name;
 	const KNOWN_COLUMNS = ["Royalty ID", "Asset ISRC", "Reported Royalty"];
 
 	public function extractArtistName(array $row):string {
@@ -18,7 +20,10 @@ class CargoDigitalUpload extends Upload {
 	}
 
 	public function extractEarning(array $row):Money {
-		return new Money((float)$row["Reported Royalty"]);
+		return new Money(
+			(float)$row["Reported Royalty"],
+			Currency::GBP,
+		);
 	}
 
 	public function extractEarningDate(array $row):DateTime {

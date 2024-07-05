@@ -14,5 +14,5 @@ Feature: App should handle CD Baby CSV files
 		When I go to "/account/products/"
 		Then I should see the following table data:
 			| Artist | Title | Earnings |
-			| Artist 1 | Album 1 | £0.10 |
-			| Artist 1 | Album 2 | £0.06 |
+			| Artist 1 | Album 1 | 0.06 |
+			| Artist 1 | Album 2 | 0.04 |

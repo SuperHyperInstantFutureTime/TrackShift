@@ -8,6 +8,8 @@ use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Product\Product;
 use SHIFT\TrackShift\Product\ProductRepository;
 use SHIFT\TrackShift\Repository\Repository;
+use SHIFT\TrackShift\Royalty\Currency;
+use SHIFT\TrackShift\Royalty\CurrencyExchange;
 use SHIFT\TrackShift\Royalty\Earning;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Upload\Upload;
@@ -27,6 +29,7 @@ readonly class UsageRepository extends Repository {
 		Upload $upload,
 		ArtistRepository $artistRepository,
 		ProductRepository $productRepository,
+		Currency $userCurrency,
 	):int {
 		$i = 0;
 
@@ -38,7 +41,7 @@ readonly class UsageRepository extends Repository {
 			return $carry;
 		}, []);
 		$combinedArtistNameProductTitleMap = array_reduce($existingProductList, function(array $carry, Product $product):array {
-			$carry[$product->id] = $product->artist->name . ":" . $product->title;
+			$carry[$product->id] = ($product->artist?->name ?? "") . ":" . $product->title;
 			return $carry;
 		}, []);
 
@@ -59,8 +62,13 @@ readonly class UsageRepository extends Repository {
 		foreach($upload->generateDataRows() as $row) {
 			$artistName = $upload->extractArtistName($row);
 			$productTitle = $upload->extractProductTitle($row);
-			$money = $upload->extractEarning($row);
-			$earningDate = $upload->extractEarningDate($row);
+			$originalEarning = $upload->extractEarning($row);
+			try {
+				$earningDate = $upload->extractEarningDate($row);
+			}
+			catch(\TypeError) {
+				var_dump($row);die();
+			}
 			$combinedArtistNameProductTitle = "$artistName:$productTitle";
 
 			if($existingArtistId = array_search($artistName, $artistMap)) {
@@ -108,7 +116,7 @@ readonly class UsageRepository extends Repository {
 				$usageOfProductMap[$usageId][$productId] = [];
 			}
 
-			$newEarning = new Earning($earningDate, $money->value);
+			$newEarning = new Earning($earningDate, $originalEarning->value, $originalEarning->currency);
 			array_push($usageOfProductMap[$usageId][$productId], $newEarning);
 
 			fputcsv($fhUsages, [
@@ -120,6 +128,8 @@ readonly class UsageRepository extends Repository {
 		}
 		fclose($fhUsages);
 
+		$currencyExchange = new CurrencyExchange();
+
 		foreach($usageOfProductMap as $usageId => $productMap) {
 			/**
 			 * @var string $productId
@@ -127,12 +137,52 @@ readonly class UsageRepository extends Repository {
 			 **/
 			foreach($productMap as $productId => $earningArray) {
 				foreach($earningArray as $earning) {
+					$recordedEarningValue = $estimateEurValue = $estimateGbpValue = $estimateUsdValue = null;
+
+					if($earning->currency === Currency::EUR) {
+						$estimateEurValue = $earning->value;
+					}
+					elseif($earning->currency === Currency::GBP) {
+						$estimateGbpValue = $earning->value;
+					}
+					elseif($earning->currency === Currency::USD) {
+						$estimateUsdValue = $earning->value;
+					}
+
+					$estimateEurValue = $estimateEurValue ?? $currencyExchange->convert(
+						$earning,
+						$earning->earningDate,
+						Currency::EUR
+					);
+					$estimateGbpValue = $estimateGbpValue ?? $currencyExchange->convert(
+						$earning,
+						$earning->earningDate,
+						Currency::GBP
+					);
+					$estimateUsdValue = $estimateUsdValue ?? $currencyExchange->convert(
+						$earning,
+						$earning->earningDate,
+						Currency::USD
+					);
+
+					$recordedEarningValue = match ($userCurrency) {
+						Currency::EUR => $estimateEurValue,
+						Currency::GBP => $estimateGbpValue,
+						Currency::USD => $estimateUsdValue,
+					};
+
 					fputcsv($fhUOP, [
 						(string)(new Ulid("product_usage")),
 						$usageId,
 						$productId,
-						$earning->value,
+						$recordedEarningValue,
 						$earning->earningDate->format("Y-m-d"),
+						$earning->value,
+						$earning->currency->name,
+						$upload->type,
+						$estimateEurValue,
+						$estimateGbpValue,
+						$estimateUsdValue,
 					]);
 				}
 			}
@@ -147,5 +197,36 @@ readonly class UsageRepository extends Repository {
 		]);
 
 		return $i;
+	}
+
+	public function recalculateCurrencies(
+		Currency $newCurrency,
+		User $user,
+		ProductRepository $productRepository,
+	):void {
+		$productList = $productRepository->getAll($user);
+
+		// Step 1: Reset cached earnings on Products.
+		foreach($productList as $product) {
+			$productRepository->clearEarningCache($product);
+		}
+
+		$exchange = new CurrencyExchange();
+		// Step 2: Recalculate earnings field in UsageOfProduct
+		foreach($productList as $product) {
+			foreach($this->db->fetchAll("getUnconfirmedUsageOfProduct", $product->id) as $row) {
+				$earningValue = match($newCurrency) {
+					Currency::EUR => $row->getFloat("estimateEUR"),
+					Currency::GBP => $row->getFloat("estimateGBP"),
+					Currency::USD => $row->getFloat("estimateUSD"),
+				};
+				$this->db->update("setEarningForUsageOfProduct", [
+					"id" => $row->getString("id"),
+					"earning" => $earningValue,
+				]);
+			}
+		}
+
+		$productRepository->calculateUncachedEarnings($user);
 	}
 }

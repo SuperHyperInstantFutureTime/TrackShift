@@ -7,7 +7,7 @@
  
 <h2 class="highlight blue-highlight">That's where we come in.</h2> 
 
-TrackShift processes sales data for record labels so they can work out artist royalties <u>in seconds</u>.
+We process sales data for record labels so they can work out artist royalties <u>in seconds</u>.
 
 We’re adding new distributors and platforms all the time. 
 

@@ -3,6 +3,13 @@
 		<span>Account name</span>
 		<input name="account_name" data-bind:value="@name" />
 	</label>
+	<label>
+		<span>Currency</span>
+		<select name="currency" data-bind:value="@name">
+			<option></option>
+			<option data-list data-bind:text data-bind:value></option>
+		</select>
+	</label>
 
 	<div class="actions">
 		<button name="do" value="save">Save</button>

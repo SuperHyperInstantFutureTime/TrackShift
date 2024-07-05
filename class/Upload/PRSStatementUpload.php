@@ -3,10 +3,12 @@ namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
 use SHIFT\TrackShift\NotYetImplementedException;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\Usage;
 
 class PRSStatementUpload extends Upload {
+	const CURRENCY_OVERRIDE = Currency::GBP->name;
 	const KNOWN_COLUMNS = ["Record Number", "CAE Number", "Work Title", "Amount (performance revenue)", "IP1"];
 
 	public function extractArtistName(array $row): string {
@@ -18,10 +20,13 @@ class PRSStatementUpload extends Upload {
 	}
 
 	public function extractEarning(array $row): Money {
-		return new Money((float)$row["Amount (performance revenue)"]);
+		return new Money(
+			(float)$row["Amount (performance revenue)"],
+			Currency::GBP,
+		);
 	}
 
-	public function extractEarningDate(array $row):DateTime {
+	public function extractEarningDate(array $row):DateTime { // phpcs:ignore
 		throw new NotYetImplementedException("PRS Statement earning date is not yet implemented");
 	}
 }

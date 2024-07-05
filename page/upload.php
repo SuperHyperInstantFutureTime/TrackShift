@@ -1,4 +1,5 @@
 <?php
+use Gt\Config\Config;
 use Gt\Database\Database;
 use Gt\Http\Response;
 use Gt\Input\Input;
@@ -6,7 +7,9 @@ use Gt\Logger\Log;
 use SHIFT\Spotify\SpotifyClient;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Auth\UserRepository;
 use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Upload\UploadRepository;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
@@ -20,11 +23,21 @@ function do_upload(
 	ArtistRepository $artistRepository,
 	ProductRepository $productRepository,
 	SpotifyClient $spotify,
+	UserRepository $userRepository,
 	User $user,
 	Database $db,
 	Input $input,
+	Config $config,
 	Response $response,
 ):void {
+	$settings = $userRepository->getUserSettings($user);
+	$currentSettingsCurrency = null;
+	if($currencyString = $settings->get("currency") ?? null) {
+		$currentSettingsCurrency = Currency::fromCode($currencyString);
+	}
+
+	$userCurrency = $currentSettingsCurrency ?? null;
+
 	$startTime = microtime(true);
 	set_time_limit(600);
 	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
@@ -38,11 +51,22 @@ function do_upload(
 
 		$uploadRepository->setProcessed($upload, $user);
 
+		$uploadCurrency = $upload->getDefaultCurrency();
+		if(is_null($userCurrency)) {
+			$userCurrency = $uploadCurrency;
+		}
+		if(!$currentSettingsCurrency) {
+			$settings->set("currency", $userCurrency->name);
+			$userRepository->setUserSettings($user, $settings);
+			$currentSettingsCurrency = $userCurrency;
+		}
+
 		$processedNum = $usageRepository->process(
 			$user,
 			$upload,
 			$artistRepository,
 			$productRepository,
+			$userCurrency,
 		);
 
 		$db->executeSql("COMMIT");

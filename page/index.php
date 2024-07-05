@@ -33,4 +33,18 @@ function go(
 			$response->redirect("/");
 		}
 	}
+
+	if($input->contains("debug-user")) {
+		if($authenticator->isLoggedIn()) {
+			$authwaveUser = $authenticator->getUser();
+			$matchingDebugUser = $userRepository->findByAuthwaveId($authwaveUser->id);
+			if($matchingDebugUser) {
+				$userRepository->persistUser($matchingDebugUser);
+			}
+			else {
+				$userRepository->associateAuthwave($user, $authwaveUser);
+			}
+			$response->redirect("/");
+		}
+	}
 }

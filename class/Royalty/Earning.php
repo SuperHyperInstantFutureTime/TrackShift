@@ -7,7 +7,8 @@ class Earning extends Money {
 	public function __construct(
 		public readonly DateTime $earningDate,
 		float $value = 0.0,
+		?Currency $currency = null,
 	) {
-		parent::__construct($value);
+		parent::__construct($value, $currency);
 	}
 }

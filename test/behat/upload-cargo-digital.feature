@@ -14,4 +14,4 @@ Feature: App should handle Cargo Digital ZIP files
 		When I go to "/account/products/"
 		Then I should see the following table data:
 			| Artist | Title | Earnings |
-			| Artist 1 | Album 1 | < £0.01 |
+			| Artist 1 | Album 1 | 0.01 |
