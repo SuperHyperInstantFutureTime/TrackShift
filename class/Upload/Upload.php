@@ -125,8 +125,8 @@ abstract class Upload {
 	protected function getHeaderRow():array {
 		$cursor = ftell($this->fileHandle);
 		$line = fgets($this->fileHandle);
-		$line = $this->correctEncoding($line);
 		$line = $this->stripNullBytes($line);
+		$line = $this->correctEncoding($line);
 		$row = str_getcsv($line, $this->dataRowCsvSeparator);
 
 		if($cursor > 0) {
