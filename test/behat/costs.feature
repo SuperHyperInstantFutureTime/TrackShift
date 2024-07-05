@@ -23,7 +23,7 @@ Feature: TrackShift should break down costs of products
 		Then I should be on "/account/costs/"
 		And I should see the following table data:
 			| Artist   | Product | Cost    | Description    |
-			| Person 1 | BC 2    | £100.00 | Vinyl pressing |
+			| Person 1 | BC 2    | 100.00  | Vinyl pressing |
 
 	Scenario: A cost is shown in the product table balance
 		Given I am on the homepage
@@ -39,6 +39,6 @@ Feature: TrackShift should break down costs of products
 		When I go to "/account/products/"
 		Then I should see the following table data:
 			| Artist   | Title | Earnings | Balance | Profit |
-			| Person 1 | BC 2  | £2.38    | £0.38   | £0.38  |
+			| Person 1 | BC 2  | 2.38    | 0.38   | 0.38  |
 
 

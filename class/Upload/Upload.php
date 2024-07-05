@@ -155,7 +155,7 @@ abstract class Upload {
 
 
 	protected function stripNullBytes(string $line):string {
-		return $line;
+		return str_replace("\xEF\xBB\xBF", "", $line);
 	}
 
 	protected function calculateSizeString():string {

@@ -63,7 +63,12 @@ readonly class UsageRepository extends Repository {
 			$artistName = $upload->extractArtistName($row);
 			$productTitle = $upload->extractProductTitle($row);
 			$originalEarning = $upload->extractEarning($row);
-			$earningDate = $upload->extractEarningDate($row);
+			try {
+				$earningDate = $upload->extractEarningDate($row);
+			}
+			catch(\TypeError) {
+				var_dump($row);die();
+			}
 			$combinedArtistNameProductTitle = "$artistName:$productTitle";
 
 			if($existingArtistId = array_search($artistName, $artistMap)) {

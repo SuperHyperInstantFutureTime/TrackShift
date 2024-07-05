@@ -14,5 +14,5 @@ Feature: App should handle TuneCore CSV files
 		When I go to "/account/products/"
 		Then I should see the following table data:
 			| Artist | Title | Earnings |
-			| Artist 1 | Album 1 | £0.03 |
-			| Artist 2 | Album 100 | £0.11 |
+			| Artist 1 | Album 1 | 0.03 |
+			| Artist 2 | Album 100 | 0.11 |
