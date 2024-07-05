@@ -17,7 +17,6 @@ function go(Element $element, Binder $binder, Settings $settings):void {
 	}
 	$binder->bindList($availableCurrencies);
 
-	$element->querySelector("[name=currency]")->value = "GBP";
 	$kvp = $settings->getKvp();
 
 	foreach($element->querySelectorAll("input,select") as $input) {

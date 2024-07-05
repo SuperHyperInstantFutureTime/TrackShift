@@ -36,6 +36,7 @@ use SHIFT\TrackShift\Usage\UsageRepository;
  * product by UPC.
  */
 class DistroKidUpload extends Upload {
+	const CURRENCY_OVERRIDE = Currency::USD->name;
 	const KNOWN_COLUMNS = ["Reporting Date", "Sale Month", "Store", "Artist", "Title", "ISRC", "UPC", "Song/Album"];
 
 	protected string $dataRowCsvSeparator = "\t";

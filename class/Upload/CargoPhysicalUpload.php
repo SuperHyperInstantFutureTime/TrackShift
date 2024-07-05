@@ -10,6 +10,7 @@ use SHIFT\TrackShift\Usage\Usage;
 use Generator;
 
 class CargoPhysicalUpload extends Upload {
+	const CURRENCY_OVERRIDE = Currency::GBP->name;
 	const KNOWN_COLUMNS = ["Period", "Catalogue No.", "Label", "Label ID", "Sold To"];
 
 	public function extractArtistName(array $row):string {

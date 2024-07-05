@@ -7,6 +7,7 @@ use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\Usage;
 
 class TuneCoreUpload extends Upload {
+	const CURRENCY_OVERRIDE = Currency::USD->name;
 	const KNOWN_COLUMNS = ["TC Song ID", "Optional ISRC", "Optional UPC"];
 
 	public function extractArtistName(array $row):string {

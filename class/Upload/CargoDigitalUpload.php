@@ -8,6 +8,7 @@ use SHIFT\TrackShift\TrackShiftException;
 use SHIFT\TrackShift\Usage\Usage;
 
 class CargoDigitalUpload extends Upload {
+	const CURRENCY_OVERRIDE = Currency::GBP->name;
 	const KNOWN_COLUMNS = ["Royalty ID", "Asset ISRC", "Reported Royalty"];
 
 	public function extractArtistName(array $row):string {
@@ -21,7 +22,7 @@ class CargoDigitalUpload extends Upload {
 	public function extractEarning(array $row):Money {
 		return new Money(
 			(float)$row["Reported Royalty"],
-			Currency::fromCode($row["Currency"]),
+			Currency::GBP,
 		);
 	}
 

@@ -2,6 +2,7 @@
 namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 
 class UnknownUpload extends Upload {

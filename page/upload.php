@@ -31,8 +31,12 @@ function do_upload(
 	Response $response,
 ):void {
 	$settings = $userRepository->getUserSettings($user);
-	$currencyString = $settings->get("currency") ?? "GBP";
-	$userCurrency = Currency::fromCode($currencyString);
+	$currentSettingsCurrency = null;
+	if($currencyString = $settings->get("currency") ?? null) {
+		$currentSettingsCurrency = Currency::fromCode($currencyString);
+	}
+
+	$userCurrency = $currentSettingsCurrency ?? null;
 
 	$startTime = microtime(true);
 	set_time_limit(600);
@@ -46,6 +50,16 @@ function do_upload(
 //		Log::debug("{$time}s - Created " . count($usageIdList) . " usages");
 
 		$uploadRepository->setProcessed($upload, $user);
+
+		$uploadCurrency = $upload->getDefaultCurrency();
+		if(is_null($userCurrency)) {
+			$userCurrency = $uploadCurrency;
+		}
+		if(!$currentSettingsCurrency) {
+			$settings->set("currency", $userCurrency->name);
+			$userRepository->setUserSettings($user, $settings);
+			$currentSettingsCurrency = $userCurrency;
+		}
 
 		$processedNum = $usageRepository->process(
 			$user,

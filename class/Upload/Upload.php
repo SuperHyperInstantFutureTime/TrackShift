@@ -7,9 +7,13 @@ use DateTimeZone;
 use Generator;
 use Gt\DomTemplate\Bind;
 use Gt\DomTemplate\BindGetter;
+use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 
 abstract class Upload {
+	const CURRENCY_COLUMN = null;
+	const CURRENCY_OVERRIDE = null;
+
 	/** @var array<string, string> key = UPC; value = Product title */
 	public array $upcProductTitleMap = [];
 	/** @var array<string, string> key = ISRC; value = UPC */
@@ -24,6 +28,8 @@ abstract class Upload {
 	public readonly string $type;
 	public readonly DateTime $createdAt;
 	protected string $dataRowCsvSeparator = ",";
+	/** @var array<string> */
+	protected array $headerRow;
 
 	public function __construct(
 		public readonly string $id,
@@ -75,6 +81,19 @@ abstract class Upload {
 	/** @param array<string, string> $row */
 	abstract public function extractEarningDate(array $row):DateTime;
 
+	public function getDefaultCurrency():Currency {
+		$cursor = ftell($this->fileHandle);
+
+		$rowData = $this->getNextRowData();
+		$currency = is_null(static::CURRENCY_OVERRIDE)
+			? Currency::fromCode($rowData[static::CURRENCY_COLUMN])
+			: Currency::fromCode(static::CURRENCY_OVERRIDE);
+
+		fseek($this->fileHandle, $cursor);
+
+		return $currency;
+	}
+
 	/**
 	 * @param array<string, string> $row
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -90,28 +109,53 @@ abstract class Upload {
 	/**
 	 * This function is the default behaviour for all Upload types - it Generates a set of key-value-pairs for each
 	 * row in the file - the default behaviour is working with CSV data, but other types might use other formats.
-	 * @return Generator<array<string, string>>
+	 * @return Generator<null|array<string, string>>
 	 */
 	public function generateDataRows():Generator {
-		$headerRow = null;
-
 		while(!feof($this->fileHandle)) {
-			$line = fgets($this->fileHandle);
-			$line = $this->correctEncoding($line);
-			$line = $this->stripNullBytes($line);
-			$row = str_getcsv($line, $this->dataRowCsvSeparator);
-
-			if(!$row[0]) {
-				continue;
+			$nextRowData = $this->getNextRowData();
+			if($nextRowData) {
+				yield $nextRowData;
 			}
-			if(!$headerRow) {
-				$headerRow = $row;
-				continue;
-			}
-
-			yield $this->rowToData($headerRow, $row);
 		}
 		fseek($this->fileHandle, 0);
+	}
+
+	/** @return array<string> */
+	protected function getHeaderRow():array {
+		$cursor = ftell($this->fileHandle);
+		$line = fgets($this->fileHandle);
+		$line = $this->correctEncoding($line);
+		$line = $this->stripNullBytes($line);
+		$row = str_getcsv($line, $this->dataRowCsvSeparator);
+
+		if($cursor > 0) {
+			fseek($this->fileHandle, $cursor);
+		}
+
+		return $row;
+	}
+
+	/** @return null|array<string, string> */
+	protected function getNextRowData():?array {
+		if(!isset($this->headerRow)) {
+			$this->headerRow = $this->getHeaderRow();
+		}
+
+		if(ftell($this->fileHandle) === 0) {
+			fgets($this->fileHandle);
+		}
+
+		$line = fgets($this->fileHandle);
+		$line = $this->correctEncoding($line);
+		$line = $this->stripNullBytes($line);
+		$row = str_getcsv($line, $this->dataRowCsvSeparator);
+
+		if(!$row[0]) {
+			return null;
+		}
+
+		return $this->rowToData($this->headerRow, $row);
 	}
 
 	#[BindGetter]
@@ -155,7 +199,8 @@ abstract class Upload {
 
 
 	protected function stripNullBytes(string $line):string {
-		return str_replace("\xEF\xBB\xBF", "", $line);
+		$line = mb_convert_encoding($line, "UTF-8", "UTF-8");
+		return str_replace(["\xEF", "\xBB", "\xBF"], "", $line);
 	}
 
 	protected function calculateSizeString():string {

@@ -8,6 +8,7 @@ use SHIFT\TrackShift\Usage\Usage;
 
 class BandcampUpload extends Upload {
 	const KNOWN_COLUMNS = ["item type", "item name", "artist", "bandcamp transaction id"];
+	const CURRENCY_COLUMN = "currency";
 
 	protected string $dataRowCsvSeparator = ",";
 

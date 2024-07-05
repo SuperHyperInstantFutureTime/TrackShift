@@ -6,6 +6,7 @@ use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 
 class CdBabyUpload extends Upload {
+	const CURRENCY_OVERRIDE = Currency::USD->name;
 	const KNOWN_COLUMNS = ["Report Date", "Quantity", "Isrc", "CDBabySku"];
 
 	protected string $dataRowCsvSeparator = "\t";

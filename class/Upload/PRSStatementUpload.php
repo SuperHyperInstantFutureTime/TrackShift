@@ -8,6 +8,7 @@ use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Usage\Usage;
 
 class PRSStatementUpload extends Upload {
+	const CURRENCY_OVERRIDE = Currency::GBP->name;
 	const KNOWN_COLUMNS = ["Record Number", "CAE Number", "Work Title", "Amount (performance revenue)", "IP1"];
 
 	public function extractArtistName(array $row): string {

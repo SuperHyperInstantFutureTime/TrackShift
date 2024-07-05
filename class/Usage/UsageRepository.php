@@ -41,7 +41,7 @@ readonly class UsageRepository extends Repository {
 			return $carry;
 		}, []);
 		$combinedArtistNameProductTitleMap = array_reduce($existingProductList, function(array $carry, Product $product):array {
-			$carry[$product->id] = $product->artist->name . ":" . $product->title;
+			$carry[$product->id] = ($product->artist?->name ?? "") . ":" . $product->title;
 			return $carry;
 		}, []);
 
