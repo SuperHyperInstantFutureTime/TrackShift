@@ -200,7 +200,7 @@ abstract class Upload {
 
 	protected function stripNullBytes(string $line):string {
 		$line = mb_convert_encoding($line, "UTF-8", "UTF-8");
-		return str_replace(["\xB8", "\x8F", "\xEF", "\xBB", "\xBF"], "", $line);
+		return str_replace(["\xC3", "\xB8", "\x8F", "\xEF", "\xBB", "\xBF"], "", $line);
 	}
 
 	protected function calculateSizeString():string {
