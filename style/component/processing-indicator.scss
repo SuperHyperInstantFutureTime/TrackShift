@@ -1,0 +1,13 @@
+processing-indicator {
+	display: block;
+	margin: 1rem 1rem;
+	padding: 1rem;
+	text-align: center;
+	border: 2px solid #e86353;
+
+	@media(min-width: $break-small) {
+		max-width: 24rem;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}

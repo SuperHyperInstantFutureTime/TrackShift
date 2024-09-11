@@ -12,7 +12,11 @@ lines terminated by '\n'
 	originalEarning,
 	originalCurrency,
 	statementType,
+	estimateAUD,
+	estimateCAD,
 	estimateEUR,
 	estimateGBP,
-	estimateUSD
+	estimateUSD,
+	estimateMXN,
+	estimateNZD
 )

@@ -13,9 +13,17 @@ function go(
 	UploadRepository $uploadRepository,
 	User $user,
 	Element $element,
+	Input $input,
 	Binder $binder,
 ):void {
 	$binder->bindList($uploadRepository->getUploadsForUser($user));
+
+	$receivedFileList = explode(";", $input->getString("received"));
+	foreach($element->querySelectorAll("tbody>tr td.basename") as $td) {
+		if(in_array($td->textContent, $receivedFileList)) {
+			$td->closest("tr")->classList->add("new");
+		}
+	}
 }
 
 function do_delete(

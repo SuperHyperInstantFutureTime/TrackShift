@@ -7,6 +7,7 @@ use DateTimeZone;
 use Generator;
 use Gt\DomTemplate\Bind;
 use Gt\DomTemplate\BindGetter;
+use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 
@@ -14,10 +15,10 @@ abstract class Upload {
 	const CURRENCY_COLUMN = null;
 	const CURRENCY_OVERRIDE = null;
 
-	/** @var array<string, string> key = UPC; value = Product title */
-	public array $upcProductTitleMap = [];
 	/** @var array<string, string> key = ISRC; value = UPC */
 	public array $isrcUpcMap = [];
+	/** @var array<string, string> key = UPC; value = Product title */
+	public array $upcProductTitleMap = [];
 
 	/** @var resource */
 	protected $fileHandle;
@@ -27,6 +28,8 @@ abstract class Upload {
 	public readonly string $sizeString;
 	public readonly string $type;
 	public readonly DateTime $createdAt;
+	public ?float $processedPercentage = null;
+
 	protected string $dataRowCsvSeparator = ",";
 	/** @var array<string> */
 	protected array $headerRow;
@@ -34,7 +37,7 @@ abstract class Upload {
 	public function __construct(
 		public readonly string $id,
 		public string $filePath,
-		public readonly Money $totalEarnings = new Money(0),
+		public readonly ?Money $totalEarnings = null,
 		public ?DateTimeInterface $usagesProcessed = null,
 	) {
 		if(!is_file($this->filePath)) {
@@ -64,9 +67,18 @@ abstract class Upload {
 		$this->fileHandle = $this->openFile();
 	}
 
+	public function setProcessedPercentage(float $percentage):void {
+		$this->processedPercentage = $percentage;
+	}
+
 	#[Bind("isProcessing")]
 	public function isProcessing():bool {
-		return is_null($this->usagesProcessed);
+		return $this->processedPercentage < 100;
+	}
+
+	#[BindGetter]
+	public function getProcessedPercentageRounded():int {
+		return $this->processedPercentage;
 	}
 
 	/** @param array<string, string> $row */
@@ -80,6 +92,11 @@ abstract class Upload {
 
 	/** @param array<string, string> $row */
 	abstract public function extractEarningDate(array $row):DateTime;
+
+	public function preloadMissingProductTitleData(array $row):void {
+		// TODO: Most uploads will not have anything to do here, but
+		// for those that do, this will always be called.
+	}
 
 	public function getDefaultCurrency():Currency {
 		$cursor = ftell($this->fileHandle);
@@ -200,7 +217,8 @@ abstract class Upload {
 
 	protected function stripNullBytes(string $line):string {
 		$line = mb_convert_encoding($line, "UTF-8", "UTF-8");
-		return str_replace(["\xA8", "\xC3", "\xB8", "\x8F", "\xEF", "\xBB", "\xBF"], "", $line);
+		$replaced = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/u', '', $line);
+		return is_null($replaced) ? "" : $replaced;
 	}
 
 	protected function calculateSizeString():string {

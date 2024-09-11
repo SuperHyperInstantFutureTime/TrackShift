@@ -78,11 +78,8 @@ readonly class UploadRepository extends Repository {
 		return self::DIR_UPLOAD . "/$user->id";
 	}
 
-	public function getById(string $id, User $user):?Upload {
-		return $this->rowToUpload($this->db->fetch("getById", [
-			"id" => $id,
-			"userId" => $user->id
-		]));
+	public function getById(string $id):?Upload {
+		return $this->rowToUpload($this->db->fetch("getById", $id));
 	}
 
 	/** @return array<Upload> */
@@ -101,6 +98,21 @@ readonly class UploadRepository extends Repository {
 		}
 
 		return $uploadList;
+	}
+
+	public function getTotalPercentageProcessed(User $user):int {
+		$total = 0;
+		$i = null;
+
+		foreach($this->getUploadsForUser($user) as $i => $upload) {
+			$total += $upload->processedPercentage;
+		}
+
+		if($i) {
+			$total /= $i + 1;
+		}
+
+		return $total;
 	}
 
 	public function delete(Upload $upload, User $user):void {
@@ -272,7 +284,7 @@ readonly class UploadRepository extends Repository {
 			return null;
 		}
 
-		$earnings = new Money();
+		$earnings = null;
 		if($earningsFloat = $row->getFloat("totalEarningCache")) {
 			$earnings = new Money($earningsFloat);
 		}
@@ -281,12 +293,20 @@ readonly class UploadRepository extends Repository {
 
 		/** @var class-string<Upload> $type */
 		$type = $row->getString("type");
-		return new $type(
+		/** @var Upload $upload */
+		$upload = new $type(
 			$row->getString("id"),
 			$row->getString("filePath"),
 			$earnings,
 			$processedAt,
 		);
+
+		$usageProcessedPercentage = $this->db->fetchFloat("getProcessedPercentage", [
+			"uploadId" => $upload->id,
+		]) ?? 0;
+		$upload->setProcessedPercentage($usageProcessedPercentage);
+
+		return $upload;
 	}
 
 	private function ensureCorrectEncoding(string $filePath):void {

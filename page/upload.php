@@ -18,16 +18,14 @@ function go(Response $response):void {
 }
 
 function do_upload(
-	UploadRepository $uploadRepository,
-	UsageRepository $usageRepository,
 	ArtistRepository $artistRepository,
 	ProductRepository $productRepository,
-	SpotifyClient $spotify,
+	UploadRepository $uploadRepository,
+	UsageRepository $usageRepository,
 	UserRepository $userRepository,
 	User $user,
 	Database $db,
 	Input $input,
-	Config $config,
 	Response $response,
 ):void {
 	$settings = $userRepository->getUserSettings($user);
@@ -42,15 +40,18 @@ function do_upload(
 	set_time_limit(600);
 	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
 	$time = number_format(microtime(true) - $startTime);
-	Log::debug("{$time}s - Created uploads");
-	$db->executeSql("start transaction");
+	Log::debug("Created " . count($uploadList) . " uploads");
 
+	$fileNameArray = [];
 	foreach($uploadList as $upload) {
-//		$usageCsvFilePath = $usageRepository->createUsagesFromUpload($upload);
-//		Log::debug("{$time}s - Created " . count($usageIdList) . " usages");
+		$db->executeSql("start transaction");
 
+		array_push($fileNameArray, $upload->basename);
+// This will only be set as processed if the usages are processed successfully,
+// because everything is done in a TRANSACTION.
 		$uploadRepository->setProcessed($upload, $user);
 
+// Set the default currency for the user, if they don't already have one.
 		$uploadCurrency = $upload->getDefaultCurrency();
 		if(is_null($userCurrency)) {
 			$userCurrency = $uploadCurrency;
@@ -61,43 +62,20 @@ function do_upload(
 			$currentSettingsCurrency = $userCurrency;
 		}
 
-		$processedNum = $usageRepository->process(
-			$user,
-			$upload,
+		$extractedNum = $usageRepository->extractFromUploadedFile($upload);
+		$memory = round(memory_get_usage(true) / 1024 / 1024, 1);
+		$seconds = number_format(microtime(true) - $startTime, 2);
+		Log::debug("Extracted $extractedNum usages using $memory MB in $seconds seconds");
+
+		$db->executeSql("commit");
+
+		$usageRepository->processArtistsAndProducts(
 			$artistRepository,
 			$productRepository,
-			$userCurrency,
+			$userRepository,
 		);
-
-		$db->executeSql("COMMIT");
-		$memoryPeak = memory_get_peak_usage(true);
-		$memoryNow = memory_get_usage(true);
-		echo(number_format($memoryNow / (1024 * 1024)) . "MB now, " . number_format($memoryPeak / (1024 * 1024)) . " MB peak\n");
-		echo(number_format(microtime(true) - $startTime, 2) . " seconds");
-
-		if($upload->isrcUpcMap) {
-			foreach($upload->isrcUpcMap as $isrc => $upc) {
-				$productRepository->changeProductIsrcToUpc($isrc, $upc);
-			}
-		}
-
-		$uploadRepository->cacheUsage($upload);
 	}
 
-	Log::debug("committing transaction");
-	$db->executeSql("commit");
-
-	Log::debug("Looking up missing titles...");
-	$missingTitleCount = $productRepository->lookupMissingTitles($spotify, $artistRepository, $user);
-	Log::debug("Looked up $missingTitleCount titles on Spotify");
-	$duplicateCount = $productRepository->deduplicate($user);
-	Log::debug("De-duplicated $duplicateCount products");
-	$productRepository->calculateUncachedEarnings($user);
-
-	if($advanceTo = $input->getString("advance")) {
-		$response->redirect($advanceTo);
-	}
-	else {
-		$response->reload();
-	}
+	$advanceTo = "/account/uploads/?received=" . implode(";", $fileNameArray);
+	$response->redirect($advanceTo);
 }
