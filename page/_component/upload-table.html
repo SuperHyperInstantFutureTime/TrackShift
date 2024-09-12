@@ -1,4 +1,7 @@
-<input type="text" id="uploadTableSearchInput" onkeyup="myFunction()" placeholder="Search uploads...">
+<!-- <input type="text" id="uploadTableSearchInput" onkeyup="myFunction()" placeholder="Search uploads..."> -->
+
+<file-uploader />
+
 <table id="uploadTable">
 	<thead>
 	<tr>
@@ -15,7 +18,15 @@
 		<td data-bind:text="type">Unknown</td>
 		<td data-bind:text="basename" class="basename">abc.xyz</td>
 		<td data-bind:text="createdAtFormattedDate">1st Jan 1970</td>
-		<td data-bind:text="totalEarnings" class="earnings" data-processing="0" data-bind:data-processing="processedPercentageRounded">Calculating...</td>
+		<td class="earnings" data-processing="0" data-bind:data-processing="processedPercentageRounded">
+			<div class="totalEarnings" data-bind:text="totalEarnings">
+				Calculating...
+			</div>	
+			<div class="progress">
+				<progress max="100" data-bind:value="processedPercentageRounded"></progress>
+				<span class="progress-label" data-bind:text="processedPercentageRounded"></span>
+			</div>
+		</td>
 		<td class="centered" data-bind:text="sizeString">0 B</td>
 		<td class="centered">
 			<form method="post">

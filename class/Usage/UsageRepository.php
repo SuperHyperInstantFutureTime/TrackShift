@@ -139,6 +139,10 @@ readonly class UsageRepository extends Repository {
 				$artistName = $row->getString("extractedArtistName");
 				$productTitle = $row->getString("extractedProductTitle");
 
+				if(!$artistName) {
+					var_dump($row);
+				}
+
 				$artist = $artistCache["$artistName||$userId"] ?? null;
 				if(!$artist) {
 					$artist = $artistRepository->getByName($artistName, $user);

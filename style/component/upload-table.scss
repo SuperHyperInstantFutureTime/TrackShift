@@ -9,13 +9,20 @@ upload-table {
 	}
 
 	tr {
+		&:not(.processing) {
+			.progress {
+				display: none;
+			}
+		}
 		&.processing {
+			.totalEarnings {
+				display: none;
+			}
 			.earnings {
 				position: relative;
 				color: transparent;
 
 				&::after {
-					content: "Processing...";
 					position: absolute;
 					left: 0;
 					right: 0;
@@ -25,11 +32,11 @@ upload-table {
 					align-items: center;
 					color: var(--pal-ui-text);
 				}
-
-				&[data-processing]::after {
-					content: "Processing " attr(data-processing) "% ...";
-				}
 			}
+			.progress {
+				width:100%;
+				color:var(--pal-ui-text);
+			}			
 
 		}
 

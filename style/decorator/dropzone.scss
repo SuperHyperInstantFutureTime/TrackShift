@@ -1,7 +1,8 @@
 %d-dropzone {
 	display: block;
 	padding: 2rem;
-	border: 4px dashed var(--pal-body);
+	border: 3px dashed var(--pal-body);
+	border-radius:var(--theme-ui-border-radius);
 	transition: background-color 0.25s ease-in-out;
 	cursor: pointer;
 

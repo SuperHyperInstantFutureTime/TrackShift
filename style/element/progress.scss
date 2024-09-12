@@ -1,0 +1,17 @@
+progress[value] {
+    // width:100%;
+    background: var(--pal-3);
+    
+    border:0;
+    border-radius: 1rem;
+    // height:1.5rem;
+}
+progress[value]::-moz-progress-bar {
+    background: var(--pal-2);
+}
+.progress-label {
+    margin-left:0.5rem;
+    &::after {
+        content: "%";
+    }
+}

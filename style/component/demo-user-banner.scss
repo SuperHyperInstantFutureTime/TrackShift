@@ -8,7 +8,8 @@ demo-user-banner {
 	margin-top:1rem;
 	line-height: var(--theme-line-height);
 	text-align: center;
-
+	margin-bottom:0rem;
+	border-radius:var(--theme-ui-border-radius);
 	a {
 		color: var(--pal-6);
 

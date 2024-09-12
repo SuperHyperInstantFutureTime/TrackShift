@@ -1,0 +1,44 @@
+details {
+    display: grid;
+    border: var(--theme-ui-border);
+    border-radius: var(--theme-ui-border-radius);
+    padding: 0.5em 0.5em 0;
+    max-width:40vw;
+    line-height: var(--theme-line-height);
+    margin-bottom:1rem;
+    grid-template-rows: 0fr;
+    // transition: all ease-in-out 0.5s;    
+  }
+  
+  summary {
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+  }
+  
+  details[open] {
+    padding: 0.5em;
+  }
+  
+  details[open] summary {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 0.5em;
+  }
+
+  @keyframes animate {
+    from {grid-template-rows: 0fr;}
+    to {grid-template-rows: 1fr;}
+}
+
+   
+details > div {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: all ease-in-out 0.5s;
+}
+details > div > div {
+  overflow: hidden;
+}
+details[open] > div {
+  animation: animate 0.15s 0s 1 normal forwards;
+}

@@ -7,8 +7,8 @@ file-uploader {
 
 	
 	@media(min-width: $break-small) {
-		max-width: 48vw;
-		margin: 0 auto;
+		// max-width: 48vw;
+		margin-left: 0;
 	}
 
 	body.uri--index & {
@@ -26,7 +26,8 @@ file-uploader {
 
 	form {
 		padding: 0;
-		margin: 1rem;
+		margin-left: 0rem;
+		margin-bottom:5rem;
 
 		body.uri--index & {
 			margin: 2rem 1rem 4rem 1rem;
@@ -36,6 +37,11 @@ file-uploader {
 	label {
 		@extend %d-dropzone, %o-container;
 		background-color: var(--pal-page-bg);
+		height:5rem;
+		display: flex;
+  		justify-content: center;
+  		align-items: center;
+  		gap: 0.3rem;
 
 		body:not(.uri--index) & {
 			padding: 0;

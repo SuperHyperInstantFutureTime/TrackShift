@@ -1,13 +1,12 @@
 processing-indicator {
 	display: block;
-	margin: 1rem 1rem;
-	padding: 1rem;
+	position: relative;
+	z-index: -1;
+	padding:var(--theme-padding-notification);
+	color:var(--pal-ui-text);
+	margin-top:1rem;
+	line-height: var(--theme-line-height);
 	text-align: center;
-	border: 2px solid #e86353;
-
-	@media(min-width: $break-small) {
-		max-width: 24rem;
-		margin-left: auto;
-		margin-right: auto;
-	}
+	border:var(--theme-ui-border);
+	border-radius: var(--theme-ui-border-radius);
 }

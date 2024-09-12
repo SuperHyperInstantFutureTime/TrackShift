@@ -1,0 +1,1721 @@
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 100;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-thin-italic.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-ultralight-italic.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-light-italic.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-regular-italic.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-medium-italic.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-semibold-italic.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-bold-italic.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-extrabold-italic.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-black-italic.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-thin-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-ultralight-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-light-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-regular-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-medium-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-semibold-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-bold-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-extrabold-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/asset/font/gilroy/gilroy-black-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/inter/inter-regular-normal-cyrillic-ext.woff2") format("woff2");
+  unicode-range: "U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F";
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/inter/inter-regular-normal-cyrillic.woff2") format("woff2");
+  unicode-range: "U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116";
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/inter/inter-regular-normal-greek-ext.woff2") format("woff2");
+  unicode-range: "U+1F00-1FFF";
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/inter/inter-regular-normal-greek.woff2") format("woff2");
+  unicode-range: "U+0370-03FF";
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/inter/inter-regular-normal-vietnamese.woff2") format("woff2");
+  unicode-range: "U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB";
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/inter/inter-regular-normal-latin-ext.woff2") format("woff2");
+  unicode-range: "U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF";
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/inter/inter-regular-normal-latin.woff2") format("woff2");
+  unicode-range: "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: italic;
+  font-weight: 100;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-thin-italic-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: italic;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-extralight-italic-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-light-italic-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-regular-italic-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-book-italic-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-medium-italic-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-bold-italic-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-black-italic-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-ultra-italic-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-thin-normal-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-extralight-normal-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-light-normal-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-regular-normal-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-book-normal-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-medium-normal-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-bold-normal-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-black-normal-webfont.woff2");
+}
+@font-face {
+  font-family: "Geomanist";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/asset/font/geomanist/geomanist-ultra-normal-webfont.woff2");
+}
+:root {
+  --font-family-main: "Gilroy", sans-serif;
+  --font-family-heading: "Geomanist", sans-serif;
+  --font-readable-line-height: 1.6;
+  --font-size-base: 16px;
+  --font-size-1: calc(var(--font-size-base) * 3);
+  --font-size-2: calc(var(--font-size-1) * (1 / var(--size-golden-ratio)));
+  --font-size-small: calc(var(--font-size-base) * 0.8);
+}
+@media (min-width: 46rem) {
+  :root {
+    --font-size-base: 1rem;
+  }
+}
+@media (min-width: 76rem) {
+  :root {
+    --font-size-base: 1.1rem;
+  }
+}
+@media (min-width: 128rem) {
+  :root {
+    --font-size-base: 1.1rem;
+  }
+}
+
+:root {
+  --pal-1: #e86353;
+  --pal-2: #6ab3df;
+  --pal-3: #f6edef;
+  --pal-4: #453c54;
+  --pal-5: #272635;
+  --pal-6: #fff;
+  --pal-7: #d9e366;
+  --pal-8: #eac142;
+  --pal-9: #83916e;
+  --pal-10: #faefd0;
+  --pal-utility-dark-1: #252734;
+  --pal-utility-dark-2: #4f4c6b;
+  --pal-utility-dark-3: #aca9c7;
+  --pal-utility-light-1: #f2f2f2;
+  --pal-body: var(--pal-utility-dark-1);
+  --pal-page-bg: var(--pal-utility-light-1);
+  --pal-footer: var(--pal-utility-dark-1);
+  --pal-footer-text: var(--pal-utility-dark-1);
+  --pal-link-text: var(--pal-1);
+  --pal-link-bg: transparent;
+  --pal-link-text--visited: color-mix(in srgb, var(--pal-1), var(--pal-3));
+  --pal-link-bg--visited: transparent;
+  --pal-button: var(--pal-1);
+  --pal-button--contrast: #eceff7;
+  --pal-ui-bg: #ffffff;
+  --pal-ui-bg--hover: var(--pal-1);
+  --pal-ui-text: #252734;
+  --pal-ui-bg--active: var(--pal-1);
+  --pal-ui-bg--active--dark: var(--pal-5);
+}
+
+:root {
+  --size-golden-ratio: 1.618;
+  --size-page-width-fluid: 128rem;
+  --size-page-width: 76rem;
+}
+
+:root {
+  --theme-ui-border: 2px solid var(--pal-utility-dark-2);
+  --theme-ui-border-radius: 0.5rem;
+  --theme-ui-border--focus: 4px solid var(--pal-utility-dark-2);
+  --theme-ui-box-shadow: none;
+  --theme-ui-box-shadow--focus: 0 0 0 2px var(--pal-2);
+  --theme-ui-outline: none;
+  --theme-ui-outline--focus: 2px solid var(--pal-8);
+  --theme-accessibility-outline: 4px solid var(--pal-3);
+  --theme-transition: 0.3s ease-in-out;
+  --theme-padding-notification: 1rem;
+  --theme-line-height:1.5rem;
+}
+
+file-uploader label {
+  display: block;
+  padding: 2rem;
+  border: 4px dashed var(--pal-body);
+  transition: background-color 0.25s ease-in-out;
+  cursor: pointer;
+}
+file-uploader label:hover {
+  background-color: white;
+}
+file-uploader label:active {
+  transition-duration: 0s;
+  background-color: var(--pal-2);
+}
+.dragging file-uploader label, file-uploader .dragging label {
+  background-color: var(--pal-3);
+}
+
+body > article {
+  font-family: "Geomanist", sans-serif;
+}
+body > article h1, body > article h2, body > article h3, body > article h4, body > article h5, body > article h6, body > article p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+body > article h1, body > article h2, body > article h3, body > article h4, body > article h5, body > article h6 {
+  font-family: var(--font-family-heading);
+  font-weight: 600;
+}
+body > article h1 {
+  font-size: var(--font-size-1);
+  display: block;
+}
+body > article h2 {
+  font-size: var(--font-size-2);
+}
+@media (max-width: 46rem) {
+  body > article h2 {
+    font-size: calc(var(--font-size-2) * 0.9);
+  }
+}
+body > article p {
+  font-size: var(--font-size-base);
+  line-height: var(--font-readable-line-height);
+  font-family: var(--font-family-main);
+}
+body > article p.small {
+  font-size: var(--font-size-small);
+}
+body > article hr {
+  margin: 4rem 0;
+}
+body > article .centered {
+  text-align: center;
+}
+body > article .highlight {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-bottom: 2rem;
+  display: inline-block;
+}
+body > article .blue-highlight {
+  background-color: var(--pal-2);
+  color: var(--pal-5);
+}
+body > article .green-highlight {
+  background-color: var(--pal-7);
+  color: var(--pal-5);
+}
+body > article .light-highlight {
+  background-color: var(--pal-3);
+}
+body > article ::selection {
+  background-color: var(--pal-1);
+  color: var(--pal-6);
+}
+
+button, a.button, a.button-red, body.uri--index form#mc-form select, user-settings form select, split-editor form select, product-period form select, cost-editor form select, body.uri--index form#mc-form input, user-settings form input, split-editor form input, product-period form input, cost-editor form input {
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-family-main);
+  letter-spacing: var(--font-family-main-letterspacing);
+  background-color: var(--pal-ui-bg);
+  color: var(--pal-ui-text);
+  border: var(--theme-ui-border);
+  box-shadow: var(--theme-ui-box-shadow);
+  border-radius: var(--theme-ui-border-radius);
+  width: 20rem;
+}
+button:focus:not(:active), a.button:focus:not(:active), a.button-red:focus:not(:active), body.uri--index form#mc-form select:focus:not(:active), user-settings form select:focus:not(:active), split-editor form select:focus:not(:active), product-period form select:focus:not(:active), cost-editor form select:focus:not(:active), body.uri--index form#mc-form input:focus:not(:active), user-settings form input:focus:not(:active), split-editor form input:focus:not(:active), product-period form input:focus:not(:active), cost-editor form input:focus:not(:active) {
+  outline: var(--theme-ui-outline--focus);
+  box-shadow: var(--theme-ui-box-shadow--focus);
+}
+button:active, a.button:active, a.button-red:active, body.uri--index form#mc-form select:active, user-settings form select:active, split-editor form select:active, product-period form select:active, cost-editor form select:active, body.uri--index form#mc-form input:active, user-settings form input:active, split-editor form input:active, product-period form input:active, cost-editor form input:active {
+  transition: none;
+  border-color: var(--pal-ui-bg--active--dark);
+}
+button[disabled], a[disabled].button, a[disabled].button-red, body.uri--index form#mc-form select[disabled], user-settings form select[disabled], split-editor form select[disabled], product-period form select[disabled], cost-editor form select[disabled], body.uri--index form#mc-form input[disabled], user-settings form input[disabled], split-editor form input[disabled], product-period form input[disabled], cost-editor form input[disabled] {
+  background-color: var(--pal-ui-bg--disabled);
+}
+
+demo-user-banner {
+  background-color: var(--pal-2);
+  padding: var(--theme-padding-notification);
+  color: white;
+  margin-top: 1rem;
+  line-height: var(--theme-line-height);
+}
+
+upload-table, product-summary, product-table, cost-table {
+  margin-top: 2rem;
+}
+upload-table > .actions, product-summary > .actions, product-table > .actions, cost-table > .actions {
+  margin: 1rem 0;
+}
+upload-table table, product-summary table, product-table table, cost-table table {
+  border-collapse: collapse;
+}
+upload-table table tbody tr td, product-summary table tbody tr td, product-table table tbody tr td, cost-table table tbody tr td {
+  padding: 1rem 0;
+  border-bottom: 2px solid var(--pal-utility-dark-1);
+}
+upload-table table tbody tr td a, product-summary table tbody tr td a, product-table table tbody tr td a, cost-table table tbody tr td a {
+  display: block;
+  padding: 1rem 0;
+}
+
+body > article section {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  margin: 0 auto;
+  max-width: var(--size-page-width);
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+body > article .three-quarter-width {
+  width: 65%;
+}
+body > article .one-quarter-width {
+  width: 35%;
+  position: relative;
+  height: 100%;
+  display: flex;
+}
+body > article .center {
+  text-align: center;
+}
+@media (min-width: 76rem) {
+  body > article .float {
+    width: 50%;
+  }
+}
+body > article .float.left {
+  float: left;
+}
+@media (min-width: 76rem) {
+  body > article .float.left {
+    margin-right: 2rem;
+  }
+}
+body > article .float.right {
+  float: right;
+}
+@media (min-width: 76rem) {
+  body > article .float.right {
+    margin-left: 2rem;
+  }
+}
+body > article .clear {
+  clear: both;
+}
+body > article p {
+  margin-top: 0;
+}
+body > article img {
+  width: 100%;
+  border-radius: var(--theme-ui-border-radius);
+}
+body > article h1, body > article h2 {
+  margin-top: 0;
+}
+body > article h3 {
+  margin-top: 2.5rem;
+}
+body > article .pill {
+  display: inline-block;
+  border: 4px solid;
+  border-color: var(--pal-3);
+  padding: 0.8rem 1.5rem;
+  border-radius: 50rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  font-family: var(--font-family-main);
+  font-size: var(--font-size-base);
+  cursor: default;
+  transition: all 0.3s ease-in-out !important;
+}
+@media (min-width: 46rem) {
+  body > article .pill:hover {
+    transform: scale(1.2);
+  }
+}
+body > article .pill-container {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  height: 100%;
+  width: 100%;
+}
+body > article aside {
+  font-family: var(--font-family-main);
+  background: var(--pal-3);
+  padding: 1rem;
+  width: auto;
+  border-radius: 0.5rem;
+  line-height: var(--font-readable-line-height);
+  margin-bottom: 2rem;
+}
+body > article ol, body > article ul {
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-main);
+  line-height: var(--font-readable-line-height);
+}
+body > article .back-to-top {
+  position: fixed;
+  display: block;
+  bottom: 3rem;
+  right: 3rem;
+  z-index: 1000;
+}
+body > article table {
+  width: auto;
+  border: 1px solid black;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+body > article table thead {
+  font-weight: bold;
+}
+body > article table .totals {
+  font-weight: bold;
+  margin-top: 2rem;
+}
+
+audit-list > ul > li > div h1, audit-list > ul > li > div h2, audit-list > ul > li > div h3, audit-list > ul > li > div h4, audit-list > ul > li > div h5, audit-list > ul > li > div h6 {
+  font-size: 1rem;
+}
+
+body.uri--index form#mc-form .double, user-settings form .double, split-editor form .double, product-period form .double, cost-editor form .double {
+  display: flex;
+  justify-content: stretch;
+  gap: 1rem;
+}
+body.uri--index form#mc-form .double > *, user-settings form .double > *, split-editor form .double > *, product-period form .double > *, cost-editor form .double > * {
+  flex-grow: 1;
+}
+body.uri--index form#mc-form label, user-settings form label, split-editor form label, product-period form label, cost-editor form label {
+  display: block;
+  margin: 0 0 1rem 0;
+}
+body.uri--index form#mc-form label > span, user-settings form label > span, split-editor form label > span, product-period form label > span, cost-editor form label > span {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+body.uri--index form#mc-form .form-cancel, user-settings form .form-cancel, split-editor form .form-cancel, product-period form .form-cancel, cost-editor form .form-cancel {
+  margin-left: 0.75rem;
+}
+body.uri--index form#mc-form select, user-settings form select, split-editor form select, product-period form select, cost-editor form select, body.uri--index form#mc-form input, user-settings form input, split-editor form input, product-period form input, cost-editor form input {
+  width: 100%;
+}
+body.uri--index form#mc-form .actions:not(.auto-submit), user-settings form .actions:not(.auto-submit), split-editor form .actions:not(.auto-submit), product-period form .actions:not(.auto-submit), cost-editor form .actions:not(.auto-submit) {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+body.uri--index form#mc-form [readonly], user-settings form [readonly], split-editor form [readonly], product-period form [readonly], cost-editor form [readonly] {
+  appearance: textfield;
+}
+
+body.modal split-editor, body.modal cost-editor {
+  margin-top: 25vh;
+  padding: 2rem;
+  border: var(--theme-ui-border);
+  border-radius: var(--theme-ui-border-radius);
+  background: var(--pal-6);
+  max-width: 46rem;
+  box-shadow: 1rem 1rem var(--pal-utility-dark-2);
+  outline: 1px solid white;
+}
+
+body > article, user-settings, split-list, split-editor, cost-editor, account-tabs, upload-progress, file-expiry, file-upload-list, file-uploader label, global-footer footer, global-header, delete-me, column-container, audit-list, upload-table, product-summary, product-table, cost-table {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: var(--size-page-width);
+}
+
+a {
+  cursor: pointer;
+  text-decoration: underline;
+  color: var(--pal-link-text);
+  background-color: var(--pal-link-bg);
+}
+a:focus {
+  outline: var(--theme-accessibility-outline);
+}
+button, a.button, a.button-red {
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-family-main);
+  letter-spacing: var(--font-family-main-letterspacing);
+  background-color: var(--pal-ui-bg);
+  color: var(--pal-ui-text);
+  border: var(--theme-ui-border);
+  border-radius: var(--theme-ui-border-radius);
+  transition: var(--theme-transition);
+  width: auto;
+  box-shadow: 0.25rem 0.25rem var(--pal-utility-dark-2);
+  outline: 1px solid white;
+}
+button:hover, a.button:hover, a.button-red:hover {
+  background-color: var(--pal-ui-bg--hover);
+  transition: var(--theme-transition);
+  color: var(--pal-3);
+  border-color: var(--pal-1);
+}
+button:focus:not(:active), a.button:focus:not(:active), a.button-red:focus:not(:active) {
+  outline: var(--theme-ui-outline--focus);
+  box-shadow: var(--theme-ui-box-shadow--focus);
+}
+button:active, a.button:active, a.button-red:active {
+  background-color: var(--pal-ui-bg--active--dark);
+  transition: none;
+  border-color: var(--pal-ui-bg--active--dark);
+  box-shadow: 0 0 var(--pal-utility-dark-2);
+  translate: 0.25rem 0.25rem;
+}
+button[disabled], a[disabled].button, a[disabled].button-red {
+  background-color: var(--pal-ui-bg--disabled);
+}
+button .button-red, a.button .button-red, a.button-red .button-red {
+  background-color: red;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  background-color: var(--pal-utility-light-1);
+  color: var(--pal-body);
+  font-family: var(--font-family-main);
+  overflow-x: hidden;
+}
+body.modal {
+  background: none;
+}
+body.modal global-header, body.modal global-footer, body.modal account-tabs {
+  display: none;
+}
+
+html {
+  height: 100%;
+  font-size: var(--font-size-base);
+  overflow-x: hidden;
+}
+
+iframe[name=modal] {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.75);
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  animation-name: modal-appear;
+  animation-duration: 0.1s;
+}
+@keyframes modal-appear {
+  from {
+    opacity: 0;
+    scale: 1.05;
+    background-color: transparent;
+  }
+}
+
+section {
+  flex-direction: column;
+}
+section .card-row, section .row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+section .column-one-third-width {
+  width: 33.333%;
+}
+section .column-two-thirds-width {
+  width: 66.666%;
+}
+section .column-half-width {
+  width: 50%;
+}
+section .column-three-quarter-width {
+  width: 75%;
+}
+section .column-one-quarter-width {
+  width: 25%;
+}
+section .form-container {
+  width: 50%;
+}
+section .card {
+  width: 100%;
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-radius: var(--theme-ui-border-radius);
+  transition: all 0.3s ease-in-out;
+}
+section .card h3 {
+  font-size: 1.75rem;
+}
+section .card .small {
+  font-size: 1rem;
+}
+section .card:last-of-type {
+  margin-right: 0;
+}
+@media (min-width: 46rem) {
+  section .card {
+    display: inline-block;
+    margin-right: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  section .card:last-of-type {
+    margin-right: 0;
+  }
+  section .card:hover {
+    transform: scale(1.05);
+  }
+  section .card .card-text {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  section .card h3 {
+    font-size: 1.25rem;
+  }
+}
+section .card-image {
+  width: 50%;
+}
+section .card-text {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+main {
+  margin-top: 6rem;
+}
+
+audit-list {
+  margin: 4rem auto 10rem auto;
+}
+audit-list > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+audit-list > ul > li {
+  border: 2px solid black;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  transition: ease-in-out 0.3s;
+}
+audit-list > ul > li.notification {
+  box-shadow: inset 0 0 0 4px red;
+  font-weight: bold;
+}
+audit-list > ul > li > div {
+  margin-top: 0.75rem;
+}
+audit-list > ul > li:hover {
+  scale: 1.015;
+  transition: ease-in-out 0.3s;
+}
+audit-list > ul > li > time {
+  font-size: 0.75em;
+}
+
+column-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: stretch;
+}
+@media (min-width: 46rem) {
+  column-container {
+    flex-direction: row;
+  }
+}
+column-container > * {
+  flex-grow: 1;
+}
+
+delete-me {
+  display: block;
+  max-width: 46rem;
+  margin: 4rem auto;
+  text-align: center;
+  line-height: 1.5rem;
+}
+
+global-header {
+  position: relative;
+  display: block;
+}
+global-header header > h1 {
+  position: relative;
+  text-align: center;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 900;
+}
+@media (min-width: 46rem) {
+  global-header header > h1 {
+    text-align: left;
+  }
+}
+global-header header > h1 .brand {
+  font-family: "Gilroy", sans-serif !important;
+}
+global-header header > h1 a {
+  --pal-link-text: var(--pal-utility-dark-1);
+  --pal-link-text--visited: var(--pal-utility-dark-1);
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+global-header header > h1 a:hover {
+  color: var(--pal-1);
+  transition: 0.3s ease-in-out;
+}
+global-header header nav {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
+@media (min-width: 46rem) {
+  global-header header nav {
+    position: absolute;
+    margin: 0;
+    top: 0;
+    right: 0;
+    left: auto;
+  }
+}
+global-header header nav menu {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 46rem) {
+  global-header header nav menu {
+    max-width: 40rem;
+    text-align: right;
+    margin-top: 0;
+  }
+}
+global-header header nav menu li a {
+  display: block;
+  padding: 0;
+  margin: 0 1rem;
+  background-color: var(--pal-page-bg);
+}
+global-header header nav menu li a[href="/account/audit/"], global-header header nav menu li a[href="/help/"] {
+  background: none;
+  opacity: 0.8;
+}
+global-header header nav menu li a[href="/account/audit/"] span, global-header header nav menu li a[href="/help/"] span {
+  display: none;
+}
+global-header header nav menu li a[href="/account/audit/"]:hover, global-header header nav menu li a[href="/help/"]:hover {
+  opacity: 1;
+}
+global-header header nav menu li a[href="/account/audit/"]::before, global-header header nav menu li a[href="/help/"]::before {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: calc(100% - 1rem);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+global-header header nav menu li a[href="/account/audit/"]::before {
+  mask-image: url("/asset/icon/bell-solid.svg");
+}
+global-header header nav menu li a[href="/help/"]::before {
+  mask-image: url("/asset/icon/question.svg");
+}
+global-header header nav menu li.notify a::before {
+  background-color: red;
+}
+
+global-footer {
+  color: var(--pal-6);
+  position: relative;
+  display: block;
+  margin-top: 8rem;
+  background-color: var(--pal-footer);
+}
+global-footer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -4rem;
+  width: 100%;
+  height: 16rem;
+  z-index: 1;
+  display: block;
+  background-image: url("/asset/img/abstract/zap.svg");
+  background-size: 64rem;
+  background-repeat: repeat-x;
+  background-position-x: 50%;
+  pointer-events: none;
+}
+global-footer::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 8rem);
+  top: -5.3333333333rem;
+  width: 16rem;
+  height: 16rem;
+  z-index: 1;
+  display: block;
+  background-image: url("/asset/img/abstract/tape_red.svg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  pointer-events: none;
+}
+global-footer footer {
+  padding: 8rem 0;
+  text-align: center;
+}
+global-footer footer a {
+  display: inline-block;
+  padding: 0.25rem;
+  text-decoration: none;
+  --pal-link-bg: var(--pal-1);
+  --pal-link-text: var(--pal-utility-light-1);
+  --pal-link-text--visited: var(--pal-utility-light-1);
+}
+global-footer footer a:hover {
+  background-color: var(--pal-utility-dark-1);
+}
+
+file-uploader {
+  display: block;
+  box-sizing: border-box;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+}
+@media (min-width: 46rem) {
+  file-uploader {
+    max-width: 48vw;
+    margin: 0 auto;
+  }
+}
+body.uri--index file-uploader {
+  top: auto;
+  left: auto;
+  right: auto;
+  margin-top: 0;
+}
+file-uploader.uploading form {
+  opacity: 0;
+}
+file-uploader form {
+  padding: 0;
+  margin: 1rem;
+}
+body.uri--index file-uploader form {
+  margin: 2rem 1rem 4rem 1rem;
+}
+file-uploader label {
+  background-color: var(--pal-page-bg);
+}
+body:not(.uri--index) file-uploader label {
+  padding: 0;
+}
+@media (max-width: 46rem) {
+  file-uploader label p:not(:last-of-type) {
+    display: none;
+  }
+}
+file-uploader label p a span.desktop-text {
+  display: none;
+}
+@media (min-width: 46rem) {
+  file-uploader label p a span.desktop-text {
+    display: block;
+    width: auto;
+  }
+  file-uploader label p a span.mobile-text {
+    display: none;
+  }
+}
+@media (min-width: 46rem) {
+  body:not(.uri--index) file-uploader label p {
+    display: inline-block;
+  }
+}
+file-uploader label p a {
+  --pal-link-text: var(--pal-1);
+  --pal-link-text--visited: var(--pal-1);
+  text-decoration: underline;
+  cursor: pointer;
+}
+file-uploader label input {
+  display: none;
+}
+file-uploader button[name=do][value=upload], file-uploader a[name=do][value=upload].button, file-uploader a[name=do][value=upload].button-red {
+  display: none;
+}
+
+file-upload-list {
+  display: block;
+  min-height: 24rem;
+}
+
+upload-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: none;
+  height: 19rem;
+  transition: opacity 1s;
+}
+.uploading upload-progress {
+  display: block;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sweep-in {
+  0% {
+    clip-path: polygon(0 0, 0 0, 0 0, 0 100%);
+  }
+  50% {
+    clip-path: polygon(0 0, 0 0, 60% 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+upload-progress h1 {
+  text-align: center;
+  padding: 0rem 2rem;
+  margin: 8rem 1rem;
+  max-width: 40rem;
+}
+@media (min-width: 46rem) {
+  upload-progress h1 {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+upload-progress .messages {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+}
+upload-progress p {
+  position: relative;
+  display: block;
+  margin: 2rem auto;
+  font-weight: bold;
+  animation-name: fade-in;
+  animation-fill-mode: backwards;
+  animation-duration: 1s;
+  max-width: 24rem;
+  text-align: left;
+}
+@media (min-width: 46rem) {
+  upload-progress p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+upload-progress p:nth-of-type(1) {
+  animation-delay: 2.5s;
+}
+upload-progress p:nth-of-type(1)::after {
+  animation-delay: 3.5s;
+}
+upload-progress p:nth-of-type(2) {
+  animation-delay: 5s;
+}
+upload-progress p:nth-of-type(2)::after {
+  animation-delay: 6s;
+}
+upload-progress p:nth-of-type(3) {
+  animation-delay: 7.5s;
+}
+upload-progress p:nth-of-type(3)::after {
+  animation-delay: 8.5s;
+}
+upload-progress p:nth-of-type(4) {
+  animation-delay: 10s;
+}
+upload-progress p:nth-of-type(4)::after {
+  animation-delay: 11s;
+}
+upload-progress p:nth-of-type(5) {
+  animation-delay: 12.5s;
+}
+upload-progress p:nth-of-type(5)::after {
+  animation-delay: 13.5s;
+}
+upload-progress p:nth-of-type(6) {
+  animation-delay: 15s;
+}
+upload-progress p:nth-of-type(6)::after {
+  animation-delay: 16s;
+}
+upload-progress p:nth-of-type(7) {
+  animation-delay: 17.5s;
+}
+upload-progress p:nth-of-type(7)::after {
+  animation-delay: 18.5s;
+}
+upload-progress p:nth-of-type(8) {
+  animation-delay: 20s;
+}
+upload-progress p:nth-of-type(8)::after {
+  animation-delay: 21s;
+}
+upload-progress p:nth-of-type(9) {
+  animation-delay: 22.5s;
+}
+upload-progress p:nth-of-type(9)::after {
+  animation-delay: 23.5s;
+}
+upload-progress p:nth-of-type(10) {
+  animation-delay: 25s;
+}
+upload-progress p:nth-of-type(10)::after {
+  animation-delay: 26s;
+}
+upload-progress p::before, upload-progress p::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -0.25rem;
+  right: 0;
+}
+upload-progress p::before {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--pal-utility-dark-2);
+  border-radius: 2rem;
+}
+upload-progress p::after {
+  background-color: var(--pal-1);
+  -webkit-mask-image: url("/asset/icon/check-solid.svg");
+  mask-image: url("/asset/icon/check-solid.svg");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  width: 2rem;
+  height: 2rem;
+  animation: sweep-in 0.5s both;
+  translate: 0.5rem -0.3rem;
+}
+
+account-tabs {
+  display: block;
+  margin-top: 4rem;
+  overflow-x: scroll;
+}
+account-tabs ul {
+  list-style-type: none;
+  margin: 0;
+  padding-left: 0;
+  display: flex;
+  border-bottom: 2px solid var(--pal-utility-dark-1);
+}
+account-tabs ul li {
+  margin-right: 0.5rem;
+}
+account-tabs ul li a {
+  position: relative;
+  display: block;
+  padding: 1rem 2rem;
+  border: 2px solid var(--pal-utility-dark-1);
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  border-bottom: none;
+  color: var(--pal-utility-dark-1);
+  text-decoration: none;
+}
+account-tabs ul li.selected a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1rem;
+  background-color: var(--pal-6);
+}
+
+cost-editor form a {
+  margin-left: 0.75rem;
+}
+
+product-table table {
+  text-align: left;
+  position: relative;
+  border-collapse: collapse;
+}
+product-table table tbody tr td {
+  border-bottom: 2px solid var(--pal-utility-dark-1);
+}
+product-table table tbody tr td:last-of-type {
+  font-weight: bold;
+}
+product-table table tbody tr td.albumArt {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+  padding: 1rem 0;
+}
+product-table table tbody tr td.albumArt:empty::after {
+  content: "";
+  position: absolute;
+  width: 7rem;
+  height: 7rem;
+  top: 1rem;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  background-image: url("/asset/img/product/ts_album_placeholder.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+product-table table tbody tr td.albumArt img {
+  display: block;
+  width: 7em;
+  height: 7rem;
+  object-fit: contain;
+  border-radius: 3px;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+}
+
+product-summary {
+  margin: 0;
+}
+product-summary table {
+  max-width: 32rem;
+}
+
+product-period {
+  display: block;
+  padding: 1rem;
+}
+product-period form .actions {
+  justify-content: flex-end;
+}
+
+upload-table {
+  margin-bottom: 2rem;
+}
+upload-table button[name=do][value=delete] span, upload-table a[name=do][value=delete].button span, upload-table a[name=do][value=delete].button-red span {
+  display: none;
+}
+upload-table tr.processing .earnings {
+  position: relative;
+}
+upload-table tr.processing .earnings::after {
+  content: "Processing...";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  background-color: white;
+}
+
+split-editor {
+  max-width: 46rem;
+}
+body:not(.modal) split-editor {
+  margin-top: 4rem;
+}
+split-editor .artist-product-picker {
+  display: flex;
+  gap: 1rem;
+  justify-content: stretch;
+}
+split-editor .artist-product-picker form {
+  flex-grow: 1;
+  width: calc(50% - 1rem);
+}
+split-editor .artist-product-picker form select {
+  width: 100%;
+}
+split-editor .split-percentage-list .split-percentage {
+  display: flex;
+  gap: 1rem;
+}
+split-editor .split-percentage-list .split-percentage:nth-last-of-type(2) button[name=do][value=delete-split], split-editor .split-percentage-list .split-percentage:nth-last-of-type(2) a[name=do][value=delete-split].button, split-editor .split-percentage-list .split-percentage:nth-last-of-type(2) a[name=do][value=delete-split].button-red {
+  opacity: 0;
+  pointer-events: none;
+}
+split-editor .split-percentage-list .split-percentage:nth-last-of-type(1) .contact {
+  display: none;
+}
+split-editor .split-percentage-list .split-percentage:nth-last-of-type(1) button[name=do][value=add-split], split-editor .split-percentage-list .split-percentage:nth-last-of-type(1) a[name=do][value=add-split].button, split-editor .split-percentage-list .split-percentage:nth-last-of-type(1) a[name=do][value=add-split].button-red {
+  display: none;
+}
+split-editor .split-percentage-list .split-percentage:nth-last-of-type(1) button[name=do][value=delete-split], split-editor .split-percentage-list .split-percentage:nth-last-of-type(1) a[name=do][value=delete-split].button, split-editor .split-percentage-list .split-percentage:nth-last-of-type(1) a[name=do][value=delete-split].button-red {
+  opacity: 0;
+  pointer-events: none;
+}
+split-editor .split-percentage-list .split-percentage label {
+  position: relative;
+}
+split-editor .split-percentage-list .split-percentage label.owner {
+  width: 25%;
+}
+split-editor .split-percentage-list .split-percentage label.amount {
+  width: 15%;
+}
+split-editor .split-percentage-list .split-percentage label.amount::after {
+  content: "%";
+  position: absolute;
+  bottom: 0;
+  right: 2rem;
+  padding: 0.6rem;
+  pointer-events: none;
+}
+split-editor .split-percentage-list .split-percentage label.contact {
+  flex-grow: 1;
+}
+split-editor .split-percentage-list .split-percentage label input[readonly] {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+split-editor .split-percentage-list .split-percentage label span {
+  display: none;
+}
+split-editor .split-percentage-list .split-percentage:first-of-type label span {
+  display: block;
+}
+split-editor .split-percentage-list .split-percentage .split-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+split-editor .split-percentage-list .split-percentage .split-actions button, split-editor .split-percentage-list .split-percentage .split-actions a.button, split-editor .split-percentage-list .split-percentage .split-actions a.button-red {
+  height: 2.5rem;
+}
+split-editor .split-percentage-list .split-percentage .split-actions button::before, split-editor .split-percentage-list .split-percentage .split-actions a.button::before, split-editor .split-percentage-list .split-percentage .split-actions a.button-red::before {
+  content: "";
+  display: block;
+  width: 1rem;
+  aspect-ratio: 1;
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+split-editor .split-percentage-list .split-percentage .split-actions button[name=do][value=add-split]::before, split-editor .split-percentage-list .split-percentage .split-actions a[name=do][value=add-split].button::before, split-editor .split-percentage-list .split-percentage .split-actions a[name=do][value=add-split].button-red::before {
+  background-image: url("/asset/icon/plus-solid.svg");
+}
+split-editor .split-percentage-list .split-percentage .split-actions button[name=do][value=delete-split]::before, split-editor .split-percentage-list .split-percentage .split-actions a[name=do][value=delete-split].button::before, split-editor .split-percentage-list .split-percentage .split-actions a[name=do][value=delete-split].button-red::before {
+  background-image: url("/asset/icon/minus-solid.svg");
+}
+split-editor .split-percentage-list .split-percentage .split-actions button span, split-editor .split-percentage-list .split-percentage .split-actions a.button span, split-editor .split-percentage-list .split-percentage .split-actions a.button-red span {
+  display: none;
+}
+
+split-list {
+  margin-top: 2rem;
+}
+split-list .actions {
+  margin: 1rem 0;
+}
+split-list ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-top: 1rem;
+}
+split-list ul:empty::before {
+  content: "No splits added yet!";
+  font-style: italic;
+  display: block;
+  padding: 2rem;
+  text-align: center;
+}
+split-list ul li {
+  border: var(--theme-ui-border);
+  border-radius: var(--theme-ui-border-radius);
+  margin-bottom: 1rem;
+}
+split-list ul li > div {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--pal-utility-light-1);
+  border-bottom: var(--theme-ui-border);
+  border-top-left-radius: var(--theme-ui-border-radius);
+  border-top-right-radius: var(--theme-ui-border-radius);
+}
+split-list h1, split-list h2 {
+  margin: 0;
+  padding: 1rem;
+  font-size: 1rem;
+}
+split-list h2 {
+  margin-right: auto;
+}
+split-list a {
+  display: block;
+  padding: 1rem;
+  margin-left: auto;
+}
+split-list .percentage::after {
+  content: "%";
+}
+split-list table {
+  margin: 0;
+  border-collapse: collapse;
+}
+split-list table thead tr th {
+  padding: 1rem;
+}
+split-list table thead tr th:last-of-type {
+  text-align: left;
+}
+split-list table tbody tr td {
+  padding: 1rem;
+}
+split-list table tbody tr td:nth-of-type(1) {
+  width: 25%;
+}
+split-list table tbody tr td:nth-of-type(2) {
+  width: 15%;
+}
+split-list table tbody tr td:last-of-type {
+  text-align: left;
+}
+
+user-settings form {
+  margin-top: 4rem;
+}
+
+body.uri--index html {
+  overflow-x: visible;
+}
+body.uri--index global-header {
+  margin-bottom: 5rem;
+}
+body.uri--index global-header file-uploader {
+  display: none;
+}
+body.uri--index .article-fluid {
+  margin: 0 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: block;
+}
+body.uri--index form#mc-form {
+  width: 50%;
+}
+
+body {
+  scroll-behavior: smooth;
+}
+body .dark {
+  background-color: var(--pal-5);
+  color: var(--pal-6);
+}
+body .light {
+  background-color: var(--pal-utility-light-1);
+  color: var(--pal-5);
+}
+body .mustard {
+  background-color: var(--pal-8);
+}
+body .red {
+  background-color: var(--pal-1);
+  color: var(--pal-5);
+}
+body .light-blue {
+  background-color: var(--pal-2);
+  color: var(--pal-utility-dark-1);
+}
+body > .article-fluid {
+  max-width: var(--size-page-width-fluid);
+}
+body .iframe-container {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+  border-radius: 1rem;
+  margin: 4rem auto;
+}
+body .responsive-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+::selection {
+  background-color: var(--pal-4);
+}
+
+[hidden] {
+  display: none;
+}
+
+.fade-away {
+  opacity: 0;
+  transition: 1s;
+}
+
+.auto-submit {
+  display: none;
+}
+
+body {
+  background-image: url("/asset/img/abstract/bg2.svg");
+  background-repeat: no-repeat;
+  background-position: right -12rem top -2rem;
+  background-size: 24rem;
+  background-color: var(--pal-6);
+  background-attachment: scroll;
+}
+@media (min-width: 46rem) {
+  body {
+    background-size: 32vw;
+    background-position: right -20rem top -2rem;
+  }
+}
+@media (min-width: 76rem) {
+  body {
+    background-size: 38vw;
+  }
+}
+
+table {
+  width: 100%;
+  margin-bottom: 60px;
+}
+table th, table td {
+  padding-right: 1rem !important;
+}
+table th:last-of-type, table td:last-of-type {
+  text-align: right;
+}
+table thead th {
+  color: var(--pal-5);
+  text-align: left;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--pal-5);
+}
+table thead th.centered {
+  text-align: center !important;
+}
+table tbody tr {
+  transition: 0.3s ease-in-out;
+}
+table tbody tr:hover {
+  color: var(--pal-1);
+}
+table tbody tr td.centered {
+  text-align: center !important;
+}
+
+.footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
+}
+
+input[type=text] {
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 15px;
+  border: 2px solid var(--pal-utility-dark-1);
+  outline-color: var(--pal-utility-dark-1);
+  box-shadow: none !important;
+  margin-bottom: 2rem;
+}
+
+/*# sourceMappingURL=style.css.map */

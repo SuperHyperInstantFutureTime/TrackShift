@@ -1,7 +1,14 @@
 <div class="actions">
-	<a href="/account/costs/_new/" class="button" target="modal">Add cost</a>
-</div>
-<script>
+	<details>
+		<summary>What are costs?</summary>
+		<div><div>
+		<p>Costs are the label's recoupable expenses for each release. For example: physical media manufacturing, PR, advertising.</p>
+		<p>They are deducted from a release's balance. Once a release has earned more than its costs it is in profit, and profits will be shared out according to the splits.</p>
+		</div></div>
+	</details>
+	<a href="/account/costs/_new/" class="button" target="modal">Add a cost</a>
+</div>	
+<!-- <script>
 	function filterProductsTable() {
 		// Declare variables
 		var input, filter, table, tr, td, i, txtValue;
@@ -24,7 +31,7 @@
 		}
 	}
 </script>
-<input type="text" id="costsTableSearchInput" onkeyup="filterProductsTable()" placeholder="Search costs...">
+<input type="text" id="costsTableSearchInput" onkeyup="filterProductsTable()" placeholder="Search costs..."> -->
 
 <table id="costsTable">
 	<thead>
