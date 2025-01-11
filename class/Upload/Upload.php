@@ -7,26 +7,35 @@ use DateTimeZone;
 use Generator;
 use Gt\DomTemplate\Bind;
 use Gt\DomTemplate\BindGetter;
+use Gt\Logger\Log;
+use League\Csv\Reader;
+use League\Csv\ResultSet;
+use League\Csv\Statement;
+use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Content\NullByteFilter;
 use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 
 abstract class Upload {
 	const CURRENCY_COLUMN = null;
 	const CURRENCY_OVERRIDE = null;
+	const REQUIRES_PRELOADING = false;
 
-	/** @var array<string, string> key = UPC; value = Product title */
-	public array $upcProductTitleMap = [];
 	/** @var array<string, string> key = ISRC; value = UPC */
 	public array $isrcUpcMap = [];
+	/** @var array<string, string> key = UPC; value = Product title */
+	public array $upcProductTitleMap = [];
 
-	/** @var resource */
-	protected $fileHandle;
+	protected Reader $csvReader;
+	protected int $rowIndex = 0;
 	public readonly string $filename;
 	public readonly string $basename;
 	public readonly int $size;
 	public readonly string $sizeString;
 	public readonly string $type;
 	public readonly DateTime $createdAt;
+	public ?float $processedPercentage = null;
+
 	protected string $dataRowCsvSeparator = ",";
 	/** @var array<string> */
 	protected array $headerRow;
@@ -61,12 +70,41 @@ abstract class Upload {
 			CdBabyUpload::class => "CD Baby",
 		};
 
-		$this->fileHandle = $this->openFile();
+//		if (!in_array("strip_null_bytes", stream_get_filters())) {
+//			stream_filter_register("strip_null_bytes", NullByteFilter::class);
+//		}
+		$fh = fopen($this->filePath, "r");
+		$sample = fread($fh, 1024);
+		fclose($fh);
+		$encoding = mb_detect_encoding($sample, ['UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1', 'Windows-1252'], true);
+
+		$encodingMap = [
+			'UTF-8' => null, // No conversion needed if already UTF-8
+			'UTF-16LE' => 'convert.iconv.UTF-16LE.UTF-8',
+			'UTF-16BE' => 'convert.iconv.UTF-16BE.UTF-8',
+			'ISO-8859-1' => 'convert.iconv.ISO-8859-1.UTF-8',
+			'Windows-1252' => 'convert.iconv.Windows-1252.UTF-8',
+		];
+
+		$this->openFile();
+
+		if($streamName = $encodingMap[$encoding] ?? null) {
+			$this->csvReader->appendStreamFilterOnRead($streamName);
+		}
+	}
+
+	public function setProcessedPercentage(float $percentage):void {
+		$this->processedPercentage = $percentage;
 	}
 
 	#[Bind("isProcessing")]
 	public function isProcessing():bool {
-		return is_null($this->usagesProcessed);
+		return $this->processedPercentage < 100;
+	}
+
+	#[BindGetter]
+	public function getProcessedPercentageRounded():int {
+		return $this->processedPercentage;
 	}
 
 	/** @param array<string, string> $row */
@@ -81,17 +119,22 @@ abstract class Upload {
 	/** @param array<string, string> $row */
 	abstract public function extractEarningDate(array $row):DateTime;
 
+	public function preloadMissingProductTitleData(array $row):void {
+		// TODO: Most uploads will not have anything to do here, but
+		// for those that do, this will always be called.
+	}
+
 	public function getDefaultCurrency():Currency {
-		$cursor = ftell($this->fileHandle);
+		$currency = null;
 
-		$rowData = $this->getNextRowData();
-		$currency = is_null(static::CURRENCY_OVERRIDE)
-			? Currency::fromCode($rowData[static::CURRENCY_COLUMN])
-			: Currency::fromCode(static::CURRENCY_OVERRIDE);
+		foreach($this->csvReader as $rowData) {
+			if($currencyCode = $rowData[static::CURRENCY_COLUMN]) {
+				$currency = Currency::fromCode($currencyCode);
+				break;
+			}
+		}
 
-		fseek($this->fileHandle, $cursor);
-
-		return $currency;
+		return $currency ?? Currency::fromCode(static::CURRENCY_OVERRIDE);
 	}
 
 	/**
@@ -101,61 +144,31 @@ abstract class Upload {
 	public function loadUsageForInternalLookup(array $row):void {
 	}
 
-	/** @return resource */
-	public function openFile() {
-		return fopen($this->filePath, "r");
+	public function openFile():void {
+		$this->csvReader = Reader::createFromPath($this->filePath);
+		$this->csvReader->setHeaderOffset(0);
 	}
 
 	/**
 	 * This function is the default behaviour for all Upload types - it Generates a set of key-value-pairs for each
 	 * row in the file - the default behaviour is working with CSV data, but other types might use other formats.
-	 * @return Generator<null|array<string, string>>
+	 * @return Generator<ResultSet>
 	 */
 	public function generateDataRows():Generator {
-		while(!feof($this->fileHandle)) {
-			$nextRowData = $this->getNextRowData();
-			if($nextRowData) {
-				yield $nextRowData;
-			}
+		$i = 0;
+
+		do {
+			$stmt = Statement::create()->offset($i)->limit(1);
+			$resultSet = $stmt->process($this->csvReader);
+			yield $resultSet;
+			$i++;
 		}
-		fseek($this->fileHandle, 0);
+		while(count($resultSet) > 0);
 	}
 
 	/** @return array<string> */
 	protected function getHeaderRow():array {
-		$cursor = ftell($this->fileHandle);
-		$line = fgets($this->fileHandle);
-		$line = $this->stripNullBytes($line);
-		$line = $this->correctEncoding($line);
-		$row = str_getcsv($line, $this->dataRowCsvSeparator);
-
-		if($cursor > 0) {
-			fseek($this->fileHandle, $cursor);
-		}
-
-		return $row;
-	}
-
-	/** @return null|array<string, string> */
-	protected function getNextRowData():?array {
-		if(!isset($this->headerRow)) {
-			$this->headerRow = $this->getHeaderRow();
-		}
-
-		if(ftell($this->fileHandle) === 0) {
-			fgets($this->fileHandle);
-		}
-
-		$line = fgets($this->fileHandle);
-		$line = $this->stripNullBytes($line);
-		$line = $this->correctEncoding($line);
-		$row = str_getcsv($line, $this->dataRowCsvSeparator);
-
-		if(!$row[0]) {
-			return null;
-		}
-
-		return $this->rowToData($this->headerRow, $row);
+		return $this->csvReader->getHeader();
 	}
 
 	#[BindGetter]
@@ -169,7 +182,6 @@ abstract class Upload {
 	}
 
 	/**
-	 * TODO: Extract this into a CSVProcessor trait or similar.
 	 * Convert an indexed array of row data into an associative array,
 	 * according to the provided header row.
 	 * @param array<string> $headerRow
@@ -184,23 +196,6 @@ abstract class Upload {
 			}
 		}
 		return $data;
-	}
-
-	private function correctEncoding(string $line):string {
-		$encoding = mb_detect_encoding($line, ['UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1'], true);
-		if($encoding !== "UTF-8") {
-			if (substr($line, 0, 2) === "\xFF\xFE") {
-				$line = substr($line, 2);
-			}
-			$line = mb_convert_encoding($line, "UTF-8", $encoding);
-		}
-		return $line;
-	}
-
-
-	protected function stripNullBytes(string $line):string {
-		$line = mb_convert_encoding($line, "UTF-8", "UTF-8");
-		return str_replace(["\xA8", "\xC3", "\xB8", "\x8F", "\xEF", "\xBB", "\xBF"], "", $line);
 	}
 
 	protected function calculateSizeString():string {

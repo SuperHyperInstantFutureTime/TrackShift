@@ -11,6 +11,7 @@ class NormalisedString implements Stringable {
 		$text = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $text);
 		$text = preg_replace("/[^\w ]/", "", $text);
 		$text = str_replace(" ", "_", $text);
+		$text = str_replace("__", "_", $text);
 		return strtolower($text);
 	}
 }

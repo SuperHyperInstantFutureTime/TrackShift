@@ -4,10 +4,21 @@ select
 	Upload.filePath,
 	Upload.type,
 	totalEarningCache,
+# 	sum(UsageOfProduct.earning) as totalEarningCache,
 	usagesProcessed
 
 from
 	Upload
+
+# left join
+# 	`Usage`
+# on
+# 	`Usage`.uploadId = Upload.id
+#
+# left join
+# 	`UsageOfProduct`
+# on
+# 	UsageOfProduct.usageId = `Usage`.id
 
 where
 	userId = :userId

@@ -1,10 +1,13 @@
 <?php
 namespace SHIFT\TrackShift\Upload;
+use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\Row;
 use Gt\Input\InputData\Datum\FileUpload;
 use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
+use League\Csv\Reader;
 use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Content\NullByteFilter;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
 
@@ -14,6 +17,14 @@ use SHIFT\TrackShift\Royalty\Money;
  */
 readonly class UploadRepository extends Repository {
 	const DIR_UPLOAD = "data/upload";
+
+	public function __construct(QueryCollection $db) {
+		parent::__construct($db);
+
+		if (!in_array("strip_null_bytes", stream_get_filters())) {
+			stream_filter_register("strip_null_bytes", NullByteFilter::class);
+		}
+	}
 
 	public function purgeOldFiles():void {
 // TODO: this needs to be tested and implemented.
@@ -37,12 +48,8 @@ readonly class UploadRepository extends Repository {
 			}
 			$uploadedFile->moveTo($targetPath);
 
-// TODO: Handle the file encoding.
-			$this->ensureCorrectEncoding($targetPath);
-			$this->ensureUnixLineEnding($targetPath);
-			$this->ensureSeparatorMatchesExtension($targetPath);
-
 			$uploadType = $this->detectUploadType($targetPath);
+			Log::debug("Detected upload type: $uploadType");
 			/** @var Upload $upload */
 			$upload = new $uploadType(new Ulid("upload"), $targetPath);
 
@@ -53,6 +60,7 @@ readonly class UploadRepository extends Repository {
 				"type" => $upload::class,
 			]);
 
+// TODO: Handle failures better.
 //			if($upload instanceof UnknownUpload) {
 //				$this->auditRepository->notify(
 //					$user,
@@ -78,11 +86,8 @@ readonly class UploadRepository extends Repository {
 		return self::DIR_UPLOAD . "/$user->id";
 	}
 
-	public function getById(string $id, User $user):?Upload {
-		return $this->rowToUpload($this->db->fetch("getById", [
-			"id" => $id,
-			"userId" => $user->id
-		]));
+	public function getById(string $id):?Upload {
+		return $this->rowToUpload($this->db->fetch("getById", $id));
 	}
 
 	/** @return array<Upload> */
@@ -101,6 +106,21 @@ readonly class UploadRepository extends Repository {
 		}
 
 		return $uploadList;
+	}
+
+	public function getTotalPercentageProcessed(User $user):int {
+		$total = 0;
+		$i = null;
+
+		foreach($this->getUploadsForUser($user) as $i => $upload) {
+			$total += $upload->processedPercentage;
+		}
+
+		if($i) {
+			$total /= $i + 1;
+		}
+
+		return $total;
 	}
 
 	public function delete(Upload $upload, User $user):void {
@@ -159,7 +179,7 @@ readonly class UploadRepository extends Repository {
 			$type = $this->detectUploadTypeFromCsv($filePath);
 		}
 		elseif($this->isTsv($filePath)) {
-			$type = $this->detectUploadTypeFromTsv($filePath);
+			$type = $this->detectUploadTypeFromCsv($filePath, "\t");
 		}
 
 		return $type;
@@ -188,13 +208,13 @@ readonly class UploadRepository extends Repository {
 
 		return true;
 	}
-	private function hasCsvColumns(
-		string $filePath,
-		string...$columnsToCheck,
-	):bool {
-		$firstLine = $this->getCsvLine(fopen($filePath, "r"));
-		return $this->allColumnsExist($firstLine, $columnsToCheck);
-	}
+//	private function hasCsvColumns(
+//		string $filePath,
+//		string...$columnsToCheck,
+//	):bool {
+//		$firstLine = $this->getCsvLine(fopen($filePath, "r"));
+//		return $this->allColumnsExist($firstLine, $columnsToCheck);
+//	}
 
 	private function hasTsvColumns(
 		string $filePath,
@@ -239,31 +259,26 @@ readonly class UploadRepository extends Repository {
 
 // TODO: We probably should always automatically convert to a kvp, otherwise this function is VERY similar to detectUploadTypeFromTsv and potentially others.
 
-	protected function detectUploadTypeFromCsv(mixed $filePath):string {
+	protected function detectUploadTypeFromCsv(mixed $filePath, string $delimiter = ","):string {
 		$type = UnknownUpload::class;
-		if($this->hasCsvColumns($filePath, ...PRSStatementUpload::KNOWN_COLUMNS)) {
+		$reader = Reader::createFromPath($filePath);
+		$reader->appendStreamFilterOnRead("strip_null_bytes");
+		$reader->setDelimiter($delimiter);
+		$header = $reader->first();
+
+		if($this->allColumnsExist($header, PRSStatementUpload::KNOWN_COLUMNS)) {
 			$type = PRSStatementUpload::class;
 		}
-		elseif($this->hasCsvColumns($filePath, ...BandcampUpload::KNOWN_COLUMNS)) {
+		elseif($this->allColumnsExist($header, BandcampUpload::KNOWN_COLUMNS)) {
 			$type = BandcampUpload::class;
 		}
-		elseif($this->hasCsvColumns($filePath, ...CargoDigitalUpload::KNOWN_COLUMNS)) {
+		elseif($this->allColumnsExist($header, CargoDigitalUpload::KNOWN_COLUMNS)) {
 			$type = CargoDigitalUpload::class;
 		}
-		elseif($this->hasCsvColumns($filePath, ...TuneCoreUpload::KNOWN_COLUMNS)) {
+		elseif($this->allColumnsExist($header, TuneCoreUpload::KNOWN_COLUMNS)) {
 			$type = TuneCoreUpload::class;
 		}
-		return $type;
-	}
 
-	protected function detectUploadTypeFromTsv(mixed $filePath):string {
-		$type = UnknownUpload::class;
-		if($this->hasTsvColumns($filePath, ...DistroKidUpload::KNOWN_COLUMNS)) {
-			$type = DistroKidUpload::class;
-		}
-		elseif($this->hasTsvColumns($filePath, ...CdBabyUpload::KNOWN_COLUMNS)) {
-			$type = CdBabyUpload::class;
-		}
 		return $type;
 	}
 
@@ -281,12 +296,20 @@ readonly class UploadRepository extends Repository {
 
 		/** @var class-string<Upload> $type */
 		$type = $row->getString("type");
-		return new $type(
+		/** @var Upload $upload */
+		$upload = new $type(
 			$row->getString("id"),
 			$row->getString("filePath"),
 			$earnings,
 			$processedAt,
 		);
+
+		$usageProcessedPercentage = $this->db->fetchFloat("getProcessedPercentage", [
+			"uploadId" => $upload->id,
+		]) ?? 0;
+		$upload->setProcessedPercentage($usageProcessedPercentage);
+
+		return $upload;
 	}
 
 	private function ensureCorrectEncoding(string $filePath):void {

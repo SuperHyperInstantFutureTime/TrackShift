@@ -19,9 +19,7 @@ inner join
 on
 	UsageOfProduct.productId = Product.id
 and
-	UsageOfProduct.earningDate >= :periodFrom
-and
-	UsageOfProduct.earningDate <= :periodTo
+	(UsageOfProduct.earningDate between :periodFrom and :periodTo)
 
 left join
 	(
@@ -67,7 +65,7 @@ group by
 	Product.id
 
 order by
-	min(Product.totalEarningCache) desc
+	sum(UsageOfProduct.earning) desc
 
 limit :limit
 offset :offset

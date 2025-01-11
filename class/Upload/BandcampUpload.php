@@ -22,7 +22,7 @@ class BandcampUpload extends Upload {
 
 	public function extractEarning(array $row):Money {
 		return new Money(
-			(float)$row["net amount"],
+			(float)($row["net amount"] ?? 0),
 			Currency::fromCode($row["currency"]),
 		);
 	}

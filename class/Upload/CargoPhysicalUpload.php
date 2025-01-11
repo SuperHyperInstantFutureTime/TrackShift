@@ -54,9 +54,9 @@ class CargoPhysicalUpload extends Upload {
 	public function generateDataRows():Generator {
 		$headerRow = null;
 
-		$reader = new Reader();
-		$reader->open($this->filePath);
-		$sheet = $reader->getSheetIterator()->current();
+		$xlsReader = new Reader();
+		$xlsReader->open($this->filePath);
+		$sheet = $xlsReader->getSheetIterator()->current();
 		foreach($sheet->getRowIterator() as $excelRow) {
 			$row = $excelRow->toArray();
 			if(!$row[0]) {

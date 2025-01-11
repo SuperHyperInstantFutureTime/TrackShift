@@ -10,8 +10,12 @@ class CurrencyExchange {
 	const DEFAULT_JSON = [
 		"base" => "USD",
 		"rates" => [
+			"AUD" => 1.50,
+			"CAD" => 1.35,
 			"EUR" => 0.85,
 			"GBP" => 0.65,
+			"MXN" => 19.90,
+			"NZD" => 1.60,
 		]
 	];
 
@@ -21,7 +25,8 @@ class CurrencyExchange {
 			mkdir($currencyDir, recursive: true);
 		}
 
-		$urlTemplate = "https://openexchangerates.org/api/historical/{{dateString}}.json?app_id=$apiKey&symbols=EUR,GBP&show_alternative=false&prettyprint=true";
+		$symbolList = implode(",", array_keys(self::DEFAULT_JSON["rates"]));
+		$urlTemplate = "https://openexchangerates.org/api/historical/{{dateString}}.json?app_id=$apiKey&symbols=$symbolList&show_alternative=false&prettyprint=true";
 		$date = new DateTime("2010-01-01");
 		$dateNow = new DateTime();
 

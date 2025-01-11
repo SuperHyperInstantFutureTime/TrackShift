@@ -30,6 +30,7 @@
 @import "component/audit-list";
 @import "component/column-container";
 @import "component/delete-me";
+@import "component/demo-user-banner";
 @import "component/global-header";
 @import "component/global-footer";
 @import "component/file-uploader";
@@ -39,6 +40,7 @@
 @import "component/account-tabs";
 @import "component/cost-editor";
 @import "component/cost-table";
+@import "component/processing-indicator";
 @import "component/product-table";
 @import "component/product-summary";
 @import "component/product-period";
@@ -51,7 +53,7 @@
 @import "page/_common";
 
 ::selection {
-	background-color: var(--pal-4);
+	background-color: var(--pal-7);
 }
 
 [hidden] {
@@ -149,22 +151,4 @@ input[type="text"] {
 	outline-color: var(--pal-utility-dark-1);
 	box-shadow:none !important;
 	margin-bottom:2rem
-}
-
-
-demo-user-banner {
-	background-color: var(--pal-2);
-	padding:var(--theme-padding-notification);
-	color:white;
-	margin-top:1rem;
-	line-height: var(--theme-line-height);
-	text-align: center;
-
-	a {
-		color: var(--pal-6);
-
-		&:hover {
-			color: var(--pal-5)
-		}
-	}
 }

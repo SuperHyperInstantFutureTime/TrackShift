@@ -8,22 +8,38 @@ upload-table {
 		}
 	}
 
-	tr.processing {
-		.earnings {
-			position: relative;
+	tr {
+		&.processing {
+			.earnings {
+				position: relative;
+				color: transparent;
 
-			&::after {
-				content: "Processing...";
-				position: absolute;
-				left: 0;
-				right: 0;
-				top: 0;
-				bottom: 0;
-				display: flex;
-				align-items: center;
-				background-color: white;
+				&::after {
+					content: "Processing...";
+					position: absolute;
+					left: 0;
+					right: 0;
+					top: 0;
+					bottom: 0;
+					display: flex;
+					align-items: center;
+					color: var(--pal-ui-text);
+				}
+
+				&[data-processing]::after {
+					content: "Processing " attr(data-processing) "% ...";
+				}
 			}
+
 		}
 
+		&.new {
+			@keyframes highlight-new {
+				from {
+					background-color: #81df6a;
+				}
+			}
+			animation: highlight-new 2s forwards 1;
+		}
 	}
 }

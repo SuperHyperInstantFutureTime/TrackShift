@@ -7,6 +7,7 @@ upload-progress {
 	display: none;
 	height: 19rem;
 	transition: opacity 1s;
+	background-color: white;
 
 	.uploading & {
 		display: block;

@@ -5,6 +5,7 @@ use DateTimeInterface;
 use Gt\Database\Query\QueryCollection;
 use Gt\Database\Result\Row;
 use Gt\Logger\Log;
+use Gt\Ulid\Ulid;
 use SHIFT\Spotify\Entity\EntityType;
 use SHIFT\Spotify\Entity\FilterQuery;
 use SHIFT\Spotify\Entity\SearchFilter;
@@ -216,6 +217,16 @@ readonly class ProductRepository extends Repository {
 			]);
 		}
 	}
+
+	public function storeProductEarning(string $productId, float $earning, DateTimeInterface $dateTime):void {
+		$this->db->insert("storeProductEarning", [
+			"id" => new Ulid("PE"),
+			"productId" => $productId,
+			"earning" => $earning,
+			"date" => $dateTime,
+		]);
+	}
+
 
 	public function clearEarningCache(mixed $product):void {
 		$this->db->update("clearProductEarningCache", $product->id);

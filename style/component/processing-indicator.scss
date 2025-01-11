@@ -1,0 +1,31 @@
+processing-indicator {
+	display: block;
+	margin: 1rem 1rem;
+	text-align: center;
+
+	@media(min-width: $break-small) {
+		max-width: 24rem;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	@keyframes wave-move-left {
+		to {
+			background-position-x: 1000%;
+		}
+	}
+
+	&::before, &::after {
+		content: "";
+		display: block;
+		background-image: url("/asset/img/abstract/wave.svg");
+		background-size: auto 100%;
+		background-position-y: 50%;
+		width: 100%;
+		height: 1rem;
+		animation: wave-move-left 10s infinite linear;
+	}
+	&::after {
+		animation-direction: reverse;
+	}
+}

@@ -10,8 +10,6 @@ from
 	Upload
 
 where
-	id = :id
-and
-	userId = :userId
+	id = ?
 
 limit 1

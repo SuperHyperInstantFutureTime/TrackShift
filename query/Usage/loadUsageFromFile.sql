@@ -6,5 +6,7 @@ lines terminated by '\n'
 (
 	id,
 	uploadId,
-	data
+	data,
+	extractedArtistName,
+	extractedProductTitle
 )

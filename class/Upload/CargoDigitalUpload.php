@@ -48,11 +48,11 @@ class CargoDigitalUpload extends Upload {
 		return new DateTime("$year-$monthOfNextQuarter-01");
 	}
 
-	public function openFile() {
+	public function openFile():void {
 		if(pathinfo($this->filePath, PATHINFO_EXTENSION) === "zip") {
 			$this->filePath = new ZipFileFinder($this->filePath);
 		}
 
-		return parent::openFile();
+		parent::openFile();
 	}
 }

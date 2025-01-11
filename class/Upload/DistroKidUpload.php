@@ -36,6 +36,7 @@ use SHIFT\TrackShift\Usage\UsageRepository;
  * product by UPC.
  */
 class DistroKidUpload extends Upload {
+	const REQUIRES_PRELOADING = true;
 	const CURRENCY_OVERRIDE = Currency::USD->name;
 	const KNOWN_COLUMNS = ["Reporting Date", "Sale Month", "Store", "Artist", "Title", "ISRC", "UPC", "Song/Album"];
 
@@ -64,19 +65,20 @@ class DistroKidUpload extends Upload {
 		$upc = trim($row["UPC"] ?? "");
 		$isrc = trim($row["ISRC"] ?? "");
 
-		if(isset($this->upcProductTitleMap[$upc])) {
-			return $this->upcProductTitleMap[$upc];
-		}
-
-		if(!$upc) {
-			$upc = $this->getUpc($isrc, $upc);
-		}
-
 		if($upc) {
-			return UsageRepository::UNSORTED_UPC . $upc;
+			return $this->upcProductTitleMap[$upc]
+				?? UsageRepository::UNSORTED_UPC . $upc;
 		}
 
-		return UsageRepository::UNSORTED_ISRC . $isrc;
+		if($isrc) {
+			if($cachedUpc = $this->isrcUpcMap[$isrc] ?? null) {
+				return UsageRepository::UNSORTED_UPC . $cachedUpc;
+			}
+			return UsageRepository::UNSORTED_ISRC . $isrc;
+		}
+		else {
+			return $row["Title"];
+		}
 	}
 
 	public function extractEarning(array $row):Money {
@@ -88,6 +90,22 @@ class DistroKidUpload extends Upload {
 
 	public function extractEarningDate(array $row):DateTime {
 		return new DateTime($row["Reporting Date"]);
+	}
+
+	public function preloadMissingProductTitleData(array $row):void {
+		$upc = trim($row["UPC"] ?? "");
+		$isrc = trim($row["ISRC"] ?? "");
+
+		// $this->isrcUpcMap - key = ISRC; value = UPC
+		// $this->upcProductTitleMap - key = UPC; value = Product title
+
+		if($isrc && $upc) {
+			$this->isrcUpcMap[$isrc] = $upc;
+		}
+
+		if($upc && !$isrc) {
+			$this->upcProductTitleMap[$upc] = $row["Title"];
+		}
 	}
 
 	/**
