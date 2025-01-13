@@ -1,7 +1,7 @@
 SELECT
-	(COUNT(*) / (SELECT COUNT(*) FROM TrackShift.`Usage` WHERE uploadId = :uploadId)) * 100 AS percentage
+	(COUNT(*) / (SELECT COUNT(*) FROM `Usage` WHERE uploadId = :uploadId)) * 100 AS percentage
 FROM
-	TrackShift.`Usage`
+	`Usage`
 
 WHERE
 	uploadId = :uploadId
