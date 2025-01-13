@@ -1,22 +1,20 @@
 select
+	`Usage`.id,
 	productId,
+	earning,
 	earningDate,
 	extractedArtistName,
-	extractedProductTitle,
-	sum(earning) as earningSum
+	extractedProductTitle
 
 from
 	`Usage`
 
-inner join
+left join
 	UsageOfProduct
 on
 	UsageOfProduct.usageId = `Usage`.id
 
 where
-	processed is not null
+	`Usage`.processed is not null
 and
-	processedProductEarnings is null
-
-group by
-	productId, earningDate
+	`Usage`.processedProductEarnings is null

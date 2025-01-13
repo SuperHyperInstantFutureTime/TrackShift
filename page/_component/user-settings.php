@@ -7,7 +7,9 @@ use SHIFT\TrackShift\Auth\Settings;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Auth\UserRepository;
 use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Repository\DatabaseTransaction;
 use SHIFT\TrackShift\Royalty\Currency;
+use SHIFT\TrackShift\Upload\UploadRepository;
 use SHIFT\TrackShift\Usage\UsageRepository;
 
 function go(Element $element, Binder $binder, Settings $settings):void {
@@ -29,7 +31,9 @@ function go(Element $element, Binder $binder, Settings $settings):void {
 function do_save(
 	UserRepository $userRepository,
 	UsageRepository $usageRepository,
+	UploadRepository $uploadRepository,
 	ProductRepository $productRepository,
+	DatabaseTransaction $transaction,
 	Settings $settings,
 	User $user,
 	Input $input,
@@ -50,11 +54,14 @@ function do_save(
 					Currency::fromCode($value),
 					$user,
 					$productRepository,
+					$uploadRepository,
+					$transaction,
 				);
 			}
 		}
 	}
 
+	$uploadRepository->cacheEarnings();
 	$userRepository->setUserSettings($user, $settings);
 	$response->reload();
 }

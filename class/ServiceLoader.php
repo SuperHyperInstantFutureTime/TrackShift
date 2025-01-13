@@ -15,6 +15,7 @@ use SHIFT\TrackShift\Auth\UserRepository;
 use SHIFT\TrackShift\Content\ContentRepository;
 use SHIFT\TrackShift\Cost\CostRepository;
 use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Repository\DatabaseTransaction;
 use SHIFT\TrackShift\Split\SplitRepository;
 use SHIFT\TrackShift\Upload\UploadRepository;
 use SHIFT\TrackShift\Usage\UsageRepository;
@@ -31,6 +32,21 @@ class ServiceLoader extends DefaultServiceLoader {
 //			$this->container->get(UserRepository::class),
 //		);
 //	}
+
+	public function loadDatabaseTransaction():DatabaseTransaction {
+		$database = $this->container->get(Database::class);
+		$startCallback = function()use ($database) {
+			$database->executeSql("start transaction");
+		};
+		$commitCallback = function()use ($database) {
+			$database->executeSql("commit");
+		};
+
+		return new DatabaseTransaction(
+			$startCallback,
+			$commitCallback,
+		);
+	}
 
 	public function loadContentRepo():ContentRepository {
 		return new ContentRepository("data/web-content");

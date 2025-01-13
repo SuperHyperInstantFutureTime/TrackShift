@@ -3,6 +3,7 @@ namespace SHIFT\TrackShift\Royalty;
 
 use DateInterval;
 use DateTime;
+use Gt\Logger\Log;
 use JetBrains\PhpStorm\ArrayShape;
 
 class CurrencyExchange {
@@ -32,6 +33,7 @@ class CurrencyExchange {
 
 		while($date <= $dateNow) {
 			$date = $date->add(new DateInterval("P1W"));
+			Log::debug("Caching for " . $date->format("Y-m-d"));
 			$dateString = $date->format("Y-m-d");
 			$cacheJsonFilePath = "data/cache/currency/$dateString.json";
 			if(file_exists($cacheJsonFilePath)) {
@@ -79,7 +81,7 @@ class CurrencyExchange {
 		}
 
 
-		if($money->currency->name === $json["base"]) {
+		if($money->currency?->name === $json["base"]) {
 // Direct conversion from base currency to target currency.
 			return $money->value * $json["rates"][$toCurrency->name];
 		}

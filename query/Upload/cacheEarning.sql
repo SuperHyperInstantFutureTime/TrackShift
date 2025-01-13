@@ -1,5 +1,5 @@
 update Upload
 set
-	totalEarningCache = :earning
+	totalEarningCache = :totalEarning
 where
 	id = :uploadId

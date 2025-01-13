@@ -20,8 +20,6 @@ readonly class Split extends Entity implements IteratorAggregate {
 	}
 
 	public function getIterator():Traversable {
-		$splitPercentageList = $this->splitPercentageList;
-		array_push($splitPercentageList, new RemainderSplitPercentage($splitPercentageList));
-		return new ArrayIterator($splitPercentageList);
+		return new ArrayIterator($this->splitPercentageList);
 	}
 }

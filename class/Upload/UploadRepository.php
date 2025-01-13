@@ -7,6 +7,7 @@ use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
 use League\Csv\Reader;
 use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Content\EncodingFilter;
 use SHIFT\TrackShift\Content\NullByteFilter;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
@@ -144,10 +145,20 @@ readonly class UploadRepository extends Repository {
 		}
 	}
 
-	public function setProcessed(Upload $upload, User $user):void {
+	/** @return array<Upload> */
+	public function getUnprocessed():array {
+		$uploadList = [];
+
+		foreach($this->db->fetchAll("getUnprocessed") as $row) {
+			array_push($uploadList, $this->rowToUpload($row));
+		}
+
+		return $uploadList;
+	}
+
+	public function setProcessed(Upload $upload):void {
 		$this->db->update("setProcessed", [
 			"id" => $upload->id,
-			"userId" => $user->id,
 		]);
 	}
 
@@ -208,13 +219,24 @@ readonly class UploadRepository extends Repository {
 
 		return true;
 	}
-//	private function hasCsvColumns(
-//		string $filePath,
-//		string...$columnsToCheck,
-//	):bool {
-//		$firstLine = $this->getCsvLine(fopen($filePath, "r"));
-//		return $this->allColumnsExist($firstLine, $columnsToCheck);
-//	}
+
+	public function cacheEarnings():int {
+		$numUpdated = 0;
+
+		foreach($this->db->fetchAll("getUncachedEarnings") as $row) {
+			$totalEarning = $this->db->fetchFloat("calculateTotalEarning", $row->getString("id"));
+			$numUpdated += $this->db->update("cacheEarning", [
+				"uploadId" => $row->getString("id"),
+				"totalEarning" => $totalEarning,
+			]);
+		}
+
+		return $numUpdated;
+	}
+
+	public function clearEarningCache(Upload $upload):void {
+		$this->db->update("clearEarningCache", $upload->id);
+	}
 
 	private function hasTsvColumns(
 		string $filePath,
@@ -257,14 +279,18 @@ readonly class UploadRepository extends Repository {
 		return true;
 	}
 
-// TODO: We probably should always automatically convert to a kvp, otherwise this function is VERY similar to detectUploadTypeFromTsv and potentially others.
-
 	protected function detectUploadTypeFromCsv(mixed $filePath, string $delimiter = ","):string {
 		$type = UnknownUpload::class;
 		$reader = Reader::createFromPath($filePath);
+
+		$encodingFilter = new EncodingFilter($filePath);
+		if($streamName = $encodingFilter->getStreamName()) {
+			$reader->appendStreamFilterOnRead($streamName);
+		}
+
 		$reader->appendStreamFilterOnRead("strip_null_bytes");
 		$reader->setDelimiter($delimiter);
-		$header = $reader->first();
+		$header = $reader->nth(0);
 
 		if($this->allColumnsExist($header, PRSStatementUpload::KNOWN_COLUMNS)) {
 			$type = PRSStatementUpload::class;

@@ -1,6 +1,7 @@
 <?php
 namespace SHIFT\TrackShift\Usage;
 
+use DateTime;
 use Gt\Database\Database;
 use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
@@ -10,6 +11,7 @@ use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Auth\UserRepository;
 use SHIFT\TrackShift\Product\Product;
 use SHIFT\TrackShift\Product\ProductRepository;
+use SHIFT\TrackShift\Repository\DatabaseTransaction;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\CurrencyExchange;
@@ -20,7 +22,7 @@ readonly class UsageRepository extends Repository {
 	const UNSORTED_UPC = "::UNSORTED_UPC::";
 	const UNSORTED_ISRC = "::UNSORTED_ISRC::";
 
-	public function extractFromUploadedFile(
+	public function extractProductsFromUpload(
 		Upload $upload,
 	):int {
 		$dbUsageFilePath = "/tmp/trackshift/usages-csv/$upload->id/usage.csv";
@@ -40,32 +42,34 @@ readonly class UsageRepository extends Repository {
 		}
 
 		$csvRowCount = 0;
-		foreach($upload->generateDataRows() as $resultSet) {
-			$row = $resultSet->first();
+		foreach($upload->generateDataRows() as $row) {
 			$usageId = (string)(new Ulid("usage"));
-			$json = json_encode($resultSet);
+			$json = json_encode($row);
 			if($error = json_last_error()) {
 				Log::critical("Error $error: " . json_last_error_msg(), $row);
 			}
 
+			// This line is currently only DistroKid-speciifc:
 			$upload->loadUsageForInternalLookup($row);
+
+			$artistName = $upload->extractArtistName($row);
 			$productTitle = $upload->extractProductTitle($row);
 
 			fputcsv($fhUsages, [
 				$usageId,
 				$upload->id,
-				$json,
-				$upload->extractArtistName($row),
+				base64_encode($json),
+				$artistName,
 				$productTitle,
 			]);
 			$csvRowCount++;
-			Log::debug("Created row $csvRowCount.");
 		}
 
 		fclose($fhUsages);
 		$this->db->insert("loadUsageFromFile", [
 			"infileName" => $dbUsageFilePath,
 		]);
+		$this->db->update("base64DecodeJson");
 
 		return $csvRowCount;
 	}
@@ -131,10 +135,14 @@ readonly class UsageRepository extends Repository {
 			}
 
 			$chunkStartTime = microtime(true);
-			$db->executeSql("start transaction");
 			$fhUsages = fopen($dbUOPPath, "w");
 
+			$artistName = "|||UNPROCESSED|||";
+			$productTitle = "|||UNPROCESSED|||";
+
 			foreach($unprocessedRows as $row) {
+				$db->executeSql("start transaction");
+
 				$usageId = $row->getString("id");
 				$uploadId = $row->getString("uploadId");
 
@@ -145,12 +153,27 @@ readonly class UsageRepository extends Repository {
 				}
 				$userId = $row->getString("userId");
 				$user = $userCache[$userId] ?? $userRepository->getById($userId);
+				$userCache[$user->id] = $user;
+
 				$artistName = $row->getString("extractedArtistName");
 				$productTitle = $row->getString("extractedProductTitle");
+
+				if(!$artistName || !$productTitle) {
+// Some usage rows do not have any data in them, such as Bandcamp payout rows.
+					$totalProcessed += $this->db->update("setProcessed", $usageId);
+					continue;
+				}
 
 				$artist = $artistCache["$artistName||$userId"] ?? null;
 				if(!$artist) {
 					$artist = $artistRepository->getByName($artistName, $user);
+					if(!$artist) {
+						$artist = new Artist(
+							new Ulid("artist"),
+							$artistName,
+						);
+						$artistRepository->create($user, $artist);
+					}
 					$artistCache["$artistName||$userId"] = $artist;
 				}
 
@@ -161,6 +184,14 @@ readonly class UsageRepository extends Repository {
 						$artist,
 						$user,
 					);
+					if(!$product) {
+						$product = new Product(
+							new Ulid("product"),
+							$productTitle,
+							$artist,
+						);
+						$productRepository->create($user, $product);
+					}
 					$productCache["$productTitle||$artistName||$userId"] = $product;
 				}
 
@@ -169,7 +200,9 @@ readonly class UsageRepository extends Repository {
 				if(!$data) {
 					$error = json_last_error();
 					$errorMessage = json_last_error_msg();
+					Log::critical("JSON error $error: $errorMessage", [$jsonString]);
 				}
+
 				$earning = $upload->extractEarning($data);
 				$earningDate = $upload->extractEarningDate($data);
 
@@ -180,7 +213,7 @@ readonly class UsageRepository extends Repository {
 					"earning" => $earning->value,
 					"earningDate" => $earningDate->format("Y-m-d H:i:s"),
 					"originalEarning" => $earning->value,
-					"originalCurrency" => $earning->currency->name,
+					"originalCurrency" => $earning->currency?->name,
 					"statementType" => $upload->type,
 					"estimateAUD" => null,//$currencyExchange->convert($earning, $earningDate, Currency::AUD),
 					"estimateCAD" => null,//$currencyExchange->convert($earning, $earningDate, Currency::CAD),
@@ -193,6 +226,7 @@ readonly class UsageRepository extends Repository {
 				fputcsv($fhUsages, $usageOfProduct);
 
 				$totalProcessed += $this->db->update("setProcessed", $usageId);
+				$db->executeSql("commit");
 			}
 
 			fclose($fhUsages);
@@ -200,34 +234,72 @@ readonly class UsageRepository extends Repository {
 			$this->db->insert("loadUsageOfProductFromFile", [
 				"infileName" => $dbUOPPath,
 			]);
-			$totalInserts += $limitPerIteration;
+			$totalInserts += $totalProcessed;
 
-			$db->executeSql("commit");
 			$chunkEndTime = microtime(true);
-			$chunkDeltaTime = round($chunkEndTime - $chunkStartTime);
+			$db->executeSql("commit");
 
-			Log::debug("Processed $totalProcessed in $chunkDeltaTime s ($artistName - $productTitle)");
+			$chunkDeltaTime = number_format($chunkEndTime - $chunkStartTime, 2);
+			Log::debug("Chunk processed $totalProcessed ($artistName - $productTitle) $chunkDeltaTime seconds");
 		}
 
 		$db->executeSql("SET FOREIGN_KEY_CHECKS=1");
-
 		return $totalInserts;
 	}
 
-	public function generateProductEarnings(
+	private function setProcessedProductEarnings(string $id):void {
+		$this->db->update(
+			"setProcessedProductEarnings",
+			$id,
+		);
+	}
+
+	public function calculateProductEarnings(
 		ProductRepository $productRepository,
-	):void {
+		DatabaseTransaction $transaction,
+	):int {
+		$numCalculated = 0;
 		$resultSet = $this->db->fetchAll("getUsagesWithoutProductEarnings");
 
+		$productEarningsByDate = [];
+
+		$transaction->start();
 		foreach($resultSet as $row) {
+
+			$usageId = $row->getString("id");
 			$productId = $row->getString("productId");
-			echo $productId, PHP_EOL;
-			$productRepository->storeProductEarning(
-				$productId,
-				$row->getFloat("earningSum"),
-				$row->getDateTime("earningDate")
+			$date = $row->getString("earningDate");
+			$earning = $row->getFloat("earning");
+
+			if(!isset($productEarningsByDate[$productId])) {
+				$productEarningsByDate[$productId] = [];
+			}
+			if(!isset($productEarningsByDate[$productId][$date])) {
+				$productEarningsByDate[$productId][$date] = [];
+			}
+
+			array_push(
+				$productEarningsByDate[$productId][$date],
+				$earning,
 			);
+			$numCalculated ++;
+
+			$this->setProcessedProductEarnings($usageId);
 		}
+
+		foreach($productEarningsByDate as $productId => $dateArray) {
+			foreach(array_keys($dateArray) as $date) {
+				$totalEarning = array_sum($dateArray[$date]);
+				$productRepository->storeProductEarning(
+					$productId,
+					$totalEarning,
+					new DateTime($date),
+				);
+			}
+		}
+
+		$transaction->commit();
+		return $numCalculated;
 	}
 
 
@@ -276,12 +348,19 @@ readonly class UsageRepository extends Repository {
 		Currency $newCurrency,
 		User $user,
 		ProductRepository $productRepository,
+		UploadRepository $uploadRepository,
+		DatabaseTransaction $transaction,
 	):void {
 		$productList = $productRepository->getAll($user);
+
+		$transaction->start();
 
 		// Step 1: Reset cached earnings on Products.
 		foreach($productList as $product) {
 			$productRepository->clearEarningCache($product);
+		}
+		foreach($uploadRepository->getUploadsForUser($user) as $upload) {
+			$uploadRepository->clearEarningCache($upload);
 		}
 
 		$exchange = new CurrencyExchange();
@@ -301,5 +380,7 @@ readonly class UsageRepository extends Repository {
 		}
 
 		$productRepository->calculateUncachedEarnings($user);
+
+		$transaction->commit();
 	}
 }

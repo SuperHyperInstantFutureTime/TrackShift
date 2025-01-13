@@ -12,6 +12,7 @@ use League\Csv\Reader;
 use League\Csv\ResultSet;
 use League\Csv\Statement;
 use SHIFT\TrackShift\Auth\User;
+use SHIFT\TrackShift\Content\EncodingFilter;
 use SHIFT\TrackShift\Content\NullByteFilter;
 use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
@@ -70,25 +71,14 @@ abstract class Upload {
 			CdBabyUpload::class => "CD Baby",
 		};
 
-//		if (!in_array("strip_null_bytes", stream_get_filters())) {
-//			stream_filter_register("strip_null_bytes", NullByteFilter::class);
-//		}
-		$fh = fopen($this->filePath, "r");
-		$sample = fread($fh, 1024);
-		fclose($fh);
-		$encoding = mb_detect_encoding($sample, ['UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1', 'Windows-1252'], true);
-
-		$encodingMap = [
-			'UTF-8' => null, // No conversion needed if already UTF-8
-			'UTF-16LE' => 'convert.iconv.UTF-16LE.UTF-8',
-			'UTF-16BE' => 'convert.iconv.UTF-16BE.UTF-8',
-			'ISO-8859-1' => 'convert.iconv.ISO-8859-1.UTF-8',
-			'Windows-1252' => 'convert.iconv.Windows-1252.UTF-8',
-		];
+		if (!in_array("strip_null_bytes", stream_get_filters())) {
+			stream_filter_register("strip_null_bytes", NullByteFilter::class);
+		}
+		$encodingFilter = new EncodingFilter($this->filePath);
 
 		$this->openFile();
 
-		if($streamName = $encodingMap[$encoding] ?? null) {
+		if($streamName = $encodingFilter->getStreamName()) {
 			$this->csvReader->appendStreamFilterOnRead($streamName);
 		}
 	}
@@ -128,7 +118,7 @@ abstract class Upload {
 		$currency = null;
 
 		foreach($this->csvReader as $rowData) {
-			if($currencyCode = $rowData[static::CURRENCY_COLUMN]) {
+			if($currencyCode = $rowData[static::CURRENCY_COLUMN] ?? null) {
 				$currency = Currency::fromCode($currencyCode);
 				break;
 			}
@@ -155,6 +145,14 @@ abstract class Upload {
 	 * @return Generator<ResultSet>
 	 */
 	public function generateDataRows():Generator {
+		$stmt = Statement::create()->offset(0);
+		$resultSet = $stmt->process($this->csvReader);
+		foreach($resultSet as $rowData) {
+			yield $rowData;
+		}
+		return;
+
+
 		$i = 0;
 
 		do {
