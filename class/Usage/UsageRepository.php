@@ -33,8 +33,7 @@ readonly class UsageRepository extends Repository {
 
 		if($upload::REQUIRES_PRELOADING) {
 			Log::debug("Upload requires preloading...");
-			foreach($upload->generateDataRows() as $i => $resultSet) {
-				$row = $resultSet->first();
+			foreach($upload->generateDataRows() as $i => $row) {
 				$upload->preloadMissingProductTitleData($row);
 			}
 

@@ -12,8 +12,7 @@ use League\Csv\Reader;
 use League\Csv\ResultSet;
 use League\Csv\Statement;
 use SHIFT\TrackShift\Auth\User;
-use SHIFT\TrackShift\Content\EncodingFilter;
-use SHIFT\TrackShift\Content\NullByteFilter;
+use SHIFT\TrackShift\Content\FileFixer;
 use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 
@@ -71,16 +70,16 @@ abstract class Upload {
 			CdBabyUpload::class => "CD Baby",
 		};
 
-		if (!in_array("strip_null_bytes", stream_get_filters())) {
-			stream_filter_register("strip_null_bytes", NullByteFilter::class);
-		}
-		$encodingFilter = new EncodingFilter($this->filePath);
+//		if (!in_array("strip_null_bytes", stream_get_filters())) {
+//			stream_filter_register("strip_null_bytes", NullByteFilter::class);
+//		}
+//		$encodingFilter = new EncodingFilter($this->filePath);
 
 		$this->openFile();
 
-		if($streamName = $encodingFilter->getStreamName()) {
-			$this->csvReader->appendStreamFilterOnRead($streamName);
-		}
+//		if($streamName = $encodingFilter->getStreamName()) {
+//			$this->csvReader->appendStreamFilterOnRead($streamName);
+//		}
 	}
 
 	public function setProcessedPercentage(float $percentage):void {
@@ -135,7 +134,13 @@ abstract class Upload {
 	}
 
 	public function openFile():void {
+		$fixer = new FileFixer();
+		$fixer->fix($this->filePath);
 		$this->csvReader = Reader::createFromPath($this->filePath);
+		$extension = pathinfo($this->filePath, PATHINFO_EXTENSION);
+		if($extension === "tsv") {
+			$this->csvReader->setDelimiter("\t");
+		}
 		$this->csvReader->setHeaderOffset(0);
 	}
 
@@ -147,21 +152,9 @@ abstract class Upload {
 	public function generateDataRows():Generator {
 		$stmt = Statement::create()->offset(0);
 		$resultSet = $stmt->process($this->csvReader);
-		foreach($resultSet as $rowData) {
+		foreach($resultSet->getRecords() as $rowData) {
 			yield $rowData;
 		}
-		return;
-
-
-		$i = 0;
-
-		do {
-			$stmt = Statement::create()->offset($i)->limit(1);
-			$resultSet = $stmt->process($this->csvReader);
-			yield $resultSet;
-			$i++;
-		}
-		while(count($resultSet) > 0);
 	}
 
 	/** @return array<string> */

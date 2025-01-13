@@ -7,8 +7,7 @@ use Gt\Logger\Log;
 use Gt\Ulid\Ulid;
 use League\Csv\Reader;
 use SHIFT\TrackShift\Auth\User;
-use SHIFT\TrackShift\Content\EncodingFilter;
-use SHIFT\TrackShift\Content\NullByteFilter;
+use SHIFT\TrackShift\Content\FileFixer;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
 
@@ -18,14 +17,6 @@ use SHIFT\TrackShift\Royalty\Money;
  */
 readonly class UploadRepository extends Repository {
 	const DIR_UPLOAD = "data/upload";
-
-	public function __construct(QueryCollection $db) {
-		parent::__construct($db);
-
-		if (!in_array("strip_null_bytes", stream_get_filters())) {
-			stream_filter_register("strip_null_bytes", NullByteFilter::class);
-		}
-	}
 
 	public function purgeOldFiles():void {
 // TODO: this needs to be tested and implemented.
@@ -49,7 +40,19 @@ readonly class UploadRepository extends Repository {
 			}
 			$uploadedFile->moveTo($targetPath);
 
+			$fixer = new FileFixer();
+			$fixer->fix($targetPath);
+
 			$uploadType = $this->detectUploadType($targetPath);
+
+			$extension = pathinfo($targetPath, PATHINFO_EXTENSION);
+			if($this->isCsv($targetPath) && $extension !== "csv") {
+				rename($targetPath, "$targetPath.csv");
+			}
+			elseif($this->isTsv($targetPath) && $extension !== "tsv") {
+				rename($targetPath, "$targetPath.tsv");
+			}
+
 			Log::debug("Detected upload type: $uploadType");
 			/** @var Upload $upload */
 			$upload = new $uploadType(new Ulid("upload"), $targetPath);
@@ -196,28 +199,24 @@ readonly class UploadRepository extends Repository {
 		return $type;
 	}
 
-	private function isCsv(string $filePath):bool {
+	private function isCsv(string $filePath, string $separator = ","):bool {
 		$fh = fopen($filePath, "r");
-		$firstLine = fgets($fh);
-		$csvData = str_getcsv($firstLine);
+		$firstLine = fgetcsv($fh, separator: $separator);
+		$secondLine = fgetcsv($fh, separator: $separator);
 
-		if(count($csvData) <= 1) {
+		if(!$firstLine || !$secondLine) {
 			return false;
 		}
 
-		return true;
+		if(count($firstLine) <= 1) {
+			return false;
+		}
+
+		return count($firstLine) === count($secondLine);
 	}
 
 	private function isTsv(string $filePath):bool {
-		$fh = fopen($filePath, "r");
-		$firstLine = fgets($fh);
-		$csvData = str_getcsv($firstLine, "\t");
-
-		if(count($csvData) <= 1) {
-			return false;
-		}
-
-		return true;
+		return $this->isCsv($filePath, "\t");
 	}
 
 	public function cacheEarnings():int {
@@ -282,15 +281,10 @@ readonly class UploadRepository extends Repository {
 	protected function detectUploadTypeFromCsv(mixed $filePath, string $delimiter = ","):string {
 		$type = UnknownUpload::class;
 		$reader = Reader::createFromPath($filePath);
-
-		$encodingFilter = new EncodingFilter($filePath);
-		if($streamName = $encodingFilter->getStreamName()) {
-			$reader->appendStreamFilterOnRead($streamName);
-		}
-
-		$reader->appendStreamFilterOnRead("strip_null_bytes");
 		$reader->setDelimiter($delimiter);
-		$header = $reader->nth(0);
+
+		$reader->setHeaderOffset(0);
+		$header = $reader->getHeader();
 
 		if($this->allColumnsExist($header, PRSStatementUpload::KNOWN_COLUMNS)) {
 			$type = PRSStatementUpload::class;
@@ -303,6 +297,9 @@ readonly class UploadRepository extends Repository {
 		}
 		elseif($this->allColumnsExist($header, TuneCoreUpload::KNOWN_COLUMNS)) {
 			$type = TuneCoreUpload::class;
+		}
+		elseif($this->allColumnsExist($header, DistroKidUpload::KNOWN_COLUMNS)) {
+			$type = DistroKidUpload::class;
 		}
 
 		return $type;
@@ -363,67 +360,5 @@ readonly class UploadRepository extends Repository {
 
 		$content = mb_convert_encoding($content, "UTF-8", $encoding);
 		file_put_contents($filePath, $content);
-	}
-
-	private function ensureUnixLineEnding(string $filePath):void {
-		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
-		if($ext === "zip" || $ext === "xlsx") {
-			return;
-		}
-		$fhIn = fopen($filePath, "r");
-
-		$firstLine = fgets($fhIn, 2048);
-		if(!str_contains($firstLine, "\r")) {
-			// Everything's OK :)
-			return;
-		}
-		fclose($fhIn);
-
-		$contents = file_get_contents($filePath);
-		$contents = str_replace("\r\n", "\n", $contents);
-		$contents = str_replace("\r", "\n", $contents);
-
-		file_put_contents("$filePath.fixed", $contents);
-		rename("$filePath.fixed", $filePath);
-	}
-
-	private function ensureSeparatorMatchesExtension(string $filePath):void {
-		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
-		$extensionSeparators = [
-			"csv" => ",",
-			"tsv" => "\t",
-		];
-
-		if (!array_key_exists($ext, $extensionSeparators) || in_array($ext, ["zip", "xlsx"])) {
-			return;
-		}
-
-		$oppositeExt = $ext === "csv" ? "tsv" : "csv";
-		if ($this->checkFileTypeMismatch($ext, $oppositeExt, $filePath)) {
-			$this->convertFile($filePath, $extensionSeparators[$ext], $extensionSeparators[$oppositeExt]);
-		}
-	}
-
-	private function checkFileTypeMismatch(string $ext, string $oppositeExt, string $filePath): bool {
-		$checkFunctions = ["csv" => "isCsv", "tsv" => "isTsv"];
-		return !$this->{$checkFunctions[$ext]}($filePath) && $this->{$checkFunctions[$oppositeExt]}($filePath);
-	}
-
-	private function convertFile(string $filePath, string $separatorIn, string $separatorOut): void {
-		$fhIn = fopen($filePath, "r");
-		$fhOut = fopen("$filePath.fixed", "w");
-
-		while(!feof($fhIn)) {
-			$line = fgets($fhIn);
-			if ($line) {
-				$row = str_getcsv($line, $separatorIn);
-				fputcsv($fhOut, $row, $separatorOut);
-			}
-		}
-
-		fclose($fhIn);
-		fclose($fhOut);
-
-		rename("$filePath.fixed", $filePath);
 	}
 }

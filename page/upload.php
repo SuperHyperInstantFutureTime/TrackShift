@@ -25,12 +25,6 @@ function do_upload(
 	Response $response,
 ):void {
 	$settings = $userRepository->getUserSettings($user);
-//	$currentSettingsCurrency = null;
-//	if($currencyString = $settings->get("currency") ?? null) {
-//		$currentSettingsCurrency = Currency::fromCode($currencyString);
-//	}
-
-//	$userCurrency = $currentSettingsCurrency ?? null;
 
 	$uploadList = $uploadRepository->create($user, ...$input->getMultipleFile("upload"));
 	Log::debug("Created " . count($uploadList) . " uploads for user $user->id.");
