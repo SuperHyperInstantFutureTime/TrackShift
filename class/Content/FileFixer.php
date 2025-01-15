@@ -5,6 +5,11 @@ class FileFixer {
 	public function __construct() {}
 
 	public function fix(string $filePath):void {
+		$extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+		if($extension === "xlsx") {
+			return;
+		}
+
 		$contents = file_get_contents($filePath);
 
 // Detect and remove BOM (UTF-8 and UTF-16)
