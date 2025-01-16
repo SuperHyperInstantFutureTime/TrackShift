@@ -48,9 +48,11 @@ readonly class UploadRepository extends Repository {
 			$extension = pathinfo($targetPath, PATHINFO_EXTENSION);
 			if($this->isCsv($targetPath) && $extension !== "csv") {
 				rename($targetPath, "$targetPath.csv");
+				$targetPath = "$targetPath.csv";
 			}
 			elseif($this->isTsv($targetPath) && $extension !== "tsv") {
 				rename($targetPath, "$targetPath.tsv");
+				$targetPath = "$targetPath.tsv";
 			}
 
 			Log::debug("Detected upload type: $uploadType");
@@ -200,6 +202,11 @@ readonly class UploadRepository extends Repository {
 	}
 
 	private function isCsv(string $filePath, string $separator = ","):bool {
+		$extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+		if($extension === "xlsx") {
+			return false;
+		}
+
 		$fh = fopen($filePath, "r");
 		$firstLine = fgetcsv($fh, separator: $separator);
 		$secondLine = fgetcsv($fh, separator: $separator);
