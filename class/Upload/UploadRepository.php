@@ -30,6 +30,7 @@ readonly class UploadRepository extends Repository {
 		foreach($uploadList as $uploadedFile) {
 			$originalFileName = $uploadedFile->getClientFilename();
 			$targetPath = "$userDir/$originalFileName";
+			$extension = pathinfo($targetPath, PATHINFO_EXTENSION);
 
 			if($this->db->fetch("findByFilePath", $targetPath)) {
 				continue;
@@ -40,12 +41,20 @@ readonly class UploadRepository extends Repository {
 			}
 			$uploadedFile->moveTo($targetPath);
 
+			if($extension === "zip") {
+				$foundPath = (string)(new ZipFileFinder($targetPath));
+				$foundExtension = pathinfo($foundPath, PATHINFO_EXTENSION);
+				$newTargetPath = "$targetPath.$foundExtension";
+				rename($foundPath, $newTargetPath);
+				$targetPath = $newTargetPath;
+				$extension = $foundExtension;
+			}
+
 			$fixer = new FileFixer();
 			$fixer->fix($targetPath);
 
 			$uploadType = $this->detectUploadType($targetPath);
 
-			$extension = pathinfo($targetPath, PATHINFO_EXTENSION);
 			if($this->isCsv($targetPath) && $extension !== "csv") {
 				rename($targetPath, "$targetPath.csv");
 				$targetPath = "$targetPath.csv";
@@ -112,6 +121,10 @@ readonly class UploadRepository extends Repository {
 		}
 
 		return $uploadList;
+	}
+
+	public function hasUnprocessed(User $user):bool {
+		return $this->db->fetchBool("hasUnprocessed", $user->id);
 	}
 
 	public function getTotalPercentageProcessed(User $user):int {

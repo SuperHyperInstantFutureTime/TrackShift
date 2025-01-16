@@ -6,7 +6,7 @@ class FileFixer {
 
 	public function fix(string $filePath):void {
 		$extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-		if($extension === "xlsx") {
+		if($extension === "xlsx" || $extension === "zip") {
 			return;
 		}
 

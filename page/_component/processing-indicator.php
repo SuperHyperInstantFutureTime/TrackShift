@@ -10,6 +10,13 @@ function go(
 	Binder $binder,
 	Element $element,
 ):void {
+	$element->classList->add("live-update-container");
+
+	if(!$uploadRepository->hasUnprocessed($user)) {
+		$element->remove();
+		return;
+	}
+
 	$totalPercentage = $uploadRepository->getTotalPercentageProcessed($user);
 
 	if($totalPercentage > 99) {

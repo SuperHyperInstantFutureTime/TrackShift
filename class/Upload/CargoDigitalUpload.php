@@ -2,6 +2,7 @@
 namespace SHIFT\TrackShift\Upload;
 
 use DateTime;
+use Gt\Logger\Log;
 use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\TrackShiftException;
@@ -30,7 +31,7 @@ class CargoDigitalUpload extends Upload {
 		$timestamp = $row["Statement Run Name"];
 		$matchSuccess = preg_match("/(?P<YEAR>\d{4})Q(?P<QUARTER>\d)/", $timestamp, $matches);
 		if(!$matchSuccess) {
-			throw new TrackShiftException("Cargo Digital earning date does not match: $timestamp");
+			Log::error("Cargo Digital earning date does not match in $this->filePath");
 		}
 
 		$monthOfNextQuarter = match((int)$matches["QUARTER"]) {
