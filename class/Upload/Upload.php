@@ -45,6 +45,7 @@ abstract class Upload {
 		public string $filePath,
 		public readonly Money $totalEarnings = new Money(0),
 		public ?DateTimeInterface $usagesProcessed = null,
+		public ?string $userId = null,
 	) {
 		if(!is_file($this->filePath)) {
 			throw new UploadFileNotFoundException($this->filePath);
@@ -70,16 +71,7 @@ abstract class Upload {
 			CdBabyUpload::class => "CD Baby",
 		};
 
-//		if (!in_array("strip_null_bytes", stream_get_filters())) {
-//			stream_filter_register("strip_null_bytes", NullByteFilter::class);
-//		}
-//		$encodingFilter = new EncodingFilter($this->filePath);
-
 		$this->openFile();
-
-//		if($streamName = $encodingFilter->getStreamName()) {
-//			$this->csvReader->appendStreamFilterOnRead($streamName);
-//		}
 	}
 
 	public function setProcessedPercentage(float $percentage):void {
@@ -115,6 +107,11 @@ abstract class Upload {
 
 	public function getDefaultCurrency():Currency {
 		$currency = null;
+		$currencyOverride = static::CURRENCY_OVERRIDE;
+
+		if($currencyOverride) {
+			return Currency::fromCode($currencyOverride);
+		}
 
 		foreach($this->csvReader as $rowData) {
 			if($currencyCode = $rowData[static::CURRENCY_COLUMN] ?? null) {
@@ -123,7 +120,7 @@ abstract class Upload {
 			}
 		}
 
-		return $currency ?? Currency::fromCode(static::CURRENCY_OVERRIDE);
+		return $currency ?? Currency::EUR;
 	}
 
 	/**

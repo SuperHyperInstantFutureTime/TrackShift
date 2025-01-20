@@ -367,9 +367,13 @@ readonly class UsageRepository extends Repository {
 		foreach($productList as $product) {
 			foreach($this->db->fetchAll("getUnconfirmedUsageOfProduct", $product->id) as $row) {
 				$earningValue = match($newCurrency) {
+					Currency::AUD => $row->getFloat("estimateAUD"),
+					Currency::CAD => $row->getFloat("estimateCAD"),
 					Currency::EUR => $row->getFloat("estimateEUR"),
 					Currency::GBP => $row->getFloat("estimateGBP"),
 					Currency::USD => $row->getFloat("estimateUSD"),
+					Currency::MXN => $row->getFloat("estimateMXN"),
+					Currency::NZD => $row->getFloat("estimateNZD"),
 				};
 				$this->db->update("setEarningForUsageOfProduct", [
 					"id" => $row->getString("id"),

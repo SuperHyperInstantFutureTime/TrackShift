@@ -49,8 +49,19 @@ function go(
 		$uploadRepository->purgeOldFiles();
 		$i = null;
 		foreach($uploadRepository->getUnprocessed() as $i => $upload) {
+			$uploadDefaultCurrency = $upload->getDefaultCurrency();
+			$user = $userRepository->getById($upload->userId);
+			$userSettings = $userRepository->getUserSettings($user);
+			$currentUserCurrency = $userSettings->get("currency");
+			if(!$currentUserCurrency) {
+				$userSettings->set("currency", $uploadDefaultCurrency->name);
+				$userRepository->setUserSettings($user, $userSettings);
+			}
+
+			$dbTransaction->start();
 			$usageRepository->extractProductsFromUpload($upload);
 			$uploadRepository->setProcessed($upload);
+			$dbTransaction->commit();
 		}
 		if(is_null($i)) {
 			Log::debug("No new uploads.");
@@ -147,11 +158,7 @@ foreach($argv as $arg) {
 }
 $input = new Input($_GET);
 
-$transaction = new DatabaseTransaction(function()use($database) {
-	$database->executeSql("start transaction");
-}, function()use($database) {
-	$database->executeSql("commit");
-});
+$transaction = new DatabaseTransaction($database);
 
 go(
 	$usageRepository,

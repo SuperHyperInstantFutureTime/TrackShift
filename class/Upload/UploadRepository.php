@@ -345,6 +345,7 @@ readonly class UploadRepository extends Repository {
 			$row->getString("filePath"),
 			$earnings,
 			$processedAt,
+			$row->getString("userId"),
 		);
 
 		$usageProcessedPercentage = $this->db->fetchFloat("getProcessedPercentage", [

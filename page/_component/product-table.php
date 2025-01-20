@@ -25,6 +25,4 @@ function go(
 		$input->getDateTime("p-from") ?? new DateTime("1970-01-01"),
 		$input->getDateTime("p-to") ?? new DateTime("2999-12-31"),
 	));
-
-	$binder->bindKeyValue("currency", Currency::fromCode($settings->get("currency") ?? "GBP")->value);
 }

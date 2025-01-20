@@ -1,4 +1,5 @@
 import {Page} from "../../inc/Page.es6";
+import {Currency} from "../../inc/Currency.es6";
 
 Page.match("uri--account--products").go(function() {
 	if((new URL(location.href)).searchParams.has("page")) {
@@ -52,5 +53,6 @@ function loadPages(page = 1) {
 
 		oldTBody.append(...newTBody.rows);
 		loadPages(page + 1);
+		Currency.init();
 	});
 }

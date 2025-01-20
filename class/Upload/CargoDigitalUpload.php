@@ -34,6 +34,10 @@ class CargoDigitalUpload extends Upload {
 			Log::error("Cargo Digital earning date does not match in $this->filePath");
 		}
 
+		if(!$matches["QUARTER"] || !$matches["YEAR"]) {
+			var_dump($row);die("!!!NOMATCHINGDATE!!!");
+		}
+
 		$monthOfNextQuarter = match((int)$matches["QUARTER"]) {
 			1 => 4,
 			2 => 7,

@@ -1,19 +1,18 @@
 <?php
 namespace SHIFT\TrackShift\Repository;
 
-class DatabaseTransaction {
+use Gt\Database\Database;
+
+readonly class DatabaseTransaction {
 	public function __construct(
-		/** @var callable */
-		private $startTransactionCallback,
-		/** @var callable */
-		private $commitTransactionCallback,
+		private Database $database,
 	) {}
 
 	public function start():void {
-		call_user_func($this->startTransactionCallback);
+		$this->database->executeSql("start transaction");
 	}
 
 	public function commit():void {
-		call_user_func($this->commitTransactionCallback);
+		$this->database->executeSql("commit");
 	}
 }
