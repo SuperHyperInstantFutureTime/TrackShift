@@ -35,7 +35,7 @@ class CargoDigitalUpload extends Upload {
 		}
 
 		if(!$matches["QUARTER"] || !$matches["YEAR"]) {
-			var_dump($row);die("!!!NOMATCHINGDATE!!!");
+			var_dump($row);echo("!!!NOMATCHINGDATE!!!");
 		}
 
 		$monthOfNextQuarter = match((int)$matches["QUARTER"]) {
