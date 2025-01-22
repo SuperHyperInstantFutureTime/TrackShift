@@ -14,7 +14,8 @@ let currencySymbol = null;
 
 function outputCurrency(el) {
 	el.classList.add("currency-output");
-	if(isNaN(Number(el.innerText.trim()))) {
+	if(isNaN(Number(el.innerText.trim().replace(",", "")))) {
+		console.log("Currency is not a number", el);
 		return;
 	}
 
