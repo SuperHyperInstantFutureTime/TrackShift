@@ -19,95 +19,121 @@ function go(
 	ProductRepository $productRepository,
 	UploadRepository $uploadRepository,
 	UserRepository $userRepository,
-	Database $db,
 	DatabaseTransaction $dbTransaction,
-	Input $input,
 ):void {
-	$processUploadsIntoUsages = false;
-	$processProductUsages = false;
-	$processProductEarnings = false;
-	$type = $input->getInt("type");
+	try {
+		processUsages(
+			$uploadRepository,
+			$userRepository,
+			$usageRepository,
+			$dbTransaction,
+		);
 
-// TODO: We need to figure out the default currency for users that don't have one! BEFORE any earnings are calculated.
-
-	if(is_null($type)) {
-		$processUploadsIntoUsages = $processProductUsages = $processProductEarnings = true;
-	}
-	if($type >= 1) {
-		$processUploadsIntoUsages = true;
-	}
-	if($type >= 2) {
-		$processProductUsages = true;
-	}
-	if($type >= 3) {
-		$processProductEarnings = true;
-	}
-
-	if($processUploadsIntoUsages) {
-		$time = microtime(true);
-
-		$uploadRepository->purgeOldFiles();
-		$i = null;
-		foreach($uploadRepository->getUnprocessed() as $i => $upload) {
-			$uploadDefaultCurrency = $upload->getDefaultCurrency();
-			$user = $userRepository->getById($upload->userId);
-			$userSettings = $userRepository->getUserSettings($user);
-			$currentUserCurrency = $userSettings->get("currency");
-			if(!$currentUserCurrency) {
-				$userSettings->set("currency", $uploadDefaultCurrency->name);
-				$userRepository->setUserSettings($user, $userSettings);
-			}
-
-			$dbTransaction->start();
-			$usageRepository->extractProductsFromUpload($upload);
-			$uploadRepository->setProcessed($upload);
-			$dbTransaction->commit();
-		}
-		if(is_null($i)) {
-			Log::debug("No new uploads.");
-		}
-		else {
-			$i += 1;
-			$deltaTime = number_format(microtime(true) - $time, 2);
-			Log::info("Extracted products from $i uploads in $deltaTime seconds.");
-		}
-	}
-
-	if($processProductUsages) {
-		$time = microtime(true);
-		$numUsagesProcessed = $usageRepository->processUsageOfProducts(
+		processProductUsages(
+			$usageRepository,
 			$productRepository,
 			$artistRepository,
 			$userRepository,
 			$uploadRepository,
-			$db,
+			$dbTransaction,
 		);
-		if($numUsagesProcessed > 0) {
-			$deltaTime = number_format(microtime(true) - $time, 2);
-			Log::info("Processed $numUsagesProcessed usages in $deltaTime seconds.");
-		}
-		else {
-			Log::debug("No new usages to process.");
-		}
-	}
 
-	if($processProductEarnings) {
-		$time = microtime(true);
-		$numProductsCalculated = $usageRepository->calculateProductEarnings(
+		processProductEarnings(
+			$usageRepository,
 			$productRepository,
 			$dbTransaction,
 		);
 
-		if($numProductsCalculated > 0) {
-			$deltaTime = number_format(microtime(true) - $time, 2);
-			Log::info("Calculated $numProductsCalculated earnings in $deltaTime seconds.");
-		}
-		else {
-			Log::debug("No new products generated.");
-		}
+		$uploadRepository->cacheEarnings();
 	}
+	catch(Throwable $e) {
+		$dbTransaction->rollback(
+			$e->getMessage()
+			. " - "
+			. $e->getFile()
+			. ":"
+			. $e->getLine()
+		);
+	}
+}
 
-	$uploadRepository->cacheEarnings();
+function processUsages(
+	UploadRepository $uploadRepository,
+	UserRepository $userRepository,
+	UsageRepository $usageRepository,
+	DatabaseTransaction $dbTransaction,
+):void {
+	$time = microtime(true);
+
+	$uploadRepository->purgeOldFiles();
+	$i = null;
+
+	foreach($uploadRepository->getUnprocessed() as $i => $upload) {
+		$uploadDefaultCurrency = $upload->getDefaultCurrency();
+		$user = $userRepository->getById($upload->userId);
+		$userSettings = $userRepository->getUserSettings($user);
+		$currentUserCurrency = $userSettings->get("currency");
+		if(!$currentUserCurrency) {
+			$userSettings->set("currency", $uploadDefaultCurrency->name);
+			$userRepository->setUserSettings($user, $userSettings);
+		}
+
+		$usageRepository->extractProductsFromUpload($upload, $dbTransaction);
+		$uploadRepository->setProcessed($upload);
+	}
+	if(is_null($i)) {
+		Log::debug("No new uploads.");
+	}
+	else {
+		$i += 1;
+		$deltaTime = number_format(microtime(true) - $time, 2);
+		Log::info("Extracted products from $i uploads in $deltaTime seconds.");
+	}
+}
+
+function processProductEarnings(
+	UsageRepository $usageRepository,
+	ProductRepository $productRepository,
+	DatabaseTransaction $dbTransaction,
+):void {
+	$time = microtime(true);
+	$numProductsCalculated = $usageRepository->calculateProductEarnings(
+		$productRepository,
+		$dbTransaction,
+	);
+
+	if($numProductsCalculated > 0) {
+		$deltaTime = number_format(microtime(true) - $time, 2);
+		Log::info("Calculated $numProductsCalculated earnings in $deltaTime seconds.");
+	}
+	else {
+		Log::debug("No new products generated.");
+	}
+}
+
+function processProductUsages(
+	UsageRepository $usageRepository,
+	ProductRepository $productRepository,
+	ArtistRepository $artistRepository,
+	UserRepository $userRepository,
+	UploadRepository $uploadRepository,
+	DatabaseTransaction $dbTransaction,
+):void {
+	$time = microtime(true);
+	$numUsagesProcessed = $usageRepository->processUsageOfProducts(
+		$productRepository,
+		$artistRepository,
+		$userRepository,
+		$uploadRepository,
+		$dbTransaction,
+	);
+	if($numUsagesProcessed > 0) {
+		$deltaTime = number_format(microtime(true) - $time, 2);
+		Log::info("Processed $numUsagesProcessed usages in $deltaTime seconds.");
+	}
+	else {
+		Log::debug("No new usages to process.");
+	}
 }
 
 // TODO: Handle cron like page/api
@@ -156,7 +182,6 @@ foreach($argv as $arg) {
 		$_GET[$matches[1]] = true;
 	}
 }
-$input = new Input($_GET);
 
 $transaction = new DatabaseTransaction($database);
 
@@ -166,7 +191,5 @@ go(
 	$productRepository,
 	$uploadRepository,
 	$userRepository,
-	$database,
 	$transaction,
-	$input,
 );

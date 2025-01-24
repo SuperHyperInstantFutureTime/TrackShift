@@ -24,7 +24,9 @@ readonly class UsageRepository extends Repository {
 
 	public function extractProductsFromUpload(
 		Upload $upload,
+		DatabaseTransaction $transaction,
 	):int {
+		$transaction->start("Extracting products from upload " . $upload->basename);
 		$dbUsageFilePath = "/tmp/trackshift/usages-csv/$upload->id/usage.csv";
 		if(!is_dir(dirname($dbUsageFilePath))) {
 			mkdir(dirname($dbUsageFilePath), recursive: true);
@@ -43,6 +45,16 @@ readonly class UsageRepository extends Repository {
 		$csvRowCount = 0;
 		foreach($upload->generateDataRows() as $row) {
 			$usageId = (string)(new Ulid("usage"));
+/** Currently on a wild goose chase looking for why the CSV is loading rows and columns with the
+ * same value. This following line never triggers!
+ * Once I've figured this out, I need to comb through the other types again - TSV will be an easy fix
+ * back to fgetcsv, but then I've got to make sure the files are passed through the filters.
+ * If all goes tits up, I'll revert to using League's CSV, although we were getting a data cut-off
+ * with that, and I wanted to have more control over the raw data so I could inspect it.
+ */
+//			if($row["currency"] === "currency") {
+//				die("WHAT???");
+//			}
 			$json = json_encode($row);
 			if($error = json_last_error()) {
 				Log::critical("Error $error: " . json_last_error_msg(), $row);
@@ -70,37 +82,8 @@ readonly class UsageRepository extends Repository {
 		]);
 		$this->db->update("base64DecodeJson");
 
+		$transaction->commit();
 		return $csvRowCount;
-	}
-
-	public function processArtistsAndProducts(
-		ArtistRepository $artistRepository,
-		ProductRepository $productRepository,
-		UserRepository $userRepository,
-	):void {
-		foreach($this->db->fetchAll("getUniqueUserArtistProducts") as $row) {
-			$user = $userRepository->getById($row->getString("userId"));
-			$artistName = $row->getString("extractedArtistName");
-			$productTitle = $row->getString("extractedProductTitle");
-
-			$artist = $artistRepository->getByName($artistName, $user);
-			if(!$artist) {
-				$artist = new Artist(
-					new Ulid("artist"),
-					$artistName,
-				);
-				$artistRepository->create($user, $artist);
-			}
-
-			$product = $productRepository->getByTitleAndArtist($productTitle, $artist, $user);
-			if(!$product) {
-				$productRepository->create($user, new Product(
-					new Ulid("product"),
-					$productTitle,
-					$artist,
-				));
-			}
-		}
 	}
 
 	public function processUsageOfProducts(
@@ -108,7 +91,7 @@ readonly class UsageRepository extends Repository {
 		ArtistRepository $artistRepository,
 		UserRepository $userRepository,
 		UploadRepository $uploadRepository,
-		Database $db,
+		DatabaseTransaction $transaction,
 	):int {
 		$totalInserts = 0;
 		$totalProcessed = 0;
@@ -126,12 +109,13 @@ readonly class UsageRepository extends Repository {
 		}
 
 		$limitPerIteration = 1000;
-		$db->executeSql("SET FOREIGN_KEY_CHECKS=0");
 
 		while($unprocessedRows = $this->db->fetchAll("getUnprocessed", ["limit" => $limitPerIteration])) {
 			if(count($unprocessedRows) === 0) {
 				return $totalProcessed;
 			}
+
+			$transaction->startWithoutRelations("Processing usages");
 
 			$chunkStartTime = microtime(true);
 			$fhUsages = fopen($dbUOPPath, "w");
@@ -140,8 +124,6 @@ readonly class UsageRepository extends Repository {
 			$productTitle = "|||UNPROCESSED|||";
 
 			foreach($unprocessedRows as $row) {
-				$db->executeSql("start transaction");
-
 				$usageId = $row->getString("id");
 				$uploadId = $row->getString("uploadId");
 
@@ -225,7 +207,6 @@ readonly class UsageRepository extends Repository {
 				fputcsv($fhUsages, $usageOfProduct);
 
 				$totalProcessed += $this->db->update("setProcessed", $usageId);
-				$db->executeSql("commit");
 			}
 
 			fclose($fhUsages);
@@ -236,13 +217,12 @@ readonly class UsageRepository extends Repository {
 			$totalInserts += $totalProcessed;
 
 			$chunkEndTime = microtime(true);
-			$db->executeSql("commit");
 
 			$chunkDeltaTime = number_format($chunkEndTime - $chunkStartTime, 2);
+			$transaction->commit();
 			Log::debug("Chunk processed $totalProcessed ($artistName - $productTitle) $chunkDeltaTime seconds");
 		}
 
-		$db->executeSql("SET FOREIGN_KEY_CHECKS=1");
 		return $totalInserts;
 	}
 
@@ -262,7 +242,7 @@ readonly class UsageRepository extends Repository {
 
 		$productEarningsByDate = [];
 
-		$transaction->start();
+		$transaction->startWithoutRelations("Calculating product earnings");
 		foreach($resultSet as $row) {
 
 			$usageId = $row->getString("id");

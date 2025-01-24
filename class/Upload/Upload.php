@@ -7,11 +7,9 @@ use DateTimeZone;
 use Generator;
 use Gt\DomTemplate\Bind;
 use Gt\DomTemplate\BindGetter;
-use Gt\Logger\Log;
-use League\Csv\Reader;
-use League\Csv\ResultSet;
-use League\Csv\Statement;
-use SHIFT\TrackShift\Auth\User;
+//use League\Csv\Reader;
+//use League\Csv\ResultSet;
+//use League\Csv\Statement;
 use SHIFT\TrackShift\Content\FileFixer;
 use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
@@ -26,7 +24,9 @@ abstract class Upload {
 	/** @var array<string, string> key = UPC; value = Product title */
 	public array $upcProductTitleMap = [];
 
-	protected Reader $csvReader;
+//	protected Reader $csvReader;
+	/** @var resource */
+	protected $fh;
 	protected int $rowIndex = 0;
 	public readonly string $filename;
 	public readonly string $basename;
@@ -113,12 +113,14 @@ abstract class Upload {
 			return Currency::fromCode($currencyOverride);
 		}
 
-		foreach($this->csvReader as $rowData) {
+		$pos = ftell($this->fh);
+		foreach($this->generateDataRows() as $rowData) {
 			if($currencyCode = $rowData[static::CURRENCY_COLUMN] ?? null) {
 				$currency = Currency::fromCode($currencyCode);
 				break;
 			}
 		}
+		fseek($this->fh, $pos);
 
 		return $currency ?? Currency::EUR;
 	}
@@ -133,30 +135,60 @@ abstract class Upload {
 	public function openFile():void {
 		$fixer = new FileFixer();
 		$fixer->fix($this->filePath);
-		$this->csvReader = Reader::createFromPath($this->filePath);
-		$extension = pathinfo($this->filePath, PATHINFO_EXTENSION);
-		if($extension === "tsv") {
-			$this->csvReader->setDelimiter("\t");
-		}
-		$this->csvReader->setHeaderOffset(0);
+		$this->fh = fopen($this->filePath, "r");
+//		$this->csvReader = Reader::createFromPath($this->filePath);
+//		$extension = pathinfo($this->filePath, PATHINFO_EXTENSION);
+//		if($extension === "tsv") {
+//			$this->csvReader->setDelimiter("\t");
+//		}
+//		$this->csvReader->setHeaderOffset(0);
 	}
 
 	/**
 	 * This function is the default behaviour for all Upload types - it Generates a set of key-value-pairs for each
 	 * row in the file - the default behaviour is working with CSV data, but other types might use other formats.
-	 * @return Generator<ResultSet>
+	 * @return Generator<array<string, string>>
 	 */
 	public function generateDataRows():Generator {
-		$stmt = Statement::create()->offset(0);
-		$resultSet = $stmt->process($this->csvReader);
-		foreach($resultSet->getRecords() as $rowData) {
-			yield $rowData;
+//		$stmt = Statement::create()->offset(0);
+//		$resultSet = $stmt->process($this->csvReader);
+//		foreach($resultSet->getRecords() as $rowData) {
+//			yield $rowData;
+//		}
+		$headers = null;
+		fseek($this->fh, 0);
+		while(!feof($this->fh)) {
+			$rollbackPosition = ftell($this->fh);
+			$csvRow = fgetcsv($this->fh);
+			if(!$csvRow) {
+				continue;
+			}
+			if(!$headers) {
+				$headers = $csvRow;
+				continue;
+			}
+
+// This is a fix to a weird bug. Every so often, the CSV is parsed incorrectly,
+// but simply trying it again works! This error occurs approximately once per
+// megabyte of data. I can only assume there is some strange buffering going on
+// internally. It feels like a bug within fgetcsv, but I can't believe that
+// TrackShift has found a bug in a library over 30 years old and so widely used.
+			if(count($csvRow) !== count($headers)) {
+				fseek($this->fh, $rollbackPosition);
+				continue;
+			}
+			$row = array_combine($headers, $csvRow);
+			yield $row;
 		}
 	}
 
 	/** @return array<string> */
 	protected function getHeaderRow():array {
-		return $this->csvReader->getHeader();
+		if(!isset($this->headerRow)) {
+			$this->headerRow = fgetcsv($this->fh);
+		}
+
+		return $this->headerRow;
 	}
 
 	#[BindGetter]
