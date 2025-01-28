@@ -8,9 +8,11 @@ use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\TrackShiftException;
 use SHIFT\TrackShift\Usage\Usage;
 use Generator;
+use SHIFT\TrackShift\Usage\UsageType;
 
 class CargoPhysicalUpload extends Upload {
 	const CURRENCY_OVERRIDE = Currency::GBP->name;
+	const COST_TYPE_COLUMN = "Sale / Cost";
 	const KNOWN_COLUMNS = ["Period", "Catalogue No.", "Label", "Label ID", "Sold To"];
 
 	public function extractArtistName(array $row):string {
@@ -49,6 +51,18 @@ class CargoPhysicalUpload extends Upload {
 		}
 
 		return new DateTime("$year-$monthOfNextQuarter-01");
+	}
+
+	public function getUsageType(array $row):UsageType {
+		if(strtolower($row["Sale / Cost"]) === "cost") {
+			return UsageType::COST;
+		}
+
+		return UsageType::EARNING;
+	}
+
+	public function getCostDescription(array $row):?string {
+		return $row["Cinram V Sage V Cost"] ?? null;
 	}
 
 	public function generateDataRows():Generator {

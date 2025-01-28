@@ -9,12 +9,15 @@ use SHIFT\TrackShift\Artist\Artist;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Auth\UserRepository;
+use SHIFT\TrackShift\Cost\Cost;
+use SHIFT\TrackShift\Cost\CostRepository;
 use SHIFT\TrackShift\Product\Product;
 use SHIFT\TrackShift\Product\ProductRepository;
 use SHIFT\TrackShift\Repository\DatabaseTransaction;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\CurrencyExchange;
+use SHIFT\TrackShift\Royalty\Money;
 use SHIFT\TrackShift\Upload\Upload;
 use SHIFT\TrackShift\Upload\UploadRepository;
 
@@ -91,6 +94,7 @@ readonly class UsageRepository extends Repository {
 		ArtistRepository $artistRepository,
 		UserRepository $userRepository,
 		UploadRepository $uploadRepository,
+		CostRepository $costRepository,
 		DatabaseTransaction $transaction,
 	):int {
 		$totalInserts = 0;
@@ -100,6 +104,9 @@ readonly class UsageRepository extends Repository {
 		$uploadCache = [];
 		$artistCache = [];
 		$productCache = [];
+
+// $costMap is a multidimensional array of [$productTitle||$artistName||$userId](string):[DATE](string):[COST](float)
+		$costMap = [];
 
 		$currencyExchange = new CurrencyExchange();
 
@@ -112,7 +119,7 @@ readonly class UsageRepository extends Repository {
 
 		while($unprocessedRows = $this->db->fetchAll("getUnprocessed", ["limit" => $limitPerIteration])) {
 			if(count($unprocessedRows) === 0) {
-				return $totalProcessed;
+				break;
 			}
 
 			$transaction->startWithoutRelations("Processing usages");
@@ -136,6 +143,14 @@ readonly class UsageRepository extends Repository {
 				$user = $userCache[$userId] ?? $userRepository->getById($userId);
 				$userCache[$user->id] = $user;
 
+				$jsonString = $row->getString("data");
+				$data = json_decode($jsonString, true);
+				if(!$data) {
+					$error = json_last_error();
+					$errorMessage = json_last_error_msg();
+					Log::critical("JSON error $error: $errorMessage", [$jsonString]);
+				}
+
 				$artistName = $row->getString("extractedArtistName");
 				$productTitle = $row->getString("extractedProductTitle");
 
@@ -158,7 +173,8 @@ readonly class UsageRepository extends Repository {
 					$artistCache["$artistName||$userId"] = $artist;
 				}
 
-				$product = $productCache["$productTitle||$artistName||$userId"] ?? null;
+				$productCacheKey = "$productTitle||$artistName||$userId";
+				$product = $productCache[$productCacheKey] ?? null;
 				if(!$product) {
 					$product = $productRepository->getByTitleAndArtist(
 						$productTitle,
@@ -173,38 +189,52 @@ readonly class UsageRepository extends Repository {
 						);
 						$productRepository->create($user, $product);
 					}
-					$productCache["$productTitle||$artistName||$userId"] = $product;
-				}
-
-				$jsonString = $row->getString("data");
-				$data = json_decode($jsonString, true);
-				if(!$data) {
-					$error = json_last_error();
-					$errorMessage = json_last_error_msg();
-					Log::critical("JSON error $error: $errorMessage", [$jsonString]);
+					$productCache[$productCacheKey] = $product;
 				}
 
 				$earning = $upload->extractEarning($data);
 				$earningDate = $upload->extractEarningDate($data);
 
-				$usageOfProduct = [
-					"id" => new Ulid("uop"),
-					"usageId" => $usageId,
-					"productId" => $product->id,
-					"earning" => $earning->value,
-					"earningDate" => $earningDate->format("Y-m-d H:i:s"),
-					"originalEarning" => $earning->value,
-					"originalCurrency" => $earning->currency?->name,
-					"statementType" => $upload->type,
-					"estimateAUD" => null,//$currencyExchange->convert($earning, $earningDate, Currency::AUD),
-					"estimateCAD" => null,//$currencyExchange->convert($earning, $earningDate, Currency::CAD),
-					"estimateEUR" => null,//$currencyExchange->convert($earning, $earningDate, Currency::EUR),
-					"estimateGBP" => $currencyExchange->convert($earning, $earningDate, Currency::GBP),
-					"estimateUSD" => $currencyExchange->convert($earning, $earningDate, Currency::USD),
-					"estimateMXN" => null,//$currencyExchange->convert($earning, $earningDate, Currency::MXN),
-					"estimateNZD" => null,//$currencyExchange->convert($earning, $earningDate, Currency::NZD),
-				];
-				fputcsv($fhUsages, $usageOfProduct);
+				$type = $upload->getUsageType($data);
+				if($type === UsageType::COST) {
+					if(!isset($costMap[$productCacheKey])) {
+						$costMap[$productCacheKey] = [];
+					}
+					if(!isset($costMap[$productCacheKey][$earningDate->format("Y-m-d")])) {
+						$costMap[$productCacheKey][$earningDate->format("Y-m-d")] = [];
+					}
+
+					$costDescription = $upload->getCostDescription($data);
+					if(str_starts_with($costDescription, "Cinram Storage")) {
+						$costDescription = "Cinram Storage";
+					}
+
+					if(!isset($costMap[$productCacheKey][$earningDate->format("Y-m-d")][$costDescription])) {
+						$costMap[$productCacheKey][$earningDate->format("Y-m-d")][$costDescription] = 0;
+					}
+
+					$costMap[$productCacheKey][$earningDate->format("Y-m-d")][$costDescription] += $earning->value;
+				}
+				else {
+					$usageOfProduct = [
+						"id" => new Ulid("uop"),
+						"usageId" => $usageId,
+						"productId" => $product->id,
+						"earning" => $earning->value,
+						"earningDate" => $earningDate->format("Y-m-d H:i:s"),
+						"originalEarning" => $earning->value,
+						"originalCurrency" => $earning->currency?->name,
+						"statementType" => $upload->type,
+						"estimateAUD" => null,//$currencyExchange->convert($earning, $earningDate, Currency::AUD),
+						"estimateCAD" => null,//$currencyExchange->convert($earning, $earningDate, Currency::CAD),
+						"estimateEUR" => null,//$currencyExchange->convert($earning, $earningDate, Currency::EUR),
+						"estimateGBP" => $currencyExchange->convert($earning, $earningDate, Currency::GBP),
+						"estimateUSD" => $currencyExchange->convert($earning, $earningDate, Currency::USD),
+						"estimateMXN" => null,//$currencyExchange->convert($earning, $earningDate, Currency::MXN),
+						"estimateNZD" => null,//$currencyExchange->convert($earning, $earningDate, Currency::NZD),
+					];
+					fputcsv($fhUsages, $usageOfProduct);
+				}
 
 				$totalProcessed += $this->db->update("setProcessed", $usageId);
 			}
@@ -221,6 +251,30 @@ readonly class UsageRepository extends Repository {
 			$chunkDeltaTime = number_format($chunkEndTime - $chunkStartTime, 2);
 			$transaction->commit();
 			Log::debug("Chunk processed $totalProcessed ($artistName - $productTitle) $chunkDeltaTime seconds");
+		}
+
+//					$cost = new Cost(
+//						new Ulid("cost"),
+//						$product,
+//						$upload->getCostDescription($data),
+//						$earning,
+//						$earningDate,
+//					);
+//					$costRepository->create($cost, $user);
+		foreach($costMap as $productCacheKey => $costDateMap) {
+			foreach($costDateMap as $dateString => $costDataMap) {
+				foreach($costDataMap as $title => $amount) {
+					$product = $productCache[$productCacheKey];
+					$cost = new Cost(
+						new Ulid("cost"),
+						$product,
+						$title,
+						new Money($amount),
+						new DateTime($dateString),
+					);
+					$costRepository->create($cost, $user);
+				}
+			}
 		}
 
 		return $totalInserts;
@@ -280,7 +334,6 @@ readonly class UsageRepository extends Repository {
 		$transaction->commit();
 		return $numCalculated;
 	}
-
 
 	/**
 	 * @return array<string, array<string, array<int, string>>>

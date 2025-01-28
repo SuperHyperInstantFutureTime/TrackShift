@@ -13,10 +13,12 @@ use Gt\DomTemplate\BindGetter;
 use SHIFT\TrackShift\Content\FileFixer;
 use SHIFT\TrackShift\Royalty\Currency;
 use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Usage\UsageType;
 
 abstract class Upload {
 	const CURRENCY_COLUMN = null;
 	const CURRENCY_OVERRIDE = null;
+	const COST_TYPE_COLUMN = null;
 	const REQUIRES_PRELOADING = false;
 
 	/** @var array<string, string> key = ISRC; value = UPC */
@@ -103,6 +105,18 @@ abstract class Upload {
 	public function preloadMissingProductTitleData(array $row):void {
 		// TODO: Most uploads will not have anything to do here, but
 		// for those that do, this will always be called.
+	}
+
+	public function getUsageType(array $row):UsageType {
+		// Most uploads will only contain earnings, but if they could
+		// contain anything else, override this function.
+		return UsageType::EARNING;
+	}
+
+	public function getCostDescription(array $row):?string {
+		// Most uploads will not have costs, and therefore no cost
+		// descriptions, but those that do can override this function.
+		return null;
 	}
 
 	public function getDefaultCurrency():Currency {

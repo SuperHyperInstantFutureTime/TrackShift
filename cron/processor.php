@@ -8,6 +8,7 @@ use Gt\Session\FileHandler;
 use Gt\Session\Session;
 use SHIFT\TrackShift\Artist\ArtistRepository;
 use SHIFT\TrackShift\Auth\UserRepository;
+use SHIFT\TrackShift\Cost\CostRepository;
 use SHIFT\TrackShift\Product\ProductRepository;
 use SHIFT\TrackShift\Repository\DatabaseTransaction;
 use SHIFT\TrackShift\Upload\UploadRepository;
@@ -17,6 +18,7 @@ function go(
 	UsageRepository $usageRepository,
 	ArtistRepository $artistRepository,
 	ProductRepository $productRepository,
+	CostRepository $costRepository,
 	UploadRepository $uploadRepository,
 	UserRepository $userRepository,
 	DatabaseTransaction $dbTransaction,
@@ -35,6 +37,7 @@ function go(
 			$artistRepository,
 			$userRepository,
 			$uploadRepository,
+			$costRepository,
 			$dbTransaction,
 		);
 
@@ -117,6 +120,7 @@ function processProductUsages(
 	ArtistRepository $artistRepository,
 	UserRepository $userRepository,
 	UploadRepository $uploadRepository,
+	CostRepository $costRepository,
 	DatabaseTransaction $dbTransaction,
 ):void {
 	$time = microtime(true);
@@ -125,6 +129,7 @@ function processProductUsages(
 		$artistRepository,
 		$userRepository,
 		$uploadRepository,
+		$costRepository,
 		$dbTransaction,
 	);
 	if($numUsagesProcessed > 0) {
@@ -162,9 +167,9 @@ $database = new Database($settings);
 $usageRepository = new UsageRepository($database->queryCollection("Usage"));
 $artistRepository = new ArtistRepository($database->queryCollection("Artist"));
 $productRepository = new ProductRepository($database->queryCollection("Product"), $artistRepository);
+$costRepository = new CostRepository($database->queryCollection("Cost"), $productRepository);
 $uploadRepository = new UploadRepository($database->queryCollection("Upload"));
 $userRepository = new UserRepository($database->queryCollection("User"), $session->getStore(UserRepository::SESSION_STORE_KEY, true));
-
 
 // Parse $argv into a key-value pair associative array
 $_GET = [];
@@ -189,6 +194,7 @@ go(
 	$usageRepository,
 	$artistRepository,
 	$productRepository,
+	$costRepository,
 	$uploadRepository,
 	$userRepository,
 	$transaction,
