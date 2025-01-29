@@ -8,7 +8,23 @@
 
 	table {
 		border-collapse: collapse;
+		background-color: var(--pal-6);
+		overflow-x: auto;
+		display: block;
+		width: 100%;
+		-webkit-overflow-scrolling: touch; // Smooth scrolling for iOS
+		white-space: nowrap;
+
+		@media(min-width: $break-small) {
+			display: table;
+		}
+
 		thead {
+			position: sticky;
+			top: 0;
+			width: 100%;
+			background-color: var(--pal-6);
+
 			tr {
 				th {
 
@@ -16,6 +32,7 @@
 			}
 		}
 		tbody {
+			width: 100%;
 			tr {
 				td {
 					padding: 1rem 0;
