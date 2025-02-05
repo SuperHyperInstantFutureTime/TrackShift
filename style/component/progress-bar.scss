@@ -1,0 +1,26 @@
+progress[value] {
+    --color: black; /* the progress color */
+    --background: white; /* the background color */
+  
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 3px black solid;
+    padding:3px;
+    // width: 200px;
+    margin: 0 auto;
+    border-radius: 1em;
+    background: var(--background);
+  }
+  progress[value]::-webkit-progress-bar {
+    border-radius: 1em;
+    background: var(--background);
+  }
+  progress[value]::-webkit-progress-value {
+    border-radius: 1em;
+    background: var(--color);
+  }
+  progress[value]::-moz-progress-bar {
+    border-radius: 1em;
+    background: var(--color);
+  }

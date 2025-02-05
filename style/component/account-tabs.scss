@@ -9,19 +9,19 @@ account-tabs {
 		margin: 0;
 		padding-left:0;
 		display: flex;
-		border-bottom: 2px solid var(--pal-utility-dark-1);
+		// border-bottom: 2px solid var(--pal-utility-dark-1);
 
 		li {
-			margin-right: 0.5rem;
+			margin-right: 2rem;
 
 			a {
 				position: relative;
 				display: block;
-				padding: 1rem 2rem;
-				border: 2px solid var(--pal-utility-dark-1);
-				border-top-left-radius: 1rem;
-				border-top-right-radius: 1rem;
-				border-bottom: none;
+				// padding: 1rem 2rem;
+				// border: 2px solid var(--pal-utility-dark-1);
+				// border-top-left-radius: 1rem;
+				// border-top-right-radius: 1rem;
+				// border-bottom: none;
 				color: var(--pal-utility-dark-1);
 				text-decoration: none;
 			}
@@ -33,11 +33,11 @@ account-tabs {
 					&::after {
 						content: "";
 						position: absolute;
-						bottom: -2px;
+						bottom: -0.5rem;
 						left: 0;
 						right: 0;
-						height: 1rem;
-						background-color: var(--pal-6);
+						height: 5px;
+						background-color: var(--pal-utility-dark-1);
 					}
 				}
 			}
