@@ -1,26 +1,43 @@
-SELECT SUM(netProfit) as totalNetProfit
-FROM (
-    SELECT
-        Product.id,
+select
+
+    (
+        coalesce(sum(UsageOfProduct.earning), 0) -
         (
-            SELECT SUM(earning)
-            FROM UsageOfProduct
-            WHERE productId = Product.id AND (earningDate BETWEEN :periodFrom AND :periodTo)
+            select
+                coalesce(sum(Cost.amount), 0)
+            from
+                Cost
+            where
+                Cost.date >= :periodFrom and Cost.date <= :periodTo
         ) -
-        (
-            SELECT COALESCE(SUM(Cost.amount), 0)
-            FROM Cost
-            WHERE Cost.productId = Product.id AND (date BETWEEN :periodFrom AND :periodTo)
-        ) -
-        (
-            SELECT COALESCE(SUM(((SELECT SUM(earning) FROM UsageOfProduct WHERE productId = Product.id AND (earningDate BETWEEN :periodFrom AND :periodTo)) - COALESCE((SELECT SUM(Cost.amount) FROM Cost WHERE Cost.productId = Product.id AND (date BETWEEN :periodFrom AND :periodTo)), 0)) * (SplitPercentage.percentage / 100)), 0)
-            FROM
-                Split
-            JOIN SplitPercentage ON Split.id = SplitPercentage.splitId
-            WHERE Split.productId = Product.id
-        ) as netProfit
-    FROM
-        Product
-    WHERE
-        Product.uploadUserId = :userId
-) as ProductProfits
+        coalesce(sum(J_Product_SplitPercentage.sumPercentage), 0)
+    ) as totalProfit
+from
+    Product
+inner join
+    UsageOfProduct
+on
+    UsageOfProduct.productId = Product.id
+    and (UsageOfProduct.earningDate between :periodFrom and :periodTo)
+left join
+    (
+        select
+            Split.productId,
+            sum(SplitPercentage.percentage) as sumPercentage
+        from
+            Split
+        inner join
+            SplitPercentage
+        on
+            Split.id = SplitPercentage.splitId
+        group by
+            Split.productId
+    ) J_Product_SplitPercentage
+on
+    J_Product_SplitPercentage.productId = Product.id
+inner join
+    Artist
+on
+    Artist.id = Product.artistId
+where
+    Product.uploadUserId = :userId;

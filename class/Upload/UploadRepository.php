@@ -8,6 +8,7 @@ use Gt\Ulid\Ulid;
 use League\Csv\Reader;
 use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Content\FileFixer;
+use SHIFT\TrackShift\Product\Product;
 use SHIFT\TrackShift\Repository\Repository;
 use SHIFT\TrackShift\Royalty\Money;
 
@@ -143,7 +144,7 @@ readonly class UploadRepository extends Repository {
 	}
 
 	public function delete(Upload $upload, User $user):void {
-		$this->db->update("invalidateProductCache", $upload->id);
+//		$this->db->update("invalidateProductCache", $upload->id);
 		$this->db->delete("delete", [
 			"id" => $upload->id,
 			"userId" => $user->id,
@@ -239,22 +240,32 @@ readonly class UploadRepository extends Repository {
 		return $this->isCsv($filePath, "\t");
 	}
 
-	public function cacheEarnings():int {
+	public function cacheProfit(?User $user = null):int {
 		$numUpdated = 0;
 
-		foreach($this->db->fetchAll("getUncachedEarnings") as $row) {
-			$totalEarning = $this->db->fetchFloat("calculateTotalEarning", $row->getString("id"));
+		foreach($this->db->fetchAll("getUncachedProfits") as $row) {
+			$userId = $row->getString("userId");
+			if($user && $user->id !== $userId) {
+				continue;
+			}
+
+			$totalProfit = $this->db->fetchFloat("calculateTotalProfit", $row->getString("id"));
 			$numUpdated += $this->db->update("cacheEarning", [
 				"uploadId" => $row->getString("id"),
-				"totalEarning" => $totalEarning,
+				"totalProfit" => $totalProfit,
 			]);
 		}
 
 		return $numUpdated;
 	}
 
-	public function clearEarningCache(Upload $upload):void {
-		$this->db->update("clearEarningCache", $upload->id);
+	public function invalidateProfitCacheForProduct(Product $product):void {
+		$changes = $this->db->update("invalidateProductCache", $product->id);
+		Log::debug("Changes: $changes for $product->id");
+	}
+
+	public function clearProfitCache(Upload $upload):void {
+		$this->db->update("clearProfitCache", $upload->id);
 	}
 
 	private function hasTsvColumns(
@@ -331,7 +342,7 @@ readonly class UploadRepository extends Repository {
 		}
 
 		$earnings = new Money();
-		if($earningsFloat = $row->getFloat("totalEarningCache")) {
+		if($earningsFloat = $row->getFloat("totalProfitCache")) {
 			$earnings = new Money($earningsFloat);
 		}
 

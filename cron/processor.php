@@ -47,15 +47,16 @@ function go(
 			$dbTransaction,
 		);
 
-		$uploadRepository->cacheEarnings();
+		$uploadRepository->cacheProfit();
 	}
 	catch(Throwable $e) {
+		$trace = $e->getTrace()[4];
 		$dbTransaction->rollback(
 			$e->getMessage()
 			. " - "
-			. $e->getFile()
+			. $trace["file"]
 			. ":"
-			. $e->getLine()
+			. $trace["line"]
 		);
 	}
 }

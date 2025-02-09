@@ -7,9 +7,8 @@ select
 	Product.titleNormalised,
 
 	sum(UsageOfProduct.earning) as totalEarning,
-
 	J_Product_Cost.sumAmount as totalCost,
-	J_Product_SplitPercentage.sumPercentage as percentageOutgoing
+	(J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount) as splitOutgoing
 
 from
 	Product

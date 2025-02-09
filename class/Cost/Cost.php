@@ -10,13 +10,17 @@ use SHIFT\TrackShift\Repository\Entity;
 use SHIFT\TrackShift\Royalty\Money;
 
 readonly class Cost extends Entity {
+	public Money $amount;
+
 	public function __construct(
 		public string $id,
 		public Product $product,
 		public string $description,
-		public Money $amount,
+		Money $amount,
 		public DateTimeInterface $date,
-	) {}
+	) {
+		$this->amount = $amount->withAbsoluteValue();
+	}
 
 	#[BindGetter]
 	public function getAddedOn():string {

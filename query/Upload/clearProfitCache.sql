@@ -1,6 +1,6 @@
 update Upload
 set
-	totalEarningCache = null
+	Upload.totalProfitCache = null
 where
 	id = ?
 

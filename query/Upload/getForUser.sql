@@ -3,7 +3,7 @@ select
 	Upload.userId,
 	Upload.filePath,
 	Upload.type,
-	totalEarningCache,
+	totalProfitCache,
 # 	sum(UsageOfProduct.earning) as totalEarningCache,
 	usagesProcessed
 

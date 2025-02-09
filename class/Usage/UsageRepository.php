@@ -392,7 +392,7 @@ readonly class UsageRepository extends Repository {
 			$productRepository->clearEarningCache($product);
 		}
 		foreach($uploadRepository->getUploadsForUser($user) as $upload) {
-			$uploadRepository->clearEarningCache($upload);
+			$uploadRepository->clearProfitCache($upload);
 		}
 
 		$exchange = new CurrencyExchange();

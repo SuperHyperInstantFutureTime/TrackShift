@@ -120,7 +120,7 @@ readonly class ProductRepository extends Repository {
 	):array {
 		$earningList = [];
 
-		$resultSet = $this->db->fetchAll("getEarnings", [
+		$resultSet = $this->db->fetchAll("getTableData", [
 			"userId" => $user->id,
 			"limit" => $count,
 			"offset" => $offset,
@@ -151,8 +151,7 @@ readonly class ProductRepository extends Repository {
 			$balance = $earning->withSubtraction($cost);
 
 			$outgoing = new Money();
-			if($outgoingPercentage = $row->getFloat("percentageOutgoing")) {
-				$outgoingValue = ($outgoingPercentage / 100) * $balance->value;
+			if($outgoingValue = $row->getFloat("splitOutgoing")) {
 				$outgoing = new Money(round($outgoingValue, 2));
 			}
 
@@ -242,13 +241,16 @@ readonly class ProductRepository extends Repository {
 			"periodFrom" => $periodFrom,
 			"periodTo" => $periodTo,
 		];
-		$earnings = $this->db->fetchFloat("getSummaryEarnings", $bindings);
-		$costs = $this->db->fetchFloat("getSummaryCosts", $bindings);
-		$profits = $this->db->fetchFloat("getSummaryProfits", $bindings);
+		$row = $this->db->fetch("getSummary", $bindings);
+		$earnings = $row->getFloat("summaryEarnings");
+		$costs = $row->getFloat("summaryCosts");
+		$outgoings = $row->getFloat("summaryOutgoings");
+		$profits = $earnings - $costs - $outgoings;
 
 		return new ProductSummary(
 			$earnings ?? 0.0,
 			$costs ?? 0.0,
+			$outgoings ?? 0.0,
 			$profits ?? 0.0,
 		);
 	}

@@ -1,22 +1,16 @@
 update Product
 
-inner join
-	UsageOfProduct
-on
-	Product.id = UsageOfProduct.productId
+inner join UsageOfProduct
+on UsageOfProduct.productId = Product.id
 
-inner join
-	`Usage`
-on
-	UsageOfProduct.usageId = `Usage`.id
+inner join `Usage`
+on `Usage`.id = UsageOfProduct.usageId
 
-inner join
-	Upload
-on
-	`Usage`.uploadId = Upload.id
+inner join Upload
+on Upload.id = `Usage`.uploadId
 
 set
-	Product.totalEarningCache = null
+	Upload.totalProfitCache = null
 
 where
-	Upload.id = ?
+	Product.id = ?

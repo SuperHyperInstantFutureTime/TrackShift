@@ -30,4 +30,12 @@ class Money implements Stringable {
 		$newValue = (float)substr((string)$newValue, 0, 2 + self::DECIMAL_ACCURACY);
 		return new Money($newValue);
 	}
+
+	public function withAbsoluteValue():self {
+		if($this->value >= 0) {
+			return $this;
+		}
+
+		return new Money(abs($this->value));
+	}
 }

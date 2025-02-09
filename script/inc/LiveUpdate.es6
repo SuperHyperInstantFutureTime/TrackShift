@@ -1,3 +1,5 @@
+import {Currency} from "./Currency.es6";
+
 export class LiveUpdate {
 	static init() {
 		let triggerElement = document.querySelector("[data-live-update='main']");
@@ -40,6 +42,7 @@ function initElement(element) {
 
 function replaceAll(elementList, document, newDocument) {
 	elementList.forEach(element => replaceElement(element, document, newDocument));
+	Currency.init();
 }
 
 function replaceElement(element, document, newDocument) {

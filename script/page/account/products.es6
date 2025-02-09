@@ -26,6 +26,7 @@ function loadSummary(callback) {
 		let selector = "product-summary";
 		document.querySelector(selector).innerHTML = newDocument.querySelector(selector).innerHTML;
 		callback();
+		Currency.init();
 	});
 }
 

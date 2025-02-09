@@ -45,7 +45,7 @@ abstract class Upload {
 	public function __construct(
 		public readonly string $id,
 		public string $filePath,
-		public readonly Money $totalEarnings = new Money(0),
+		public readonly Money $totalProfit = new Money(0),
 		public ?DateTimeInterface $usagesProcessed = null,
 		public ?string $userId = null,
 	) {

@@ -11,7 +11,7 @@ readonly class ProductEarning extends Entity {
 		public User $user,
 		public Product $product,
 		public Money $earning,
-		public Money $cost,
+		public Money $costs,
 		private Money $outgoing,
 		public Money $profit,
 	) {}
@@ -26,8 +26,8 @@ readonly class ProductEarning extends Entity {
 
 	#[BindGetter]
 	public function getBalance():?string {
-		if($this->cost->value) {
-			return $this->earning->withSubtraction($this->cost);
+		if($this->costs->value) {
+			return $this->earning->withSubtraction($this->costs);
 		}
 
 		return null;

@@ -3,7 +3,7 @@ select
 	userId,
 	filePath,
 	type,
-	totalEarningCache,
+	totalProfitCache,
 	usagesProcessed
 
 from

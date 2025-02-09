@@ -12,6 +12,7 @@ use SHIFT\TrackShift\Cost\Cost;
 use SHIFT\TrackShift\Cost\CostRepository;
 use SHIFT\TrackShift\Product\ProductRepository;
 use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Upload\UploadRepository;
 
 function go(
 	ArtistRepository $artistRepository,
@@ -69,11 +70,13 @@ function do_save(
 	Input $input,
 	CostRepository $costRepository,
 	ProductRepository $productRepository,
+	UploadRepository $uploadRepository,
 	Response $response,
 	DynamicPath $dynamicPath,
 	User $user,
 ):void {
 	$product = $productRepository->getById($input->getString("product"));
+	$uploadRepository->invalidateProfitCacheForProduct($product);
 	$description = $input->getString("description");
 	$amount = new Money($input->getFloat("amount"));
 	$date = $input->getDateTime("date");
@@ -81,6 +84,7 @@ function do_save(
 	$id = $dynamicPath->get("cost");
 
 	if($id === "_new") {
+		$redirectType = "created";
 		$id = new Ulid("cost");
 		$cost = new Cost(
 			$id,
@@ -90,9 +94,9 @@ function do_save(
 			$date,
 		);
 		$costRepository->create($cost, $user);
-		$response->redirect("/account/costs/?created=$id");
 	}
 	else {
+		$redirectType = "updated";
 		$cost = new Cost(
 			$id,
 			$product,
@@ -101,19 +105,30 @@ function do_save(
 			$date,
 		);
 		$costRepository->update($cost, $user);
-		$response->redirect("/account/costs/?updated=$id");
 	}
+
+	$uploadRepository->cacheProfit($user);
+	$response->redirect("/account/costs/?$redirectType=$id");
 }
 
 function do_delete(
 	CostRepository $costRepository,
+	ProductRepository $productRepository,
+	UploadRepository $uploadRepository,
 	User $user,
+	Input $input,
 	DynamicPath $dynamicPath,
 	Response $response,
 ):void {
+	$product = $productRepository->getById($input->getString("product"));
+	$uploadRepository->invalidateProfitCacheForProduct($product);
+
 	$id = $dynamicPath->get();
 	if($cost = $costRepository->getById($id)) {
 		$costRepository->delete($cost, $user);
 	}
+
+	$uploadRepository->cacheProfit($user);
+
 	$response->redirect("../");
 }

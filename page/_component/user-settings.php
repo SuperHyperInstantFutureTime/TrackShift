@@ -61,7 +61,7 @@ function do_save(
 		}
 	}
 
-	$uploadRepository->cacheEarnings();
+	$uploadRepository->cacheProfit();
 	$userRepository->setUserSettings($user, $settings);
 	$response->reload();
 }

@@ -4,10 +4,10 @@ select
 	filePath,
 	type,
 	usagesProcessed,
-	totalEarningCache
+	totalProfitCache
 
 from
 	Upload
 
 where
-	Upload.totalEarningCache is null
+	Upload.totalProfitCache is null
