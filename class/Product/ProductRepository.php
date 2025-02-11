@@ -110,8 +110,8 @@ readonly class ProductRepository extends Repository {
 		]);
 	}
 
-	/** @return array<ProductEarning> */
-	public function getProductEarnings(
+	/** @return array<ProductFinanceDetails> */
+	public function getProductTableData(
 		User $user,
 		int $count,
 		int $offset,
@@ -134,7 +134,7 @@ readonly class ProductRepository extends Repository {
 				$earning = new Money($totalEarningFloat);
 			}
 			if(!$earning) {
-				continue;
+				$earning = new Money();
 			}
 			$product = new Product(
 				$row->getString("productId"),
@@ -155,17 +155,16 @@ readonly class ProductRepository extends Repository {
 				$outgoing = new Money(round($outgoingValue, 2));
 			}
 
-			$profit = $balance->withSubtraction($outgoing);
-
 			array_push(
 				$earningList,
-				new ProductEarning(
+				new ProductFinanceDetails(
 					$user,
 					$product,
 					$earning,
+					$balance,
 					$cost,
 					$outgoing,
-					$profit,
+					new Money($row->getFloat("profit")),
 				)
 			);
 		}
@@ -245,13 +244,11 @@ readonly class ProductRepository extends Repository {
 		$earnings = $row->getFloat("summaryEarnings");
 		$costs = $row->getFloat("summaryCosts");
 		$outgoings = $row->getFloat("summaryOutgoings");
-		$profits = $earnings - $costs - $outgoings;
 
 		return new ProductSummary(
 			$earnings ?? 0.0,
 			$costs ?? 0.0,
 			$outgoings ?? 0.0,
-			$profits ?? 0.0,
 		);
 	}
 

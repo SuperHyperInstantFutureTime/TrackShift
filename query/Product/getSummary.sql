@@ -1,18 +1,11 @@
 select
-    sum(DetailedProductsSummary.totalEarning) as summaryEarnings,
-    sum(DetailedProductsSummary.totalCost) as summaryCosts,
-    sum(DetailedProductsSummary.splitOutgoing) as summaryOutgoings
+    coalesce(sum(DetailedProductsSummary.totalEarning), 0) as summaryEarnings,
+    coalesce(sum(DetailedProductsSummary.totalCost), 0) as summaryCosts,
+    coalesce(sum(DetailedProductsSummary.splitOutgoing), 0) as summaryOutgoings
 
 from
     (
 	select
-		Product.id as productId,
-		Product.artistId,
-		Artist.name as artistName,
-		Artist.nameNormalised as artistNameNormalised,
-		Product.title,
-		Product.titleNormalised,
-
 		sum(UsageOfProduct.earning) as totalEarning,
 		J_Product_Cost.sumAmount as totalCost,
 		(J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount) as splitOutgoing
@@ -20,7 +13,7 @@ from
 	from
 		Product
 
-	inner join
+	left join
 		UsageOfProduct
 	on
 		UsageOfProduct.productId = Product.id

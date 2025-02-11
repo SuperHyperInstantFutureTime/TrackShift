@@ -8,12 +8,14 @@ select
 
 	sum(UsageOfProduct.earning) as totalEarning,
 	J_Product_Cost.sumAmount as totalCost,
-	(J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount) as splitOutgoing
+	(J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount) as splitOutgoing,
+
+	(coalesce(sum(UsageOfProduct.earning), 0) - J_Product_Cost.sumAmount - coalesce((J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount), 0)) as profit
 
 from
 	Product
 
-inner join
+left join
 	UsageOfProduct
 on
 	UsageOfProduct.productId = Product.id
@@ -52,7 +54,7 @@ left join
 on
 	J_Product_SplitPercentage.productId = Product.id
 
-inner join
+left join
 	Artist
 on
 	Artist.id = Product.artistId
@@ -61,10 +63,12 @@ where
 	Product.uploadUserId = :userId
 
 group by
-	Product.id
+	Product.id,
+	Product.titleNormalised
 
 order by
-	sum(UsageOfProduct.earning) desc
+	profit desc,
+	Product.titleNormalised
 
 limit :limit
 offset :offset

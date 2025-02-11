@@ -101,6 +101,7 @@ readonly class UsageRepository extends Repository {
 		$totalProcessed = 0;
 
 		$userCache = [];
+		/** @var array<string, Upload> $uploadCache */
 		$uploadCache = [];
 		$artistCache = [];
 		$productCache = [];
@@ -253,14 +254,6 @@ readonly class UsageRepository extends Repository {
 			Log::debug("Chunk processed $totalProcessed ($artistName - $productTitle) $chunkDeltaTime seconds");
 		}
 
-//					$cost = new Cost(
-//						new Ulid("cost"),
-//						$product,
-//						$upload->getCostDescription($data),
-//						$earning,
-//						$earningDate,
-//					);
-//					$costRepository->create($cost, $user);
 		foreach($costMap as $productCacheKey => $costDateMap) {
 			foreach($costDateMap as $dateString => $costDataMap) {
 				foreach($costDataMap as $title => $amount) {

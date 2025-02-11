@@ -6,6 +6,7 @@ use SHIFT\TrackShift\Royalty\Money;
 class ProductSummary {
 	public Money $summaryEarnings;
 	public Money $summaryCosts;
+	public Money $summaryBalance;
 	public Money $summaryOutgoing;
 	public Money $summaryProfit;
 
@@ -13,11 +14,11 @@ class ProductSummary {
 		float $totalEarnings,
 		float $totalCosts,
 		float $totalOutgoings,
-		float $totalProfits,
 	) {
 		$this->summaryEarnings = new Money($totalEarnings);
 		$this->summaryCosts = new Money($totalCosts);
+		$this->summaryBalance = $this->summaryEarnings->withSubtraction($this->summaryCosts);
 		$this->summaryOutgoing = new Money($totalOutgoings);
-		$this->summaryProfit = new Money($totalProfits);
+		$this->summaryProfit = $this->summaryBalance->withSubtraction($this->summaryOutgoing);
 	}
 }

@@ -249,8 +249,8 @@ readonly class UploadRepository extends Repository {
 				continue;
 			}
 
-			$totalProfit = $this->db->fetchFloat("calculateTotalProfit", $row->getString("id"));
-			$numUpdated += $this->db->update("cacheEarning", [
+			$totalProfit = 0;//$this->db->fetchFloat("calculateTotalProfit", $row->getString("id"));
+			$numUpdated += $this->db->update("cacheTotalProfit", [
 				"uploadId" => $row->getString("id"),
 				"totalProfit" => $totalProfit,
 			]);

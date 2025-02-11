@@ -1,29 +1,22 @@
 select
-    sum(DetailedProductsSummary.totalEarning) - sum(DetailedProductsSummary.totalCost) - sum(DetailedProductsSummary.splitOutgoing) as totalProfit
+    sum(coalesce(DetailedProductsSummary.totalEarning, 0))
+    - sum(coalesce(DetailedProductsSummary.totalCost, 0))
+    - sum(coalesce(DetailedProductsSummary.splitOutgoing, 0)) as totalProfit
 
 from
     (
 	select
 		sum(UsageOfProduct.earning) as totalEarning,
-		coalesce(J_Product_Cost.sumAmount, 0.0) as totalCost,
-		coalesce((J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount), 0.0) as splitOutgoing
+		J_Product_Cost.sumAmount as totalCost,
+		(J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount) as splitOutgoing
 
 	from
 		Product
 
-	inner join
+	left join
 		UsageOfProduct
 	on
 		UsageOfProduct.productId = Product.id
-
-	inner join
-		`Usage`
-	on
-		`Usage`.id = UsageOfProduct.usageId
-
-	inner join Upload
-	on Upload.id = `Usage`.uploadId
-	and Upload.id = ?
 
 	left join
 		(

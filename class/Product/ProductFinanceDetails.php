@@ -6,11 +6,12 @@ use SHIFT\TrackShift\Auth\User;
 use SHIFT\TrackShift\Repository\Entity;
 use SHIFT\TrackShift\Royalty\Money;
 
-readonly class ProductEarning extends Entity {
+readonly class ProductFinanceDetails extends Entity {
 	public function __construct(
 		public User $user,
 		public Product $product,
 		public Money $earning,
+		public Money $balance,
 		public Money $costs,
 		private Money $outgoing,
 		public Money $profit,

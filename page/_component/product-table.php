@@ -18,7 +18,7 @@ function go(
 	$limit = 10;
 	$offset = $page * $limit;
 
-	$binder->bindList($productRepository->getProductEarnings(
+	$binder->bindList($productRepository->getProductTableData(
 		$user,
 		$limit,
 		$offset,
