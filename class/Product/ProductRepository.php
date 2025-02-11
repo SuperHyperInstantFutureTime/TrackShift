@@ -37,6 +37,7 @@ readonly class ProductRepository extends Repository {
 				"title" => new StringCleaner($product->title),
 				"titleNormalised" => new NormalisedString($product->title),
 				"uploadUserId" => $user->id,
+				"uploadId" => $product->upload->id,
 			]);
 			$count++;
 		}

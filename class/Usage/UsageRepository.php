@@ -187,6 +187,7 @@ readonly class UsageRepository extends Repository {
 							new Ulid("product"),
 							$productTitle,
 							$artist,
+							upload: $upload
 						);
 						$productRepository->create($user, $product);
 					}

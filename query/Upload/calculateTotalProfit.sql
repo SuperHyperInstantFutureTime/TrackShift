@@ -53,6 +53,9 @@ from
 	on
 		Artist.id = Product.artistId
 
+	where
+		Product.uploadId = ?
+
 	group by
 		Product.id
 

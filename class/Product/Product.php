@@ -5,6 +5,7 @@ use Gt\DomTemplate\BindGetter;
 use SHIFT\TrackShift\Artist\Artist;
 use SHIFT\TrackShift\Repository\Entity;
 use SHIFT\TrackShift\Royalty\Money;
+use SHIFT\TrackShift\Upload\Upload;
 
 readonly class Product extends Entity {
 	public function __construct(
@@ -12,6 +13,7 @@ readonly class Product extends Entity {
 		public string $title,
 		public ?Artist $artist,
 		public ?Money $totalEarning = null,
+		public ?Upload $upload = null,
 	) {}
 
 	#[BindGetter]
