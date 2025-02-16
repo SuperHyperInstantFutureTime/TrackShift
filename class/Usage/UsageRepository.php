@@ -155,11 +155,11 @@ readonly class UsageRepository extends Repository {
 				$artistName = $row->getString("extractedArtistName");
 				$productTitle = $row->getString("extractedProductTitle");
 
-				if(!$artistName || !$productTitle) {
+//				if(!$artistName || !$productTitle) {
 // Some usage rows do not have any data in them, such as Bandcamp payout rows.
-					$totalProcessed += $this->db->update("setProcessed", $usageId);
-					continue;
-				}
+//					$totalProcessed += $this->db->update("setProcessed", $usageId);
+//					continue;
+//				}
 
 				$artist = $artistCache["$artistName||$userId"] ?? null;
 				if(!$artist) {
