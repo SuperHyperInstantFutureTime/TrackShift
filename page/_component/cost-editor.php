@@ -29,8 +29,8 @@ function go(
 		$document->querySelector("select[name=artist]"),
 	);
 
-	$artistId = $input->getString("artist");
 	$id = $dynamicPath->get("cost");
+	$artistId = $input->getString("artist");
 	$cost = null;
 
 	if($id === "_new") {
@@ -42,7 +42,9 @@ function go(
 	else {
 		$cost = $costRepository->getById($id);
 		$binder->bindData($cost);
-		$artistId = $cost->product->artist->id;
+		if(!$artistId) {
+			$artistId = $cost->product->artist->id;
+		}
 	}
 
 	if($artistId) {
@@ -58,7 +60,7 @@ function go(
 		}
 	}
 
-	$binder->bindKeyValue("date", date("Y-m-d"));
+	$binder->bindKeyValue("dateValue", date("Y-m-d"));
 }
 
 function do_set_artist(Input $input, Response $response, Uri $uri):void {

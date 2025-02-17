@@ -1,7 +1,7 @@
 <form method="post" onchange="this.submit()">
 	<label>
 		<span>Artist</span>
-		<select name="artist" required data-bind:value="@name">
+		<select name="artist" required data-bind:value="@name" data-rebind>
 			<option></option>
 			<option data-list data-bind:text="name" data-bind:value="id">Artist</option>
 		</select>
@@ -28,7 +28,7 @@
 	</label>
 	<label>
 		<span>Date</span>
-		<input name="date" required type="date" data-bind:value="@name" autocomplete="off" />
+		<input name="date" required type="date" data-bind:value="dateValue" autocomplete="off" />
 	</label>
 
 	<div class="actions">

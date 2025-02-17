@@ -34,4 +34,9 @@ readonly class Cost extends Entity {
 	public function getDateFormatted():string {
 		return $this->date->format("jS M Y");
 	}
+
+	#[BindGetter]
+	public function getDateValue():string {
+		return $this->date->format("Y-m-d");
+	}
 }

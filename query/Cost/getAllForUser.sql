@@ -25,4 +25,4 @@ where
 	Cost.userId = ?
 
 order by
-	Artist.name, Product.title
+	Cost.date, Artist.name, Product.title

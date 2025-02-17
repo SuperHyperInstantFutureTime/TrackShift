@@ -45,4 +45,13 @@
 			}
 		}
 	}
+
+	.new {
+		@keyframes highlight-new {
+			from {
+				background-color: #81df6a;
+			}
+		}
+		animation: highlight-new 2s forwards 1;
+	}
 }

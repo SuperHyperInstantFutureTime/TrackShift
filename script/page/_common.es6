@@ -7,4 +7,9 @@ Page.go(function() {
 	Modal.init();
 	LiveUpdate.init();
 	Currency.init();
+
+	let newElement = document.querySelector(".new");
+	if(newElement) {
+		newElement.scrollIntoView({behavior: "smooth"})
+	}
 });
