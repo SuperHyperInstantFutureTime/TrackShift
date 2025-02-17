@@ -35,17 +35,7 @@ class ServiceLoader extends DefaultServiceLoader {
 
 	public function loadDatabaseTransaction():DatabaseTransaction {
 		$database = $this->container->get(Database::class);
-		$startCallback = function()use ($database) {
-			$database->executeSql("start transaction");
-		};
-		$commitCallback = function()use ($database) {
-			$database->executeSql("commit");
-		};
-
-		return new DatabaseTransaction(
-			$startCallback,
-			$commitCallback,
-		);
+		return new DatabaseTransaction($database);
 	}
 
 	public function loadContentRepo():ContentRepository {
