@@ -21,7 +21,7 @@ function go(
 	$receivedFileList = explode(";", $input->getString("received"));
 	foreach($element->querySelectorAll("tbody>tr td.basename") as $td) {
 		if(in_array($td->textContent, $receivedFileList)) {
-			$td->closest("tr")->classList->add("new");
+			$td->closest("tr")->classList->add("highlight");
 		}
 	}
 }

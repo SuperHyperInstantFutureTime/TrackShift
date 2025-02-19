@@ -8,8 +8,11 @@ Page.go(function() {
 	LiveUpdate.init();
 	Currency.init();
 
-	let newElement = document.querySelector(".new");
-	if(newElement) {
-		newElement.scrollIntoView({behavior: "smooth"})
+	let highlightElement = document.querySelector(".highlight");
+	if(highlightElement) {
+		highlightElement.scrollIntoView({
+			behavior: "smooth",
+			block: "center",
+		});
 	}
 });

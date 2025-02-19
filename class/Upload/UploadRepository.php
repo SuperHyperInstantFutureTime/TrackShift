@@ -203,7 +203,7 @@ readonly class UploadRepository extends Repository {
 		}
 
 		if($uploadedFileExtension === "xlsx") {
-			$type = CargoPhysicalUpload::class;
+			$type = $this->detectUploadTypeFromExcel($filePath);
 		}
 		elseif($this->isCsv($filePath)) {
 			$type = $this->detectUploadTypeFromCsv($filePath);
@@ -392,5 +392,9 @@ readonly class UploadRepository extends Repository {
 
 		$content = mb_convert_encoding($content, "UTF-8", $encoding);
 		file_put_contents($filePath, $content);
+	}
+
+	private function detectUploadTypeFromExcel(string $filePath):string {
+		return CargoPhysicalUpload::class;
 	}
 }

@@ -15,9 +15,9 @@ function go(
 ):void {
 	$binder->bindList($costRepository->getAll($user));
 
-	if($updatedId = $input->getString("updated")) {
-		if($updatedElement = $document->querySelector("[data-cost-id='$updatedId']")) {
-			$updatedElement->classList->add("new");
+	if($highlightId = $input->getString("highlight")) {
+		if($updatedElement = $document->querySelector("[data-cost-id='$highlightId']")) {
+			$updatedElement->classList->add("highlight");
 		}
 	}
 }

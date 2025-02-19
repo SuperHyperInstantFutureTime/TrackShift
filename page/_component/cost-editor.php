@@ -110,7 +110,7 @@ function do_save(
 	}
 
 	$uploadRepository->cacheProfit($user);
-	$response->redirect("/account/costs/?$redirectType=$id");
+	$response->redirect("/account/costs/?highlight=$id&type=$redirectType");
 }
 
 function do_delete(

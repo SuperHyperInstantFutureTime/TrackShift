@@ -165,7 +165,7 @@ readonly class ProductRepository extends Repository {
 					$balance,
 					$cost,
 					$outgoing,
-					new Money($row->getFloat("profit")),
+					new Money($row->getFloat("profit") ?? 0),
 				)
 			);
 		}
