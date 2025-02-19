@@ -13,6 +13,7 @@ use SHIFT\TrackShift\Split\EmptySplitPercentage;
 use SHIFT\TrackShift\Split\RemainderSplitPercentage;
 use SHIFT\TrackShift\Split\SplitPercentage;
 use SHIFT\TrackShift\Split\SplitRepository;
+use SHIFT\TrackShift\Upload\UploadRepository;
 
 function go(
 	ArtistRepository $artistRepository,
@@ -28,6 +29,7 @@ function go(
 	$artistId = $input->getString("artist");
 	$productId = $input->getString("product");
 	$id = $dynamicPath->get("split");
+	$binder->bindKeyValue("id", $id);
 
 	if($id === "_new") {
 		$element->querySelector("button[name=do][value=delete]")->remove();
@@ -111,6 +113,7 @@ function do_add_split(
 
 function do_delete_split(
 	SplitRepository $splitRepository,
+	UploadRepository $uploadRepository,
 	DynamicPath $dynamicPath,
 	Input $input,
 	Response $response,
@@ -121,6 +124,9 @@ function do_delete_split(
 	$splitRepository->deleteSplitPercentage($splitPercentageId);
 
 	$splitId = $dynamicPath->get("split");
+	$split = $splitRepository->getById($splitId, $user);
+	$uploadRepository->invalidateProfitCacheForProduct($split->product);
+
 	$artistId = $input->getString("artist");
 	$productId = $input->getString("product");
 //	$auditRepository->delete($user, $splitPercentageId);
@@ -130,11 +136,15 @@ function do_delete_split(
 function do_delete(
 	DynamicPath $dynamicPath,
 	SplitRepository $splitRepository,
+	UploadRepository $uploadRepository,
 //	AuditRepository $auditRepository,
 	User $user,
 	Response $response,
 ):void {
 	$splitId = $dynamicPath->get("split");
+	$split = $splitRepository->getById($splitId, $user);
+	$uploadRepository->invalidateProfitCacheForProduct($split->product);
+
 	$splitRepository->delete($splitId, $user);
 //	$auditRepository->delete($user, $splitId);
 	$response->redirect("../");

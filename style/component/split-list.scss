@@ -27,6 +27,16 @@ split-list {
 			border: var(--theme-ui-border);
 			border-radius: var(--theme-ui-border-radius);
 			margin-bottom: 1rem;
+
+			&.highlight {
+				@keyframes highlight-new {
+					from {
+						background-color: #81df6a;
+					}
+				}
+				animation: highlight-new 2s forwards 1;
+			}
+
 			>div {
 				display: flex;
 				justify-content: space-between;

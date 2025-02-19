@@ -10,7 +10,8 @@ Page.go(function() {
 });
 
 function init(component) {
-	let primaryButton = component.querySelector(".split-percentage-list .actions a.primary");
+	let linkButtonSelector = ".split-percentage-list .actions a.primary";
+	let primaryButton = component.querySelector(linkButtonSelector);
 
 	primaryButton.addEventListener("click", e => {
 		let secondLastForm = component.querySelector(".split-percentage-list form:nth-last-of-type(2)");
@@ -28,6 +29,11 @@ function init(component) {
 			credentials: "same-origin",
 			body: formData
 		}).then(response => {
+			return response.text();
+		}).then(html => {
+			let parser = new DOMParser();
+			let newDocument = parser.parseFromString(html, "text/html");
+			primaryButton.href = newDocument.querySelector(linkButtonSelector).href;
 			window.top.location.href = primaryButton.href;
 		});
 	});
