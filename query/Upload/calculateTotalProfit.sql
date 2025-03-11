@@ -1,66 +1,60 @@
-select
-    sum(coalesce(DetailedProductsSummary.totalEarning, 0))
-    - sum(coalesce(DetailedProductsSummary.totalCost, 0))
-    - sum(coalesce(DetailedProductsSummary.splitOutgoing, 0)) as totalProfit
-
-from
+SELECT
+    SUM(COALESCE(DetailedProductsSummary.totalEarning, 0))
+    - SUM(COALESCE(DetailedProductsSummary.totalCost, 0))
+    - SUM(COALESCE(DetailedProductsSummary.splitOutgoing, 0)) AS totalProfit
+FROM
     (
-	select
-		sum(UsageOfProduct.earning) as totalEarning,
-		J_Product_Cost.sumAmount as totalCost,
-		(J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount) as splitOutgoing
-
-	from
-		Product
-
-	left join
-		UsageOfProduct
-	on
-		UsageOfProduct.productId = Product.id
-
-	left join
-		(
-			select
-				productId,
-				sum(Cost.amount) as sumAmount
-			from
-				Cost
-			group by
-				productId
-		) J_Product_Cost
-	on
-		J_Product_Cost.productId = Product.id
-
-	left join
-		(
-			select
-				Split.productId,
-				sum(SplitPercentage.percentage) as sumPercentage
-			from
-				Split
-			inner join
-				SplitPercentage
-			on
-				Split.id = SplitPercentage.splitId
-			group by
-				Split.productId
-		) J_Product_SplitPercentage
-	on
-		J_Product_SplitPercentage.productId = Product.id
-
-	inner join
-		Artist
-	on
-		Artist.id = Product.artistId
-
-	where
-		Product.uploadId = ?
-
-	group by
-		Product.id
-
-	order by
-		sum(UsageOfProduct.earning) desc
-
-
-) as DetailedProductsSummary
+        SELECT
+            SUM(UsageOfProduct.earning) AS totalEarning,
+            J_Product_Cost.sumAmount AS totalCost,
+            (J_Product_SplitPercentage.sumPercentage / 100) *
+            (SUM(UsageOfProduct.earning) - J_Product_Cost.sumAmount) AS splitOutgoing
+        FROM
+            Product
+        LEFT JOIN
+            UsageOfProduct
+        ON
+            UsageOfProduct.productId = Product.id
+        LEFT JOIN
+            (
+                SELECT
+                    productId,
+                    SUM(Cost.amount) AS sumAmount
+                FROM
+                    Cost
+                GROUP BY
+                    productId
+            ) J_Product_Cost
+        ON
+            J_Product_Cost.productId = Product.id
+        LEFT JOIN
+            (
+                SELECT
+                    Split.productId,
+                    SUM(SplitPercentage.percentage) AS sumPercentage
+                FROM
+                    Split
+                INNER JOIN
+                    SplitPercentage
+                ON
+                    Split.id = SplitPercentage.splitId
+                GROUP BY
+                    Split.productId
+            ) J_Product_SplitPercentage
+        ON
+            J_Product_SplitPercentage.productId = Product.id
+        INNER JOIN
+            Artist
+        ON
+            Artist.id = Product.artistId
+        INNER JOIN
+            `Usage`
+        ON
+            `Usage`.id = UsageOfProduct.usageId
+        WHERE
+            `Usage`.uploadId = ?
+        GROUP BY
+            Product.id
+        ORDER BY
+            SUM(UsageOfProduct.earning) DESC
+    ) AS DetailedProductsSummary;
