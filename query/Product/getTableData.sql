@@ -61,6 +61,8 @@ on
 
 where
 	Product.uploadUserId = :userId
+and
+	Product.title != ''
 
 group by
 	Product.id,
