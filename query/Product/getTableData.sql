@@ -10,7 +10,7 @@ select
 	J_Product_Cost.sumAmount as totalCost,
 	(J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount) as splitOutgoing,
 
-	(coalesce(sum(UsageOfProduct.earning), 0) - J_Product_Cost.sumAmount - coalesce((J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount), 0)) as profit
+	(coalesce(sum(UsageOfProduct.earning), 0) - coalesce(J_Product_Cost.sumAmount, 0) - coalesce((J_Product_SplitPercentage.sumPercentage / 100) * (sum(UsageOfProduct.earning) - J_Product_Cost.sumAmount), 0)) as profit
 
 from
 	Product
