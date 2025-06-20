@@ -23,7 +23,7 @@
 		margin-left:0.75rem;
 	}
 
-	select, input {
+	select, input, textarea {
 		@extend %d-ui-element;
 		width: 100%;
 	}

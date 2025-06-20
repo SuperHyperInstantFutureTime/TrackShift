@@ -1,0 +1,24 @@
+sign-up-early-access {
+	@extend %o-container;
+
+	h3 {
+		background-color: var(--pal-2);
+		color: var(--pal-6);
+		padding: 0.5rem;
+		font-size: 1.25rem;
+		text-align: center;
+		font-weight: bold;
+	}
+
+	form {
+		@extend %d-form-fields;
+
+		.actions {
+			justify-content: center;
+
+			button {
+				flex-grow: 0.5;
+			}
+		}
+	}
+}

@@ -1,10 +1,17 @@
 body {
+	position: relative;
 	margin: 0;
 	height: 100%;
 	background-color: var(--pal-page-bg);
 	color: var(--pal-body);
 	font-family: var(--font-family-main);
 	overflow-x: hidden;
+
+	@media(min-width: $break-small) {
+	}
+
+	@media(min-width: $break-medium) {
+	}
 
 	&.modal {
 		global-header, global-footer, account-tabs {

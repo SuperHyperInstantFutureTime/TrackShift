@@ -45,6 +45,7 @@
 @import "component/product-summary";
 @import "component/product-period";
 @import "component/upload-table";
+@import "component/sign-up-early-access";
 @import "component/split-editor";
 @import "component/split-list";
 @import "component/user-settings";
@@ -54,6 +55,7 @@
 
 ::selection {
 	background-color: var(--pal-7);
+	color: var(--pal-4);
 }
 
 [hidden] {
@@ -70,21 +72,7 @@
 }
 
 body {
-	background-image: url("/asset/img/abstract/bg2.svg");
-	background-repeat: no-repeat;
-	background-position: right -12rem top -2rem ;
-	background-size: 24rem;
-	background-color: var(--pal-6);
-	background-attachment: scroll;
 
-	@media(min-width: $break-small) {
-		background-size: 32vw;
-		background-position: right -20rem top -2rem ;
-	}
-
-	@media(min-width: $break-medium) {
-		background-size: 38vw;
-	}
 }
 
 table {

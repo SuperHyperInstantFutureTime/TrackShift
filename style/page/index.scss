@@ -1,3 +1,112 @@
 body.uri--index {
-   
+	global-header {
+		a {
+			color: var(--pal-6);
+		}
+	}
+
+	section {
+		&.hero {
+			margin-top: -10rem;
+			padding-top: 10rem;
+			padding-bottom: 4rem;
+			background-color: var(--pal-5);
+			color: var(--pal-3);
+
+			h2 {
+				font-family: var(--font-family-main);
+				font-size: 1.25em;
+			}
+		}
+
+		&.overview {
+			color: var(--pal-4);
+
+			h1 {
+				margin: 4rem 0;
+			}
+
+			ol {
+				counter-reset: section;
+				padding-left: 4rem;
+				list-style-type: none;
+				line-height: 1.5;
+
+				li {
+					position: relative;
+					counter-increment: section;
+					padding-bottom: 1rem;
+
+					&::before {
+						content: counter(section);
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						font-size: 1.5rem;
+						font-weight: bold;
+						position: absolute;
+						left: -4rem;
+						top: 0.25rem;
+						width: 2.5rem;
+						aspect-ratio: 1;
+						border: 2px solid;
+						border-radius: 100%;
+					}
+				}
+			}
+
+			sign-up-early-access {
+				margin: 4rem 0;
+			}
+		}
+
+		&.problem {
+			background-color: var(--pal-5);
+			color: var(--pal-6);
+			padding: 4rem 0;
+
+			p {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				font-weight: bold;
+
+				em {
+					background-color: var(--pal-2);
+					color: var(--pal-6);
+					padding: 0.5rem;
+				}
+			}
+		}
+
+		&.solution {
+			padding: 4rem 0;
+		}
+
+		&.about {
+			padding: 4rem 0;
+
+			img {
+				max-width: 100%;
+				border-radius: 1rem;
+			}
+		}
+
+		&.contact {
+			margin: 0 1rem;
+			padding: 4rem 0;
+
+			form {
+				@extend %d-form-fields;
+
+				.actions {
+					justify-content: center;
+
+					button {
+						flex-grow: 0.5;
+					}
+				}
+			}
+		}
+	}
 }
