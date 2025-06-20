@@ -41,19 +41,20 @@
 </section>
 
 <section class="contact" id="contact">
+	<p id="contact-submit">Thank you for submitting your message. We'll get back to you as soon as possible.</p>
 	<h1>Get in touch</h1>
 	<form method="post">
 		<label>
 			<span>Your name</span>
-			<input name="name" required />
+			<input name="name" autocomplete="off" required />
 		</label>
 		<label>
 			<span>Email address</span>
-			<input name="email" type="email" required />
+			<input name="email" type="email" autocomplete="off" required />
 		</label>
 		<label>
 			<span>Message</span>
-			<textarea name="message" required />
+			<textarea name="message" autocomplete="off" required />
 		</label>
 		<button name="do" value="contact">Send your message</button>
 	</form>

@@ -96,6 +96,19 @@ body.uri--index {
 			margin: 0 1rem;
 			padding: 4rem 0;
 
+			#contact-submit {
+				display: none;
+
+				&:target {
+					display: block;
+					padding: 8rem 0;
+
+					&~* {
+						display: none;
+					}
+				}
+			}
+
 			form {
 				@extend %d-form-fields;
 

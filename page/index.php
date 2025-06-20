@@ -14,23 +14,38 @@ function go(
 	Input $input,
 	Response $response,
 ):void {
-	if($uploadRepository->getUploadsForUser($user)) {
-		if(!$input->contains("homepage")) {
-			$response->redirect("/account/uploads/");
-		}
-	}
+//	if($uploadRepository->getUploadsForUser($user)) {
+//		if(!$input->contains("homepage")) {
+//			$response->redirect("/account/uploads/");
+//		}
+//	}
+//
+//	if($input->contains("debug-user")) {
+//		if($authenticator->isLoggedIn()) {
+//			$authwaveUser = $authenticator->getUser();
+//			$matchingDebugUser = $userRepository->findByAuthwaveId($authwaveUser->id);
+//			if($matchingDebugUser) {
+//				$userRepository->persistUser($matchingDebugUser);
+//			}
+//			else {
+//				$userRepository->associateAuthwave($user, $authwaveUser);
+//			}
+//			$response->redirect("/");
+//		}
+//	}
+}
 
-	if($input->contains("debug-user")) {
-		if($authenticator->isLoggedIn()) {
-			$authwaveUser = $authenticator->getUser();
-			$matchingDebugUser = $userRepository->findByAuthwaveId($authwaveUser->id);
-			if($matchingDebugUser) {
-				$userRepository->persistUser($matchingDebugUser);
-			}
-			else {
-				$userRepository->associateAuthwave($user, $authwaveUser);
-			}
-			$response->redirect("/");
-		}
-	}
+function do_contact(
+	Input $input,
+	Response $response,
+):void {
+	$log = implode("\t", [
+		date("Y-m-d H:i:s"),
+		$input->getString("name"),
+		$input->getString("email"),
+		$input->getString("message"),
+	]);
+	file_put_contents("data/contact.txt", $log . "\n", FILE_APPEND);
+
+	$response->redirect("#contact-submit");
 }
