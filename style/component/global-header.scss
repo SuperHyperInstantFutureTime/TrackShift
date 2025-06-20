@@ -1,6 +1,7 @@
 global-header {
 	@extend %o-container;
 	position: relative;
+	z-index: 1;
 
 	display: block;
 
@@ -41,6 +42,12 @@ global-header {
 				list-style-type: none;
 				margin: 0;
 				padding: 0;
+
+				@media(min-width: $break-small) {
+					margin-top: -4rem;
+					margin-left: 12rem;
+					justify-content: flex-start;
+				}
 
 				>li {
 					a {

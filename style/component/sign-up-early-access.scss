@@ -1,6 +1,31 @@
 sign-up-early-access {
 	@extend %o-container;
 
+	margin-left: var(--margin-horizontal);
+	margin-right: var(--margin-horizontal);
+
+	@media(min-width: $break-small) {
+		--margin-horizontal: auto !important;
+
+		h3 {
+			display: block;
+		}
+	}
+
+	#signed-up {
+		display: none;
+
+		&:target {
+			display: block;
+			margin-bottom: 16rem;
+
+			&~* {
+				display: none;
+
+			}
+		}
+	}
+
 	h3 {
 		background-color: var(--pal-2);
 		color: var(--pal-6);
@@ -8,10 +33,21 @@ sign-up-early-access {
 		font-size: 1.25rem;
 		text-align: center;
 		font-weight: bold;
+
+		@media(min-width: $break-small) {
+			display: inline-block;
+			font-size: 1.5rem;
+			width: auto;
+		}
 	}
 
 	form {
 		@extend %d-form-fields;
+
+		@media(min-width: $break-small) {
+			max-width: 32rem;
+			margin: 0 auto;
+		}
 
 		.actions {
 			justify-content: center;

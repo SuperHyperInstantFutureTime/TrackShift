@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 219.01 412.03">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f6edef;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #4f4c6b;
+      }
+
+      .cls-3 {
+        fill: #272635;
+      }
+
+      .cls-4 {
+        fill: #6ab3df;
+      }
+
+      .cls-5 {
+        fill: #e86353;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <polygon class="cls-5" points="0 364.45 118.41 15.66 170.6 15.66 170.6 364.45 0 364.45"/>
+    <circle class="cls-4" cx="161.12" cy="31.22" r="31.22"/>
+    <circle class="cls-3" cx="105.87" cy="150.36" r="20.58"/>
+    <circle class="cls-1" cx="134.45" cy="224.56" r="26.3"/>
+    <circle class="cls-1" cx="121.79" cy="88.18" r="8.11"/>
+    <circle class="cls-3" cx="123.96" cy="286.13" r="10.29"/>
+    <circle class="cls-4" cx="56.57" cy="328.8" r="20.58"/>
+    <circle class="cls-2" cx="73.46" cy="255.17" r="9.62"/>
+    <circle class="cls-2" cx="153.46" cy="164.17" r="9.62"/>
+    <circle class="cls-4" cx="166.34" cy="359.37" r="52.66"/>
+  </g>
+</svg>

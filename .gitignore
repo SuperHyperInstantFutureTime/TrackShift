@@ -7,3 +7,4 @@ config.*.ini
 access-token.dat
 /data/cache
 /data/upload
+/node_modules
