@@ -8,13 +8,9 @@ global-header {
 	header {
 		>h1 {
 			position: relative;
-			text-align: center;
 			font-family: var(--font-family-main);
 			font-weight: 900;
-
-			@media(min-width: $break-small) {
-				text-align: left;
-			}
+			text-align: left;
 
 			.brand {
 				font-family: var(--font-family-main) !important;
@@ -30,6 +26,10 @@ global-header {
 				&:hover {
 					color: var(--pal-1);
 					transition: 0.3s ease-in-out
+				}
+
+				@media(max-width: 20rem) {
+					visibility: hidden;
 				}
 			}
 		}
@@ -53,82 +53,33 @@ global-header {
 					a {
 						display: block;
 						padding: 1rem;
+						width: 4rem;
+						text-align: center;
 					}
 				}
 			}
 		}
 
-		// This nav has been turned off until the app is readdressed.
-		//nav {
-		//	position: relative;
-		//	top: 0;
-		//	left: 0;
-		//	right: 0;
-		//	display: flex;
-		//	justify-content: center;
-		//
-		//	@media(min-width: $break-small) {
-		//		position: absolute;
-		//		margin: 0;
-		//		top: 0;
-		//		right: 0;
-		//		left: auto;
-		//	}
-		//
-		//	menu {
-		//		display: flex;
-		//		list-style-type: none;
-		//		margin: 0;
-		//		padding: 0;
-		//
-		//		@media(min-width: $break-small) {
-		//			max-width: calc($break-small - 6rem);
-		//			text-align: right;
-		//			margin-top: 0;
-		//		}
-		//
-		//		li {
-		//			a {
-		//				display: block;
-		//				padding: 0;
-		//				margin: 0 1rem;
-		//				background-color: var(--pal-page-bg);
-		//
-		//				&[href='/account/audit/'] {
-		//					span {
-		//						display: none;
-		//					}
-		//
-		//					background: none;
-		//					opacity: 0.8;
-		//
-		//					&:hover {
-		//						opacity: 1;
-		//					}
-		//
-		//					&::before {
-		//						content: "";
-		//						display: block;
-		//						width: 2.5rem;
-		//						height: 2.5rem;
-		//						mask-image: url("/asset/icon/bell-solid.svg");
-		//						mask-position: center;
-		//						mask-repeat: no-repeat;
-		//						mask-size: calc(100% - 1rem);
-		//						background-color: rgba(black, 0.5);
-		//					}
-		//				}
-		//			}
-		//
-		//			&.notify {
-		//				a {
-		//					&::before {
-		//						background-color: red;
-		//					}
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
+		menu {
+			position: absolute;
+			top: 0;
+			right: 1rem;
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+
+			@media(max-width: 20rem) {
+				left: 1rem;
+			}
+
+			li {
+				a {
+					@media(max-width: 20rem) {
+						display: block !important;
+						text-align: center;
+					}
+				}
+			}
+		}
 	}
 }

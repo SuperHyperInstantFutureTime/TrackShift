@@ -14,7 +14,9 @@ function go(
 	Settings $settings,
 ):void {
 	if(!$authenticator->isLoggedIn()) {
-		$document->querySelector("demo-user-banner")->hidden = false;
+		if($bannerElement = $document->querySelector("demo-user-banner")) {
+			$bannerElement->hidden = false;
+		}
 	}
 
 	if($currencyString = $settings->get("currency")) {
