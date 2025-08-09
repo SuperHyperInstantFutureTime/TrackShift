@@ -28,6 +28,8 @@
 @import "element/section";
 @import "element/main";
 
+@import "component/account-overview";
+@import "component/account-tabs";
 @import "component/audit-list";
 @import "component/column-container";
 @import "component/delete-me";
@@ -38,7 +40,6 @@
 @import "component/file-upload-list";
 @import "component/file-expiry";
 @import "component/upload-progress";
-@import "component/account-tabs";
 @import "component/cost-editor";
 @import "component/cost-table";
 @import "component/processing-indicator";
@@ -53,6 +54,7 @@
 
 @import "page/index";
 @import "page/_common";
+@import "page/account/_common";
 
 ::selection {
 	background-color: var(--pal-7);

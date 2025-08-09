@@ -1,0 +1,62 @@
+account-overview {
+	@extend %o-container;
+
+	form {
+		margin: 2rem 0;
+
+		label {
+			span {
+				font-size: 1.5rem;
+				margin-right: 2rem;
+				font-weight: bold;
+			}
+			select {
+				font-size: 1rem;
+				background-color: transparent;
+				border: none;
+				width: 10rem;
+				border-bottom: 3px solid var(--pal-4);
+			}
+		}
+	}
+
+	dl, dt, dd {
+		margin: 0;
+		padding: 0;
+	}
+
+	dl {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1rem;
+
+		@media(min-width: $break-small) {
+			flex-wrap: nowrap;
+			justify-content: stretch;
+		}
+
+		>div {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: calc(50% - 3rem);
+			//flex-grow: 1;
+			padding: 1rem;
+			background-color: var(--pal-5);
+			border-radius: 0.5rem;
+			box-shadow: 0 0.25rem 0 color-mix(in srgb, var(--pal-4), transparent 90%);
+
+			dt {
+				color: var(--pal-3);
+				margin-top: 0.5rem;
+			}
+			dd {
+				font-size: 1.5rem;
+				font-weight: bold;
+				order: -1;
+				color: var(--pal-3);
+			}
+		}
+	}
+}

@@ -1,0 +1,30 @@
+body.dir--account {
+	global-header {
+		border-bottom: 3px solid var(--pal-4);
+
+		h1 {
+			margin-right: 2rem;
+		}
+
+		nav {
+			ul {
+				li {
+					a {
+						color: var(--pal-4);
+						font-weight: bold;
+						text-decoration: none;
+
+						&:hover {
+							color: var(--pal-1);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	file-uploader {
+		margin-top: 4rem;
+		margin-bottom: 4rem;
+	}
+}

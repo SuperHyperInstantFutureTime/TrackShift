@@ -6,8 +6,13 @@ global-header {
 	display: block;
 
 	header {
+		@media(min-width: $break-small) {
+			display: flex;
+		}
+
 		>h1 {
 			position: relative;
+			display: inline-block;
 			font-family: var(--font-family-main);
 			font-weight: 900;
 			text-align: left;
@@ -44,9 +49,9 @@ global-header {
 				padding: 0;
 
 				@media(min-width: $break-small) {
-					margin-top: -4rem;
-					margin-left: 12rem;
 					justify-content: flex-start;
+					align-items: center;
+					height: 100%;
 				}
 
 				>li {
@@ -61,10 +66,15 @@ global-header {
 		}
 
 		menu {
-			position: absolute;
-			top: 0;
+			//position: absolute;
+			top: 1rem;
 			right: 1rem;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 1rem;
 			margin: 0;
+			margin-bottom: 1rem;
 			padding: 0;
 			list-style-type: none;
 
@@ -72,11 +82,64 @@ global-header {
 				left: 1rem;
 			}
 
+			@media(min-width: $break-small) {
+				position: absolute;
+			}
+
 			li {
 				a {
 					@media(max-width: 20rem) {
 						display: block !important;
 						text-align: center;
+					}
+				}
+
+				&.login,&.logout {
+					position: absolute;
+					top: 1rem;
+					right: 1rem;
+
+					@media(min-width: $break-small) {
+						position: initial;
+					}
+				}
+
+				&:not(.login,.logout) {
+					a {
+						color: var(--pal-5);
+
+						&::before {
+							content: "";
+							display: block;
+							width: 2rem;
+							aspect-ratio: 1;
+							background-color: currentColor;
+							mask-size: 100%;
+							mask-repeat: no-repeat;
+							mask-position: 50%;
+
+						}
+
+						&:hover {
+							color: var(--pal-1);
+						}
+
+						&[href="/"] {
+							mask-image: url("/asset/icon/house-solid-full.svg");
+						}
+						&[href="/account/"] {
+							mask-image: url("/asset/icon/columns-solid.svg");
+						}
+						&[href="/account/settings/"] {
+							mask-image: url("/asset/icon/gear-solid-full.svg");
+						}
+						&[href="/help/"] {
+							mask-image: url("/asset/icon/circle-question-regular-full.svg");
+						}
+
+						span {
+							display: none;
+						}
 					}
 				}
 			}

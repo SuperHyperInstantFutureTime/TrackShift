@@ -7,20 +7,19 @@ account-tabs {
 	ul {
 		list-style-type: none;
 		margin: 0;
-		padding-left:0;
+		margin-left: -1rem;
+		padding-left: 0;
 		display: flex;
-		border-bottom: 2px solid var(--pal-utility-dark-1);
 
 		li {
 			margin-right: 0.5rem;
 
 			a {
 				position: relative;
+				font-size: 1.25rem;
+				font-weight: bold;
 				display: block;
-				padding: 1rem 2rem;
-				border: 2px solid var(--pal-utility-dark-1);
-				border-top-left-radius: 1rem;
-				border-top-right-radius: 1rem;
+				padding: 1rem;
 				border-bottom: none;
 				color: var(--pal-utility-dark-1);
 				text-decoration: none;
@@ -28,17 +27,9 @@ account-tabs {
 
 			&.selected {
 				a {
-					// background-color: var(--pal-utility-light-1);
-
-					&::after {
-						content: "";
-						position: absolute;
-						bottom: -2px;
-						left: 0;
-						right: 0;
-						height: 1rem;
-						background-color: var(--pal-6);
-					}
+					text-decoration: underline;
+					text-decoration-thickness: 3px;
+					text-underline-offset: 0.5rem;
 				}
 			}
 		}
