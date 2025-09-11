@@ -30,7 +30,7 @@ readonly class UsageRepository extends Repository {
 		DatabaseTransaction $transaction,
 	):int {
 		$transaction->start("Extracting products from upload " . $upload->basename);
-		$dbUsageFilePath = "/tmp/trackshift/usages-csv/$upload->id/usage.csv";
+		$dbUsageFilePath = "data/tmp/usages-csv/$upload->id/usage.csv";
 		if(!is_dir(dirname($dbUsageFilePath))) {
 			mkdir(dirname($dbUsageFilePath), recursive: true);
 		}
@@ -111,7 +111,7 @@ readonly class UsageRepository extends Repository {
 
 		$currencyExchange = new CurrencyExchange();
 
-		$dbUOPPath = "/tmp/trackshift/usage-of-product.csv";
+		$dbUOPPath = "data/tmp/usage-of-product.csv";
 		if(!is_dir(dirname($dbUOPPath))) {
 			mkdir(dirname($dbUOPPath), recursive: true);
 		}
