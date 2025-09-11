@@ -9,9 +9,11 @@
 @import "variable/theme";
 
 @import "decorator/dropzone";
+@import "decorator/data-fancy-layout";
+@import "decorator/data-table";
+@import "decorator/floating-element";
 @import "decorator/typography";
 @import "decorator/ui-element";
-@import "decorator/data-table";
 @import "decorator/editorial-content";
 @import "decorator/info-text";
 @import "decorator/form-fields";
@@ -28,6 +30,8 @@
 @import "element/section";
 @import "element/main";
 
+@import "component/account-overview";
+@import "component/account-tabs";
 @import "component/audit-list";
 @import "component/column-container";
 @import "component/delete-me";
@@ -38,7 +42,6 @@
 @import "component/file-upload-list";
 @import "component/file-expiry";
 @import "component/upload-progress";
-@import "component/account-tabs";
 @import "component/cost-editor";
 @import "component/cost-table";
 @import "component/processing-indicator";
@@ -53,6 +56,7 @@
 
 @import "page/index";
 @import "page/_common";
+@import "page/account/_common";
 
 ::selection {
 	background-color: var(--pal-7);
@@ -132,12 +136,17 @@ table {
   	text-align: center
 }
 
-input[type="text"] {
-	padding:15px;
-	font-size:18px;
-	border-radius:15px;
-	border: 2px solid var(--pal-utility-dark-1);
+input[type="search"] {
+	padding: 0.5rem 1rem;
+	padding-left: 3rem;
+	font-size: 1rem;
+	border-radius: 0.5rem;
+	border: 3px solid var(--pal-utility-dark-1);
 	outline-color: var(--pal-utility-dark-1);
-	box-shadow:none !important;
-	margin-bottom:2rem
+	box-shadow: none !important;
+	margin-bottom: 2rem;
+	background-image: url("/asset/icon/search-regular.svg");
+	background-position: 1rem;
+	background-size: auto calc(100% - 1rem);
+	background-repeat: no-repeat;
 }

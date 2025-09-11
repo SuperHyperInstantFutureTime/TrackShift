@@ -23,7 +23,7 @@ function loadSummary(callback) {
 		return response.text();
 	}).then(html => {
 		let newDocument = parser.parseFromString(html, "text/html");
-		let selector = "product-summary";
+		let selector = "account-overview";
 		document.querySelector(selector).innerHTML = newDocument.querySelector(selector).innerHTML;
 		callback();
 		Currency.init();

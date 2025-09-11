@@ -4,52 +4,57 @@
 	<nav>
 		<ul>
 			<li>
-				<a href="#about">About</a>
+				<a href="/#about">About</a>
 			</li>
 			<li>
-				<a href="#contact">Contact</a>
+				<a href="/#contact">Contact</a>
 			</li>
 		</ul>
+
+		<menu>
+			<li>
+				<a href="/"><span>Homepage</span></a>
+			</li>
+			<li>
+				<a href="/account/"><span>Dashboard</span></a>
+			</li>
+			<li>
+				<a href="/account/settings/"><span>Settings</span></a>
+			</li>
+			<li>
+				<a href="/help/"><span>Help</span></a>
+			</li>
+
+			<li class="login">
+				<a href="/auth/login/" class="button">
+					<span>Log in</span>
+				</a>
+				<script>
+					let link = document.currentScript.previousElementSibling;
+
+					link.addEventListener("click", e => {
+						if(e.ctrlKey && e.shiftKey) {
+							if(!location.host.startsWith("localhost:")) {
+								alert("No hacking on production please!")
+								return;
+							}
+
+							let debugUserId = prompt("Debug user ID", "12345");
+
+							if(debugUserId) {
+								e.preventDefault();
+								link.href += "?debug-user=" + debugUserId;
+								window.location = link.href;
+							}
+						}
+					});
+				</script>
+			</li>
+			<li class="logout">
+				<a href="/auth/logout/" class="button">
+					<span>Log out</span>
+				</a>
+			</li>
+		</menu>
 	</nav>
-
-<!--	This nav has been turned off until the app is readdressed -->
-<!--	<nav>-->
-<!--		<menu>-->
-<!--			<li class="bell">-->
-<!--				<a href="/account/audit/">-->
-<!--					<span>Notifications</span>-->
-<!--				</a>-->
-<!--			</li>-->
-<!--			<li class="login">-->
-<!--				<a href="/auth/login/" class="button">-->
-<!--					<span>Log in</span>-->
-<!--				</a>-->
-<!--				<script>-->
-<!--					let link = document.currentScript.previousElementSibling;-->
-
-<!--					link.addEventListener("click", e => {-->
-<!--						if(e.ctrlKey && e.shiftKey) {-->
-<!--							if(!location.host.startsWith("localhost:")) {-->
-<!--								alert("No hacking on production please!")-->
-<!--								return;-->
-<!--							}-->
-
-<!--							let debugUserId = prompt("Debug user ID", "12345");-->
-
-<!--							if(debugUserId) {-->
-<!--								e.preventDefault();-->
-<!--								link.href += "?debug-user=" + debugUserId;-->
-<!--								window.location = link.href;-->
-<!--							}-->
-<!--						}-->
-<!--					});-->
-<!--				</script>-->
-<!--			</li>-->
-<!--			<li class="logout">-->
-<!--				<a href="/auth/logout/" class="button">-->
-<!--					<span>Log out</span>-->
-<!--				</a>-->
-<!--			</li>-->
-<!--		</menu>-->
-<!--	</nav>-->
 </header>

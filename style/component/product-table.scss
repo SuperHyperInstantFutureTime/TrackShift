@@ -7,6 +7,23 @@ product-table {
 		border-collapse: collapse;
 
 		tbody {
+			&:empty {
+				position: relative;
+				height: 24rem;
+
+				&::before {
+					position: absolute;
+					left: 0;
+					right: 0;
+					display: block;
+					content: "Upload your first products from the uploads tab";
+					margin: 12rem auto;
+					text-align: center;
+					font-style: italic;
+					opacity: 0.5;
+					font-size: 2rem;
+				}
+			}
 			tr {
 				td {
 					&:last-of-type {

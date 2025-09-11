@@ -1,23 +1,32 @@
-<input type="text" id="uploadTableSearchInput" onkeyup="myFunction()" placeholder="Search uploads...">
+<input type="search" id="uploadTableSearchInput" onkeyup="myFunction()" placeholder="Search uploads...">
 <table id="uploadTable">
 	<thead>
 	<tr>
 		<th>Source</th>
 		<th>File name</th>
 		<th>Date uploaded</th>
-		<th>Net amount</th>
-		<th class="centered">File Size</th>
-		<th class="centered">Delete</th>
+		<th>File Size</th>
+		<th>Delete</th>
 	</tr>
 	</thead>
 	<tbody>
 	<tr data-list data-bind:class=":isProcessing processing" data-bind:id="id" data-live>
-		<td data-bind:text="type">Unknown</td>
-		<td data-bind:text="basename" class="basename">abc.xyz</td>
-		<td data-bind:text="createdAtFormattedDate">1st Jan 1970</td>
-		<td data-bind:text="totalProfit" class="currency earnings" data-processing="0" data-bind:data-processing="processedPercentageRounded" data-live-update>-</td>
-		<td class="centered" data-bind:text="sizeString">0 B</td>
-		<td class="centered">
+		<td class="type" data-bind:data-type="type">
+			<span data-bind:text="type">Unknown</span>
+		</td>
+		<td class="basename">
+			<h3 data-bind:text="type">Unknown</h3>
+			<span data-bind:text="basename">abc.xyz</span>
+		</td>
+		<td class="uploaded sub-strong">
+			<span data-bind:text="createdAtFormattedDate">1st Jan 1970</span>
+			<strong>Uploaded</strong>
+		</td>
+		<td class="earnings sub-strong">
+			<span data-bind:text="totalProfit" class="currency">0</span>
+			<strong>Earnings</strong>
+		</td>
+		<td>
 			<form method="post">
 				<input type="hidden" name="id" data-bind:value="id" />
 				<button class="button" name="do" value="delete" onclick="return confirm('Are you sure you want to delete this file?')">

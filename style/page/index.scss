@@ -1,6 +1,6 @@
 body.uri--index {
 	global-header {
-		a {
+		a:not(.button) {
 			color: var(--pal-6);
 		}
 	}
