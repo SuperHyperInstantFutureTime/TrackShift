@@ -64,6 +64,11 @@
 						background-color: transparent;
 						background-image: url("/asset/upload-type/cargo.svg");
 					}
+					&[data-type="DistroKid"]::before {
+						content: "";
+						background-color: transparent;
+						background-image: url("/asset/upload-type/distrokid.svg");
+					}
 
 					span {
 						display: none;
