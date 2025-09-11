@@ -1,0 +1,98 @@
+%d-data-fancy-layout {
+	@extend %o-container;
+
+	table {
+		border-collapse: separate;
+		border-spacing: 0 1rem;
+
+		thead {
+			display: none;
+		}
+
+		tr {
+			td {
+				@extend %d-floating-element;
+
+				border-top: 3px solid var(--pal-5);
+				border-bottom: 3px solid var(--pal-5);
+				padding: 1rem;
+				margin-bottom: 1rem;
+
+				&:first-of-type {
+					border-left: 3px solid var(--pal-5);
+					border-top-left-radius: 1rem;
+					border-bottom-left-radius: 1rem;
+				}
+				&:last-of-type {
+					border-right: 3px solid var(--pal-5);
+					border-top-right-radius: 1rem;
+					border-bottom-right-radius: 1rem;
+				}
+
+				&.type {
+					position: relative;
+					width: 8rem;
+
+					&::before {
+						content: "Unknown";
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						width: 100%;
+						aspect-ratio: 1;
+						border-radius: 0.5rem;
+						background-color: var(--pal-7);
+						background-position: 50%;
+						background-size: 100%;
+						background-repeat: no-repeat;
+						color: var(--pal-5);
+					}
+
+					&[data-type="Bandcamp"]::before {
+						content: "";
+						background-color: transparent;
+						background-image: url("/asset/upload-type/bandcamp.svg");
+					}
+
+					&[data-type="Cargo Digital"]::before {
+						content: "";
+						background-color: transparent;
+						background-image: url("/asset/upload-type/cargo.svg");
+					}
+					&[data-type="Cargo Physical"]::before {
+						content: "";
+						background-color: transparent;
+						background-image: url("/asset/upload-type/cargo.svg");
+					}
+
+					span {
+						display: none;
+					}
+				}
+
+				&.basename {
+					h3 {
+						margin: 0;
+					}
+					span {
+						display: block;
+						margin-top: 1rem;
+						
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						overflow: hidden;
+					}
+				}
+
+				&.sub-strong {
+					text-align: center;
+
+					strong {
+						display: block;
+						margin-top: 1rem;
+					}
+				}
+			}
+		}
+	}
+}

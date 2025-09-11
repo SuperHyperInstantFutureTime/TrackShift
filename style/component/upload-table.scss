@@ -1,5 +1,5 @@
 upload-table {
-	@extend %d-data-table;
+	@extend %d-data-fancy-layout;
 	margin-bottom:2rem;
 
 	button[name=do][value=delete] {
@@ -30,7 +30,6 @@ upload-table {
 					content: "Processing " attr(data-processing) "% ...";
 				}
 			}
-
 		}
 	}
 }

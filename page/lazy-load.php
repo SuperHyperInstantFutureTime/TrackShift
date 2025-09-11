@@ -13,7 +13,7 @@ function go(Input $input, ProductRepository $productRepository, SpotifyClient $s
 	$request->headers->contains("test");
 	$minimumImageSize = 80;
 	$product = $productRepository->getById($input->getString("id"));
-	$filePath = "data/cache/art/$product->id";
+	$filePath = "data/cache/art/$product->id.jpg";
 	ob_clean();
 
 // Belt and braces...
